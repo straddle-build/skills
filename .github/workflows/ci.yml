@@ -18,7 +18,12 @@ jobs:
       - name: Check repository hygiene
         run: git diff --check
 
-      - name: Validate skill repository
+      - name: Lint Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v20
+        with:
+          globs: "**/*.md"
+
+      - name: Validate repository files and links
         shell: python
         run: |
           from pathlib import Path
@@ -34,19 +39,6 @@ jobs:
           if missing:
               raise SystemExit(f"Missing required files: {', '.join(missing)}")
 
-          for skill in root.rglob("SKILL.md"):
-              lines = skill.read_text(encoding="utf-8").splitlines()
-              if len(lines) < 4 or lines[0] != "---":
-                  raise SystemExit(f"{skill}: missing YAML frontmatter")
-              try:
-                  closing = lines.index("---", 1)
-              except ValueError:
-                  raise SystemExit(f"{skill}: unterminated YAML frontmatter")
-              frontmatter = lines[1:closing]
-              for field in ("name", "description"):
-                  if not any(line.startswith(f"{field}:") and line.split(":", 1)[1].strip() for line in frontmatter):
-                      raise SystemExit(f"{skill}: missing non-empty {field}")
-
           link_pattern = re.compile(r"\[[^]]+\]\(([^)]+)\)")
           for markdown in root.rglob("*.md"):
               text = markdown.read_text(encoding="utf-8")
@@ -56,3 +48,62 @@ jobs:
                       continue
                   if not (markdown.parent / target).exists():
                       raise SystemExit(f"{markdown}: broken relative link {target}")
+
+      - name: Validate published skills
+        shell: bash
+        run: |
+          ruby <<'RUBY'
+          require "pathname"
+          require "yaml"
+
+          skills_root = Pathname("skills")
+          skill_directories = []
+
+          if skills_root.exist?
+            unexpected_files = skills_root.children.select(&:file?).reject do |path|
+              path.basename.to_s == "README.md"
+            end
+            unless unexpected_files.empty?
+              abort "Unexpected files under skills/: #{unexpected_files.join(', ')}"
+            end
+
+            skill_directories = skills_root.children.select(&:directory?)
+            skill_directories.each do |directory|
+              name = directory.basename.to_s
+              unless name.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+                abort "#{directory}: directory name must be kebab-case"
+              end
+            end
+          end
+
+          expected_skill_files = skill_directories.map { |directory| directory / "SKILL.md" }
+          missing = expected_skill_files.reject(&:file?)
+          abort "Missing SKILL.md: #{missing.join(', ')}" unless missing.empty?
+
+          actual_skill_files = Pathname.glob("**/SKILL.md").reject do |path|
+            path.each_filename.first == ".git"
+          end
+          unexpected = actual_skill_files - expected_skill_files
+          abort "SKILL.md must live at skills/<name>/SKILL.md: #{unexpected.join(', ')}" unless unexpected.empty?
+
+          expected_skill_files.each do |skill_file|
+            text = skill_file.read
+            match = text.match(/\A---\r?\n(.*?)\r?\n---(?:\r?\n|\z)/m)
+            abort "#{skill_file}: missing YAML frontmatter" unless match
+
+            metadata = YAML.safe_load(
+              match[1],
+              permitted_classes: [],
+              permitted_symbols: [],
+              aliases: false
+            )
+            abort "#{skill_file}: frontmatter must be a mapping" unless metadata.is_a?(Hash)
+
+            name = metadata["name"]
+            description = metadata["description"]
+            abort "#{skill_file}: name must match its directory" unless name == skill_file.dirname.basename.to_s
+            unless description.is_a?(String) && !description.strip.empty?
+              abort "#{skill_file}: description must be a non-empty string"
+            end
+          end
+          RUBY
