@@ -19,7 +19,7 @@ jobs:
         run: git diff --check
 
       - name: Lint Markdown
-        uses: DavidAnson/markdownlint-cli2-action@v20
+        uses: DavidAnson/markdownlint-cli2-action@v21
         with:
           globs: "**/*.md"
 
