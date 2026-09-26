@@ -18,7 +18,7 @@ Straddle signs every delivery with the [Standard Webhooks](https://www.standardw
 
 Each endpoint has its own signing secret, prefixed `whsec_`. It is not your API key. Read it from the environment on the server, never from a client bundle or source control.
 
-Event payloads carry `event_type` (for example `charge.event.v1`), a unique `event_id`, `account_id` on platform events, and the full resource under `data`. The event catalog is the `webhooks` section of the Straddle API contract.
+Event payloads carry `event_type` (for example `charge.event.v1`), a unique `event_id`, `account_id` (platform deliveries only), and the full resource under `data`. The event catalog is the `webhooks` section of the Straddle API contract.
 
 Straddle offers three ways to receive events. Choose one in the plan; never poll an ordinary API read to discover state changes.
 
@@ -28,7 +28,7 @@ Straddle offers three ways to receive events. Choose one in the plan; never poll
 
 ## Routing events on a platform
 
-For a direct integration the account is implicit, so events may carry no `account_id`. For a SaaS or marketplace platform, every event carries `account_id`, the embedded account the event belongs to. Route on that field. Do not infer the account from the endpoint URL, from the order events arrive in, or from IDs inside `data`. Reject an event that names an account your platform does not own.
+Straddle omits `account_id` from events delivered to a direct account, because the account is implicit. For a SaaS or marketplace platform, every event carries `account_id`, the embedded account the event belongs to. Route on that field. Do not infer the account from the endpoint URL, from the order events arrive in, or from IDs inside `data`. Reject an event that names an account your platform does not own.
 
 ## The non-negotiables
 
