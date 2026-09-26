@@ -30,15 +30,15 @@ Straddle offers three ways to receive events. Choose one in the plan; never poll
 
 1. **Verify the signature on every request.** An unverified webhook is an anonymous internet POST. Anyone who learns your URL can forge events. Only act on payloads that pass verification.
 2. **Verify against the raw request body.** The signature covers the exact bytes sent. Any framework that parses JSON and re-serializes it breaks verification. Read the unprocessed body.
-3. **Return a `2xx` within seconds.** Anything else, including `3xx` redirects, is treated as a failure and retried. Push heavy work to a queue.
+3. **Return a `2xx` within seconds, but only after the event is safe.** A `2xx` tells Straddle the event is yours now; it will not be resent. Acknowledge only once the event is durably queued or its processing has been committed. Anything other than `2xx`, including `3xx` redirects, is treated as a failure and retried.
 4. **Never treat a missing secret as "skip verification".** If the signing secret is not configured, fail the request with a configuration error. A handler that silently accepts unverified payments is worse than one that is down.
 
 ## Handler shape
 
 1. **Read the raw body.** Do not parse JSON before verification.
 2. **Verify** with the selected Straddle SDK's webhook helper when it has one. Otherwise use the `standardwebhooks` library for your language. Pass the raw body, the three headers, and the endpoint's signing secret. On failure return `400`.
-3. **Acknowledge fast.** Return `2xx` (for example `204`) immediately. Do real work in a background job if it can take more than a second or two.
-4. **Deduplicate.** Deliveries can repeat. Key your processing on `webhook-id` or the payload's `event_id` so a retry is a no-op.
+3. **Persist, then acknowledge.** Write the verified event to a durable queue or table, or process it and commit, before responding. Only then return `2xx` (for example `204`). If the write fails, return `500` so Straddle retries. A `2xx` followed by a crash before persistence loses the event for good.
+4. **Deduplicate.** Deliveries can repeat. Key the persisted record and your processing on `webhook-id` or the payload's `event_id` so a retry is a no-op.
 5. **Branch on `event_type`** and process.
 
 ```ts
@@ -58,14 +58,20 @@ try {
 } catch (err) {
   return res.status(400).send();
 }
-// payload is trusted; enqueue and acknowledge
+
+// payload is trusted. Make it durable before acknowledging.
+try {
+  await queue.enqueue({ id: req.headers["webhook-id"], payload });
+} catch (err) {
+  return res.status(500).send(); // not persisted; Straddle will retry
+}
 return res.status(204).send();
 ```
 
 ## Responding, retries, and auto-disable
 
 * **Only `2xx` means success.** Every other code is treated as a failure and retried on a backoff schedule.
-* **Respond within the delivery timeout.** If processing can take longer, acknowledge first and work async.
+* **Respond within the delivery timeout.** Keep the work before the response to verify, persist, respond. Everything slower runs from the queue after the `2xx`.
 * **Use `4xx` to reject bad or forged requests** (failed verification returns `400`). Use `5xx` or timeouts only for transient failures you want retried.
 * **Endpoints auto-disable after sustained failure.** Keep the handler healthy and wire up failure notifications from the Straddle dashboard.
 
@@ -95,6 +101,7 @@ Prefer the SDK helper or `standardwebhooks`. If your language has neither, follo
 * Verification runs against the raw body
 * Missing secret is a configuration error, never a bypass
 * Failed verification returns `400`
-* Handler returns `2xx` within the timeout; heavy work is async
+* Event is durably queued or committed before the `2xx`; a failed write returns `500`
+* Handler responds within the timeout; slow work runs from the queue afterwards
 * Processing is idempotent on `webhook-id` or `event_id`
 * Signing secret is server-side only
