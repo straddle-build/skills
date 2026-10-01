@@ -6,4 +6,5 @@ timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Skill, Bash, Write]
 ---
 Straddle Wizard program: straddle-migrate → straddle-test → straddle-go-live. Start at straddle-test.
+Run the listed steps in order in this one session: after each step's STRADDLE_HANDOFF, continue with the next listed step without waiting for the Wizard; stop and ask whenever a step needs the developer (plan approval, each Sandbox write).
 This session was reopened by the Straddle Wizard. Approvals given before this message don't count: show every Sandbox write preview again and ask; a plan approval counts only as recorded in the plan file.

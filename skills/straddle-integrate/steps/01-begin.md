@@ -29,7 +29,7 @@ A later step may run in a new session, so an approval lasts only when it is writ
 
 ```markdown
 - Plan state: Approved
-- Approval: <YYYY-MM-DD>, "<the developer's words>", recorded by <straddle-plan | straddle-integrate>, sha256 <64 hex characters>
+- Approval: <YYYY-MM-DD>, "<the developer's words>", recorded by <straddle-plan | straddle-integrate | straddle-test>, sha256 <64 hex characters>
 ```
 
 The hash covers the plan file without those two lines, so recording them doesn't change it. Compute it with:

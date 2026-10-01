@@ -15,7 +15,7 @@ Write developer-facing replies in the [Straddle voice](../straddle-best-practice
 
 ## Boundaries
 
-- **No architecture changes.** Test does not edit application code, configuration, or dependencies. The only file it writes is `straddle-test-evidence.md`. A gap or failing check is a finding for Integrate, not something Test fixes.
+- **No architecture changes.** Test does not edit application code, configuration, or dependencies. The only file it writes is `straddle-test-evidence.md`, plus the chosen plan's two approval lines when step 1 records the developer's approval. A gap or failing check is a finding for Integrate, not something Test fixes.
 - **Missing configuration stops every Straddle request.** Test establishes the environment and credentials with Integrate's offline checks, never `straddle doctor`. Without an accepted target (explicit Straddle Sandbox, or the offline synthetic localhost target under every condition below) and a credential for a route, Test runs only offline checks and discovery on that route, and records a configuration error for everything else.
 - **Sandbox writes need an exact preview and explicit approval**, following Integrate's [preview step](../straddle-integrate/steps/04-preview.md). A denial or a changed context means zero writes. The fourteen excluded operations run only through the SDK or CLI.
 - **Plan approval is not write approval.** An approved integration or migration plan authorizes the file changes it lists and names the verification to run. It authorizes no Straddle request. Every Sandbox write still needs its own exact preview and explicit yes in this run. A plan that is not approved under the rules in [step 1](steps/01-begin.md) blocks Test as if there were no plan.
