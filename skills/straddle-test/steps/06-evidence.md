@@ -78,7 +78,7 @@ Tell the developer the result, the path, and what's next in two or three plain s
 - [ ] The evidence file contains no secret or unmasked data.
 ```
 
-Then print on one line, followed by one plain sentence that says what finished and what comes next:
+Then print on one line, followed by one or two short sentences: what finished, then what comes next:
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-test","status":"<passed|failed|partial|blocked>","report":"<one-paragraph summary including straddle-test-evidence.md and the scenarios not run>"}

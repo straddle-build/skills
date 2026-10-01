@@ -66,7 +66,7 @@ End the reply with:
 - [ ] Notifications use the selected webhook, FIFO, or polling endpoint, with no status polling of resource reads.
 ```
 
-Then print on one line, followed by one plain sentence that says what finished and what comes next, for example "The code's in and the Sandbox charge ran, so testing it end to end is next.":
+Then print on one line, followed by one or two short sentences: what finished, then what comes next, for example "The code's in and the Sandbox charge ran. Testing it end to end is next.":
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-integrate","status":"<complete|awaiting_approval|blocked>","report":"<one-paragraph summary: files changed, resources created or reused, and blockers>"}

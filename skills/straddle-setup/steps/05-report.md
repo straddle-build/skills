@@ -87,7 +87,7 @@ End with:
 - [ ] Setup created or changed nothing except `straddle-setup.md`.
 ```
 
-Then print the handoff on one line, followed by one plain sentence that says the result and the next step, for example "Setup's done, so planning the integration with you is next." or "I need a Sandbox API key before I call Straddle, so I haven't sent any Straddle API request. Set `STRADDLE_API_KEY` in the shell you start your agent from, then run Setup again.":
+Then print the handoff on one line, followed by one or two short sentences: the result, then the next step, for example "Setup's done. Planning the integration with you is next." or "I need a Sandbox API key before I call Straddle, so I haven't sent any Straddle API request. Set `STRADDLE_API_KEY` in the shell you start your agent from, then run Setup again.":
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-setup","status":"<status>","report":"<one-paragraph summary of the table and blockers>"}

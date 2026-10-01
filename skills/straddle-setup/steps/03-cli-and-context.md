@@ -75,7 +75,7 @@ Offer them only when every prerequisite holds:
 - the environment is explicitly selected and is `https://sandbox.straddle.com`
 - `runtime_context.error` is absent
 
-If any prerequisite fails, do not offer or run either command, even if the developer asks. Report both as `not run (prerequisite failed: <which>)`. When the prerequisites hold, tell the developer each command sends a request to Sandbox and run it only after they say yes; report `not run (declined)` otherwise.
+If any prerequisite fails, do not offer or run either command, even if the developer asks. Report both as `not run (prerequisite failed: <which>)`. When the prerequisites hold, open the offer with one plain sentence that says what you're offering, before any table or list, for example "The CLI, key, and Sandbox environment are set, so I can run two Sandbox reads next." Tell the developer each command sends a request to Sandbox, and run it only after they say yes; report `not run (declined)` otherwise.
 
 - **`doctor`:** `api` reachable is `passed`. `api` unreachable is blocking. Its `credentials` field says `present, not verified`, which is not verification.
 - **`accounts list`:** accounts returned is `passed`. A 401 or 403 is `failed`, which is blocking. For a platform, the result also shows whether at least two Sandbox accounts exist for the A/B fixture.
