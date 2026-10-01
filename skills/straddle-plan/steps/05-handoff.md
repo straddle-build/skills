@@ -35,7 +35,7 @@ End with:
 - [ ] No secret appears in the plan.
 ```
 
-Then print on one line, followed by one plain sentence that asks for the review or names the blocking decision, for example "The plan's ready for your review. Tell me if it looks right, or what to change.":
+Then print on one line, followed by one or two short sentences: the result, then the review request or the blocking decision, for example "The plan's ready for your review. Tell me if it looks right, or what to change.":
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-plan","status":"<draft|blocked>","report":"<one-paragraph summary including the plan path>"}
