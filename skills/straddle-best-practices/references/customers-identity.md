@@ -11,6 +11,8 @@ A create needs `name`, `type`, `email`, `phone` (E.164), and `device.ip_address`
 - **Individuals (KYC):** `dob` and `ssn`.
 - **Businesses (KYB):** `ein` and `legal_business_name`, plus optional `website` and `representatives` (each with `name`, `email`, `phone`).
 
+`email` is unique on the account: a create with an email another customer already has fails. Observed in Sandbox on 2026-10-01: `422`, `type` `/validation_error`, `detail` "Email '`<email>`' already exists and must be unique.", with an empty `items` list. Straddle's API reference shows the same rule in its error example, as a `400` whose item is "customer.email", "Email address must be unique." So a customer is one person, not one order or checkout.
+
 Responses mask `compliance_profile`. `getUnmaskedCustomer` returns it unmasked, but only when Straddle has enabled unmasking for the account (`allow_data_unmask` in the account settings' `configuration`). It's one of the operations that run only through the SDK or CLI after approval ([writes-and-approval.md](writes-and-approval.md)). So is `deleteCustomer`, which is for regulatory or privacy requests only and can't be undone.
 
 ## States and transitions
@@ -44,7 +46,8 @@ Identity reason codes (I-codes, and R-codes from the reputation check such as R1
 - On `rejected`, don't create paykeys or payments, and show the customer a neutral message, never the scores or codes.
 - For businesses, collect the KYB fields and representatives up front, and expect more modules in the breakdown.
 - Keep PII server-side: send `dob`, `ssn`, and `ein` from your backend, never log them, and don't store them unless you must. Use unmasked reads only when a person needs them, and keep their output out of logs.
-- Keep your user linked to the customer by `external_id`, and store the customer `id`.
+- Keep one customer per person. Link your user to the customer by `external_id`, and store the customer `id`.
+- Guest checkout can't create a customer per checkout, because a returning shopper's email already belongs to a customer, so the second create fails with `422`. It also can't reuse the customer whose email the shopper typed: anyone who types another shopper's email would inherit that shopper's verified identity and their paykeys. Reuse an existing customer only after the shopper proves they own the email, by logging in or by entering a code you emailed them; a first-time email creates a new customer. Reuse by typed email alone is acceptable only as a Sandbox test convenience, gated to Sandbox in code.
 
 ## Events and Sandbox outcomes
 

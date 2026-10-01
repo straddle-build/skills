@@ -38,7 +38,7 @@ Charges and payouts, with `config.sandbox_outcome` on the create. Times are from
 | `failed_insufficient_funds` | … → `pending` → `failed` (`insufficient_funds`, `bank_decline`, R01, 2 min). | Stayed `pending`. | Failure and `resubmitCharge`. |
 | `failed_closed_bank_account` | … → `failed` (`closed_bank_account`, `bank_decline`, R02). | Stayed `pending`. | Asking for another account. |
 | `failed_customer_dispute` | … → `failed` (`disputed`, `customer_dispute`, R05). | Stayed `pending`. | Dispute handling before funding. |
-| `failed_not_authorized` | … → `failed` (`disputed`, `customer_dispute`, R29). The paykey went `blocked` (R29, `unblock_eligible` `true`) 2 s later. | Stayed `pending`. | The R29 block and the one-time unblock. |
+| `failed_not_authorized` | … → `failed` (`disputed`, `customer_dispute`, R29). The paykey went `blocked` (R29, `unblock_eligible` `true`) 2 s later. The block is on the bank account: on 2026-10-01, every paykey made from the same routing and account number, across customers, went `blocked`, and a new link of that account failed with `422`. | Stayed `pending`. | The R29 block and the one-time unblock. |
 | `reversed_insufficient_funds` | … → `pending` → `paid` and `reversed` (`insufficient_funds`, `bank_decline`, R01), both at one `changed_at`, 5 min after `pending`. Needs a charges funding simulation. | Stayed `pending`. | A return after `paid`. |
 | `reversed_closed_bank_account` | Same, with `closed_bank_account` and R02. | Stayed `pending`. | A return after `paid`. |
 | `reversed_customer_dispute` | Same, with `disputed`, `customer_dispute`, and R05. | Stayed `pending`. | A dispute after `paid`. |
@@ -63,7 +63,7 @@ A Sandbox test run proves the handlers, not only the happy path. Pick the rows t
 | Paykey review | Paykey `review` | `review`, then `active` or `rejected` | Paykey review |
 | Failure before funding | Charge `failed_insufficient_funds` | `failed` with R01 | Failure handling and resubmit |
 | Return after paid | Charge `reversed_insufficient_funds`, plus a funding simulation | `paid`, then `reversed` with R01 | Clawback after fulfillment |
-| Dispute and R29 block | Charge `failed_not_authorized` | `failed` with R29, paykey `blocked` | Dispute handling and the unblock |
+| Dispute and R29 block | Charge `failed_not_authorized` on a paykey made from a bank account number no other scenario, run, or demo uses | `failed` with R29, paykey `blocked` | Dispute handling and the unblock |
 | Straddle hold | Charge `on_hold_daily_limit` | `on_hold` with `amount_too_large` | Hold messaging |
 | Blocked payment | Charge `cancelled_for_fraud_risk` | `failed` with `payment_blocked` | Blocked-payment messaging |
 | Refund | Charge `paid`, then `refundCharge` | A payout with `is_refund` | Refund linking (the payout stays unpaid) |
@@ -74,6 +74,7 @@ Rules for the run:
 
 - Count a status only when it arrives through the webhook, FIFO, or polling endpoint. A create response only shows `created`.
 - Give each run's resources fresh external IDs, because the simulations and a new polling consumer also show other testers' activity on the account.
+- Give each dispute and R29 scenario its own bank account number, never one another scenario or the developer's demo uses. The R29 blocks every paykey made from that account, across customers, and refuses new links of it.
 - Record the payout gap as not testable in Sandbox, and cover those handlers with recorded payloads.
 
 ## Events and Sandbox outcomes
