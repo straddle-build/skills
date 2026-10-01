@@ -30,7 +30,7 @@ Anti-patterns to flag in notification code. Each row is something the audit dete
 | --- | --- | --- | --- | --- |
 | N1 | A loop, interval, cron, or retry around `charges.retrieve`, `payouts.retrieve`, list calls, `GET /v1/charges/{id}`, or `straddle tail` to detect status | Ordinary API polling instead of a notification endpoint; misses `paid` before `reversed` | Contract `webhooks` section for the event | Consume a webhook, FIFO, or polling endpoint |
 | N2 | Webhook handler that parses JSON before verification, or uses a body-parser before the route | Signature computed over re-serialized body | [receiving-webhooks.md](../../straddle-best-practices/references/receiving-webhooks.md) | Verify the raw body |
-| N3 | `webhooks.unwrap(body, { key })` or any call without request headers | Verification skipped | Installed SDK `webhooks` source (TypeScript 1.0.4 verifies only when `headers` is passed) | Pass the request's three `webhook-*` or `svix-*` headers |
+| N3 | `webhooks.unwrap(body, { key })` or any call without request headers | Verification skipped | Installed SDK `webhooks` source (TypeScript 1.0.4 verifies only when `headers` is passed) | Pass the request's three `webhook-*` headers; on FIFO, switch to the `svix` library |
 | N4 | Missing or empty signing secret treated as "skip" | Unverified events accepted | Handler code and SDK helper | Fail with a configuration error |
 | N5 | `2xx` returned before the event is persisted, or no dedupe on `webhook-id`/`event_id` | Lost or double-processed events | Handler code | Persist then acknowledge; dedupe on the ID |
 | N6 | Platform handler ignoring `account_id` | Events applied to the wrong account | Event schema in the contract | Route on `account_id`, reject unknown accounts |

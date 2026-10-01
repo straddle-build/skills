@@ -19,4 +19,4 @@ Read sources in this order and record where each fact came from.
 
 Do not copy method names, fields, or versions from memory. Anything you could not confirm goes into the plan as unresolved.
 
-**Summary for step 3:** SDK package and exact version, the method for each planned operation with its source file, the webhook helper (or `standardwebhooks` when the SDK has none), repository files that will change, and the test command.
+**Summary for step 3:** SDK package and exact version, the method for each planned operation with its source file, the verification library from [receiving-webhooks.md](../../straddle-best-practices/references/receiving-webhooks.md#verification-library) (the `svix` library, or an existing SDK webhook helper), repository files that will change, and the test command.
