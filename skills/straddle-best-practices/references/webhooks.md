@@ -10,7 +10,7 @@ An event tells your app that a Straddle resource was created or changed. Every p
 
 - `event_type`: the event name, such as `charge.event.v1`.
 - `event_id`: unique per event. Deduplicate on it.
-- `account_id`: the embedded account the event belongs to, on platforms ([Routing events on a platform](receiving-webhooks.md#routing-events-on-a-platform)).
+- `account_id`: the account the event belongs to. The contract marks it required on every event; route on it on platforms ([Routing events on a platform](receiving-webhooks.md#routing-events-on-a-platform)).
 - `data`: the whole resource as it is now, not a diff.
 
 Each resource has two events. The `.created.v1` event fires once on create. The `.event.v1` event fires on create too, and on every later change. Subscribe to the `.event.v1` events and handle a create arriving twice.
