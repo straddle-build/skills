@@ -41,7 +41,7 @@ It reads the CLI's configuration locally and sends no request. It covers both an
 | Output | Result |
 | --- | --- |
 | `authenticated: true` | Key present, `verified: false`. Report the source only as its category (`env:STRADDLE_API_KEY` or saved CLI credentials). Never copy the `config` path or any value. |
-| `authenticated: false`, or a non-zero exit with `no credentials configured` | **Blocking configuration failure: no API key.** |
+| `authenticated: false`, or a non-zero exit with `no credentials configured` | **Blocking configuration failure: no API key (`STRADDLE_API_KEY` is not set).** |
 
 ## Context: `straddle agent-context`
 
@@ -62,7 +62,7 @@ The environment is explicitly selected only when one of these holds:
 - `printenv STRADDLE_ENVIRONMENT` prints `sandbox`, or `printenv STRADDLE_BASE_URL` prints `https://sandbox.straddle.com` (an unset variable prints nothing and exits 1)
 - the developer confirms in this run that the target is Sandbox, and `runtime_context.environment` is `https://sandbox.straddle.com` (label it developer-confirmed)
 
-A resolved default with no confirmation is a **blocking configuration failure: environment not explicitly selected**. Any environment other than `https://sandbox.straddle.com` is blocking, because integration proofs run in Sandbox.
+A resolved default with no confirmation is a **Blocking configuration failure: environment not explicitly selected (`STRADDLE_ENVIRONMENT` is not set).** Any environment other than `https://sandbox.straddle.com` is blocking, because integration proofs run in Sandbox.
 
 ## Network checks
 
@@ -75,7 +75,9 @@ Offer them only when every prerequisite holds:
 - the environment is explicitly selected and is `https://sandbox.straddle.com`
 - `runtime_context.error` is absent
 
-If any prerequisite fails, do not offer or run either command, even if the developer asks. Report both as `not run (prerequisite failed: <which>)`. When the prerequisites hold, tell the developer each command sends a request to Sandbox and run it only after they say yes; report `not run (declined)` otherwise.
+If any prerequisite fails, do not offer or run either command, even if the developer asks, and don't promise them for after the fix. Report both as `not run (prerequisite failed: <which>)`. Step 5's report then names what the developer sets, and offers nothing more.
+
+Only when every prerequisite holds, open the offer with one plain sentence that says what you're offering, before any table or list, for example "The CLI, key, and Sandbox environment are set, so I can run two Sandbox reads next." Tell the developer each command sends a request to Sandbox, and run it only after they say yes; report `not run (declined)` otherwise.
 
 - **`doctor`:** `api` reachable is `passed`. `api` unreachable is blocking. Its `credentials` field says `present, not verified`, which is not verification.
 - **`accounts list`:** accounts returned is `passed`. A 401 or 403 is `failed`, which is blocking. For a platform, the result also shows whether at least two Sandbox accounts exist for the A/B fixture.

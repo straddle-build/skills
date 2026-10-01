@@ -50,7 +50,7 @@ End with the checklist below. Leave every box unchecked. The checklist is for th
 - [ ] The production notification endpoint is a webhook, FIFO, or polling endpoint, not API polling or Dashboard email.
 ```
 
-Then print the handoff, followed by one plain sentence that says the result and what comes next:
+Then print the handoff, followed by one or two short sentences: the result, then what comes next:
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-go-live","status":"<status>","report":"<one-paragraph summary with the blocking gaps>"}

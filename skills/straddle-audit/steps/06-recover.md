@@ -21,7 +21,7 @@ If the developer approves parallel fixes, each subagent or worktree gets the abs
 
 Do not commit unless the developer asks. Update `straddle-audit-report.md` with each finding's fix status and test result.
 
-Print the handoff, followed by one plain sentence that says what's fixed and what's left:
+Print the handoff, followed by one or two short sentences: what's fixed, then what's left:
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-audit","status":"<findings | clean>","report":"straddle-audit-report.md: <fixed findings, remaining findings, test result>"}

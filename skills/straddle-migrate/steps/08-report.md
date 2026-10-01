@@ -55,7 +55,7 @@ End with the checklist below. Leave every box unchecked. The checklist is for th
 - [ ] Tests ran, and their result is stated above.
 ```
 
-Then print the handoff, followed by one plain sentence that says what finished and what comes next:
+Then print the handoff, followed by one or two short sentences: what finished, then what comes next:
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-migrate","status":"<status>","report":"<one-paragraph summary>"}

@@ -31,7 +31,7 @@ The status is `ready_with_warnings` when nothing blocks but something is incompl
 
 ## Report
 
-Write the report to `straddle-setup.md` at the repository root, replacing an earlier one, and give the same report in your reply. Open the reply with two or three plain sentences in the [Straddle voice](../../straddle-best-practices/references/voice.md): whether the project is ready, the one thing that matters most, and what happens next. A blocking configuration failure keeps its exact wording in the report, and the sentences around it name what the developer sets and where. When the client doesn't allow the write, give the report in the reply and say `straddle-setup.md` wasn't written.
+Write the report to `straddle-setup.md` at the repository root, replacing an earlier one, and give the same report in your reply. Open the reply with two or three plain sentences in the [Straddle voice](../../straddle-best-practices/references/voice.md): whether the project is ready, the one thing that matters most, and what happens next. When step 3 found a blocking configuration failure, print its bold line from step 3 word for word on its own line right after those sentences, before any table, then "No Straddle API request was sent." For example: **Blocking configuration failure: no API key (`STRADDLE_API_KEY` is not set).** A table row or paraphrase never replaces that line. The sentences around it name what the developer sets and where. When the client doesn't allow the write, give the report in the reply and say `straddle-setup.md` wasn't written.
 
 The header block comes first, because the Straddle Wizard reads it. `Status` is `complete` when the classification above is `ready` or `ready_with_warnings`, and `blocked (<each blocking check>)` when it is `blocked`. The `API key present` line says `yes` or `no` and never holds a value.
 
@@ -72,7 +72,7 @@ Setup result: ready | ready_with_warnings | blocked
 ## Next actions
 ```
 
-Next actions are exact, non-destructive steps the developer can choose, such as `export STRADDLE_API_KEY` in their own shell or following the connect-mcp guide. For a platform, the next Integrate action is creating or reusing the two Sandbox accounts after its preview and approval. Setup does not do it.
+Next actions are exact, non-destructive steps the developer can choose, such as `export STRADDLE_API_KEY` in their own shell or following the connect-mcp guide. When the status is `blocked`, they name what the developer sets and where, then end with running Setup again: no network check or Straddle request is offered, not even for after the fix. For a platform, the next Integrate action is creating or reusing the two Sandbox accounts after its preview and approval. Setup does not do it.
 
 If the developer asked for Straddle operations rather than a readiness check, Setup runs none of them. List each requested operation under Next actions as work for [straddle-integrate](../../straddle-integrate/SKILL.md) once the blockers are fixed, and word the reply as [straddle-best-practices](../../straddle-best-practices/SKILL.md#when-a-rule-blocks-the-task) requires when a rule blocks the task.
 
@@ -87,7 +87,7 @@ End with:
 - [ ] Setup created or changed nothing except `straddle-setup.md`.
 ```
 
-Then print the handoff on one line, followed by one plain sentence that says the result and the next step, for example "Setup's done, so planning the integration with you is next." or "I need a Sandbox API key before I call Straddle, so I haven't sent any Straddle API request. Set `STRADDLE_API_KEY` in the shell you start your agent from, then run Setup again.":
+Then print the handoff on one line, followed by one or two short sentences: the result, then the next step, for example "Setup's done. Planning the integration with you is next." or "I need a Sandbox API key before I call Straddle, so I haven't sent any Straddle API request. Set `STRADDLE_API_KEY` in the shell you start your agent from, then run Setup again.":
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-setup","status":"<status>","report":"<one-paragraph summary of the table and blockers>"}
