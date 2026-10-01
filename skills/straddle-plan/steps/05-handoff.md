@@ -16,6 +16,7 @@ Tell the developer, briefly and in the [Straddle voice](../../straddle-best-prac
 - the files the approved implementation would change
 - the future Sandbox writes and their executing tools
 - unresolved decisions that block implementation
+- the decisions the interview recorded as an `assumption`, for the developer to confirm or change
 - the verification commands
 
 Show the integration shape and the files to change as two small visuals, following [show-me.md](../../straddle-best-practices/references/show-me.md): a Mermaid sequence of the flow and a `diff` file tree of the file-change table. Take both from the plan file as written, and add nothing it doesn't say.

@@ -11,7 +11,7 @@ A charge pulls money from a customer's bank account over ACH (`payment_rail` is 
 - `payment_date`: a US Eastern calendar date ([Payment dates](writes-and-approval.md#payment-dates)).
 - `consent_type`: `internet` or `signed` ([ach-timing-and-consent.md](ach-timing-and-consent.md)).
 - `device.ip_address`, `description`, and `external_id`, which must be unique across charges.
-- `config.balance_check`: `required`, `enabled`, or `disabled`.
+- `config.balance_check`: `enabled`, `required`, or `disabled`. Use `enabled`: Straddle checks the balance when it can, and when it can't, as for a paykey made from a routing and account number, the charge still goes out. `required` fails the charge when the balance can't be checked, so don't use it when paykeys come from routing and account numbers. Use `disabled` only for charges timed to land when the customer gets paid, such as on payday.
 
 Optional: `metadata` (up to 20 string pairs), `config.auto_hold` with `config.auto_hold_message`, and `config.sandbox_outcome` in Sandbox.
 

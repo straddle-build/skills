@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: straddle-plan-interview-writes-plan
+context:
+  scaffold_script: scaffold.sh

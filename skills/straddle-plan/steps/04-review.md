@@ -12,6 +12,10 @@ STRADDLE_PROGRESS {"skill":"straddle-plan","step":"04-review"}
 
 Read `straddle-integration-plan.md` from disk with the Read tool now, even if you just wrote it, and check that copy rather than your memory of it. Read nothing else. Fix every item that fails:
 
+- [ ] Every Decisions row has an answer and a source, and none is still `open`. Each `Unresolved` row is also under Unresolved decisions, and each `assumption` is still marked as one.
+- [ ] The plan uses each Glossary term the way the Glossary defines it. A refund is only the payout `refundCharge` creates, never a cancelled or reversed charge.
+- [ ] Lifecycle handling covers every status the notification path delivers for each resource in scope, including `reversed` after `paid`, and names the decision behind each row.
+- [ ] Each Sandbox scenario in Verification is a row of the Sandbox outcomes scenario matrix, and none expects a Sandbox payout, refund payouts included, to reach `paid`, `failed`, or `reversed`.
 - [ ] No planned write uses `execute-request` for customer, paykey, charge, or payout creation, a `DELETE`, an unmask, or paykey reveal.
 - [ ] Every planned operation is in the public API contract. Anything outside it, or with unclear contract or account scope, is removed and listed under unresolved decisions, with no SDK or CLI fallback.
 - [ ] No status is discovered by repeating `GET` on a charge, payout, or list endpoint, and `straddle tail` is not a notification path.

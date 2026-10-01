@@ -16,14 +16,26 @@ The business outcome, who uses it, and the Straddle products in scope.
 
 ## Decisions
 
-| Decision | Value | Source |
-| --- | --- | --- |
-| Integration type | direct (`account`) / SaaS / marketplace | developer / Setup |
-| Products | charges / payouts / both | |
-| Bank connection | Bridge widget / Plaid / Quiltt / bank details | |
-| SDK | TypeScript / Python / Ruby / C# / Go | |
-| Notification path | webhook endpoint / FIFO endpoint / polling endpoint | |
-| Customer-facing onboarding (platforms) | hosted iframe | |
+The interview's log, in the order asked, with questions numbered across rounds. Plan step 1 writes each row as it's settled and resumes from this table. A decision the repository or Setup settled has no question number.
+
+- Source: `developer`, `developer, accepted recommendation`, `assumption` (the developer didn't know, so this is Plan's recommendation until they confirm it), `Setup`, or the repository `file:line`.
+- Answer: the decision, `open (round N)` while it waits for the developer, or `Unresolved` when they left it undecided.
+
+| # | Decision | Answer | Source | Why |
+| --- | --- | --- | --- | --- |
+| | Integration type | direct (`account`) / SaaS / marketplace | | |
+| | Products | charges / payouts / both | | |
+| | Bank connection | Bridge widget / Plaid / Quiltt / bank details | | |
+| | SDK | TypeScript / Python / Ruby / C# / Go | | |
+| | Notification path | webhook endpoint / FIFO endpoint / polling endpoint | | |
+| | Customer-facing onboarding (platforms) | hosted iframe | | |
+| | Later rounds: review decisions, returns after `paid`, refunds and resubmits, identity mapping, duplicate events, reconciliation, and the rest of the design tree | | | |
+
+## Glossary
+
+Terms the interview settled, in Straddle's meaning where Straddle has one, with no implementation detail.
+
+- **Term**: what it is, in one or two sentences. _Avoid_: other words for it.
 
 ## Repository evidence
 
@@ -75,6 +87,22 @@ Numbered, using the installed SDK's method names with their source file. Remove 
 - Acknowledgement: `2xx` after one event is stored (webhook), after the whole batch commits (FIFO), or the polling consumer ID, offset storage, and commit:
 - Status transitions to record, including `paid` then `reversed` with `R01`, ordered by `changed_at` with delivery order breaking a tie (best-practices receiving-webhooks reference, Ordering status changes):
 
+## Lifecycle handling
+
+What the app does for each status its notification path delivers, from the Decisions log and the "What your app must handle" section of the named best-practices reference. Keep the rows for the resources in scope.
+
+| Resource | Status or event | What the app does | Decision | Reference |
+| --- | --- | --- | --- | --- |
+| Customer | `review`, `rejected` | | | `customers-identity.md` |
+| Paykey | `review`, `rejected`, `blocked` (R29) and the one-time unblock, `inactive` | | | `bridge-and-paykeys.md` |
+| Charge | `paid` | | | `charges.md` |
+| Charge | `failed`, and `reversed` after `paid` (R01, disputes) | | | `returns-and-disputes.md` |
+| Charge | `on_hold`, `cancelled` | | | `charges.md` |
+| Refund and resubmit | `refundCharge` payout, `resubmitCharge` | | | `refunds-and-resubmits.md` |
+| Payout | `paid`, `failed`, `reversed` | | | `payouts.md` |
+| Funding event | `charge_deposit`, `charge_reversal`, `payout_withdrawal`, `payout_return` | | | `funding-and-reconciliation.md` |
+| Account (platforms) | `onboarding`, `active`, `rejected` | | | `platforms.md` |
+
 ## Configuration
 
 - `STRADDLE_API_KEY` read from the process environment; a missing key or environment raises a configuration error before any request.
@@ -96,16 +124,22 @@ Each row runs later, in Integrate or Test, only after its own preview and approv
 
 ## Verification
 
-- Repository tests:
-- Sandbox success outcome:
-- Sandbox failure or return outcome (for `reversed_insufficient_funds`, with Test's timed funding sweep row):
+- Repository tests and the test command:
 - Retry with the same idempotency key:
-- Two-account proof:
+- Two-account proof (SaaS and marketplace):
 - Notification proof (one signed event received, duplicate ignored):
+- Payout handlers, refund payouts included (`paid`, `failed`, `reversed`): offline, fed recorded `payout.event.v1` payloads, because Sandbox payouts don't reach `paid` today.
+
+Sandbox scenarios: the rows of the scenario matrix in the best-practices `sandbox-outcomes.md` (What your app must handle) for each lifecycle this plan covers.
+
+| Scenario | Create with | Must observe through the notification path | Proves |
+| --- | --- | --- | --- |
+| Happy path | customer `verified`, paykey `active`, charge `paid` | `paid` | Fulfillment |
+| Return after paid | charge `reversed_insufficient_funds`, with Test's timed funding sweep row | `paid`, then `reversed` with R01 | Clawback after fulfillment |
 
 ## Unresolved decisions
 
-- None yet.
+- None yet. Each open item names Plan's recommended answer and whether it blocks implementation.
 
 ## Approval boundaries
 

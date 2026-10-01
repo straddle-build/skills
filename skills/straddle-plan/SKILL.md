@@ -1,6 +1,6 @@
 ---
 name: straddle-plan
-description: Write or refresh a source-backed straddle-integration-plan.md before any Straddle code change or sandbox resource creation. Use when a developer wants to plan, scope, or design a Straddle integration (Pay by Bank, charges, payouts, Bridge, paykeys, direct, SaaS, or marketplace platforms), asks which SDK, headers, notification path, or tests they need, or after straddle-setup reports ready. Plan asks for the integration type, SDK, and notification path instead of guessing, and only describes future writes.
+description: Write or refresh a source-backed straddle-integration-plan.md before any Straddle code change or sandbox resource creation. Use when a developer wants to plan, scope, or design a Straddle integration (Pay by Bank, charges, payouts, Bridge, paykeys, direct, SaaS, or marketplace platforms), asks which SDK, headers, notification path, or tests they need, or after straddle-setup reports ready. Plan interviews the developer in rounds, with a recommended answer for each question, records every decision in the plan, and only describes future writes.
 metadata:
   version: 0.1.0
 ---
@@ -17,12 +17,12 @@ Write developer-facing replies in the [Straddle voice](../straddle-best-practice
 
 - Plan writes only `straddle-integration-plan.md`, plus, in step 6 and only after the developer approves the plan, the plan's approval record and at most one companion view, `straddle-plan-visual.html`, at the repository root. It does not edit application code, install packages, or change configuration.
 - No remote writes. Plan never creates, deletes, unmasks, or reveals anything, and never runs a bootstrap. It may read the Docs MCP and the installed SDK source.
-- Plan asks for decisions it cannot read from the repository. It does not pick the integration type, SDK, or notification path for the developer.
+- Plan finds the facts in the repository, the installed SDK, and the references itself, and asks the developer only for decisions, each with a recommended answer. It does not pick the integration type, SDK, or notification path for the developer.
 - Do not read `.env*`, credential stores, or private keys.
 
 ## Steps
 
-1. [steps/01-decisions.md](steps/01-decisions.md): ask for integration type, products, SDK, notification path, and onboarding path.
+1. [steps/01-decisions.md](steps/01-decisions.md): interview the developer in rounds, as [references/interview.md](references/interview.md) (adapted from mattpocock/skills, MIT; notice in [references/third-party-licenses.md](references/third-party-licenses.md)) describes, recording each decision and settled term in the plan.
 2. [steps/02-sources.md](steps/02-sources.md): read the repository, the installed SDK source, and the current Straddle docs.
 3. [steps/03-write-plan.md](steps/03-write-plan.md): write the plan from [references/plan-template.md](references/plan-template.md).
 4. [steps/04-review.md](steps/04-review.md): check the plan file against the rules and fix it.
@@ -43,4 +43,4 @@ STRADDLE_HANDOFF {"skill":"straddle-plan","status":"draft","report":"<summary>"}
 
 `status` is `draft` when the plan is complete and awaits the developer's approval, or `blocked` when unresolved decisions stop implementation.
 
-Outside a Wizard program, `STRADDLE_HANDOFF` ends the planning turn. In a Wizard program it also stops for the developer's review, because the plan isn't approved yet. Step 6 continues on a later turn, only when the handoff was `draft` and the developer then explicitly approves the plan. It prints its own `STRADDLE_PROGRESS` marker and no second handoff.
+Outside a Wizard program, `STRADDLE_HANDOFF` ends the planning turn. In a Wizard program it also stops for the developer's review, because the plan isn't approved yet. Step 6 continues on a later turn, only when the handoff was `draft` and the developer then explicitly approves the plan. It prints its own `STRADDLE_PROGRESS` marker and no second handoff. Step 1's interview rounds end the turn too, with no handoff: step 1 continues when the developer answers.
