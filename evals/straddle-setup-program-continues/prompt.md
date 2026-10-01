@@ -7,7 +7,7 @@ allowed_tools: [Read, Glob, Grep, Skill, Write, Edit]
 ---
 Straddle Wizard program: straddle-setup → straddle-plan. Start at straddle-setup.
 
-Decisions for the plan: we're a direct integration (our own Straddle account, no platform), members pay their dues with Pay by Bank charges, bank connection through Bridge with bank account details in Sandbox, the TypeScript SDK that's already installed, and status arrives through a Straddle webhook endpoint. Don't send any Straddle API request today.
+Decisions for the plan: we're a direct integration (our own Straddle account, no platform), members pay their dues with Pay by Bank charges, bank connection through Bridge with bank account details in Sandbox, the TypeScript SDK that's already installed, and status arrives through a Straddle webhook endpoint. Take your recommended answers for anything else you'd ask, and write the plan. Don't send any Straddle API request today.
 
 I can't run shell commands here; this is what I ran locally:
 

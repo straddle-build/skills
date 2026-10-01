@@ -160,6 +160,8 @@ claude plugin eval . --no-publish --mocks record --runs 3 --ablation with-withou
 
 Pass no `--trust-plugin`, `--allow-real-servers` or `--allow-tools` grant unless the run owner approves it.
 
+The eval's OS sandbox lets a run read its own scratch directories, the plugin, and the directories on the runner's `PATH` outside the system ones, but not their parents. On the VM, Node is installed under `~/.local/node`, and `npm` is a symlink from `~/.local/node/bin` into `~/.local/node/lib`, so with only `~/.local/node/bin` on `PATH` every case's `npm test` fails with `npm: command not found` and its test evidence can't report counts (ME-916). Run the evals there with `export PATH="$HOME/.local/node/bin:$HOME/.local/node:$HOME/.local/bin:$PATH"`, which keeps `node` first and lets the sandbox read npm's `lib`.
+
 ### Eval history
 
 Each pass is recorded so the next one can be compared with it. Run the pass with `--output-dir`, then record it with the skills commit the pass ran from:

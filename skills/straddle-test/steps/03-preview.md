@@ -2,7 +2,7 @@
 
 - **Needs:** summaries from steps 1 and 2.
 - **Tools:** Read, including [show-me.md](../../straddle-best-practices/references/show-me.md); AskUserQuestion; Bash only for `straddle ... --dry-run --agent` and `--help`, and only when step 1 recorded **configured**, and for `date -u +%Y-%m-%dT%H:%M:%SZ` to record the approval time. No live request.
-- **Next:** [04-sandbox.md](04-sandbox.md) after an explicit yes. Otherwise [06-evidence.md](06-evidence.md).
+- **Next:** [04-sandbox.md](04-sandbox.md) after an explicit yes. Otherwise [05-verify.md](05-verify.md), then [06-evidence.md](06-evidence.md).
 
 Print:
 
@@ -25,6 +25,6 @@ Build and ask for approval exactly as in Integrate's [preview step](../../stradd
 
 Name the notification path each status will arrive through, and the wait limit of ten minutes.
 
-When the configuration is missing, the developer says no, or you are ending your turn to wait for an answer, send nothing. Record the Sandbox scenarios as `not run` with the reason (configuration error, denied, or awaiting approval of the preview above), print `STRADDLE_ABORT` when stopping for configuration or denial, and go to step 6 before ending the turn. A later explicit yes may continue at step 4 only if the exact preview and its environment, base URL, account, operation, and payload remain unchanged; otherwise show a new preview and obtain approval. Step 6 then updates the evidence.
+When the configuration is missing, the developer says no, or you are ending your turn to wait for an answer, send nothing. Record the Sandbox scenarios as `not run` with the reason (configuration error, denied, or awaiting approval of the preview above), print `STRADDLE_ABORT` when stopping for configuration or denial, and go to step 5, which still records discovery, then step 6 before ending the turn. A later explicit yes may continue at step 4 only if the exact preview and its environment, base URL, account, operation, and payload remain unchanged; otherwise show a new preview and obtain approval. Step 6 then updates the evidence.
 
 **Summary for step 4:** the approved rows exactly as shown, or why Sandbox scenarios will not run.
