@@ -41,7 +41,7 @@ It reads the CLI's configuration locally and sends no request. It covers both an
 | Output | Result |
 | --- | --- |
 | `authenticated: true` | Key present, `verified: false`. Report the source only as its category (`env:STRADDLE_API_KEY` or saved CLI credentials). Never copy the `config` path or any value. |
-| `authenticated: false`, or a non-zero exit with `no credentials configured` | **Blocking configuration failure: no API key.** |
+| `authenticated: false`, or a non-zero exit with `no credentials configured` | **Blocking configuration failure: no API key (`STRADDLE_API_KEY` is not set).** |
 
 ## Context: `straddle agent-context`
 
@@ -62,7 +62,7 @@ The environment is explicitly selected only when one of these holds:
 - `printenv STRADDLE_ENVIRONMENT` prints `sandbox`, or `printenv STRADDLE_BASE_URL` prints `https://sandbox.straddle.com` (an unset variable prints nothing and exits 1)
 - the developer confirms in this run that the target is Sandbox, and `runtime_context.environment` is `https://sandbox.straddle.com` (label it developer-confirmed)
 
-A resolved default with no confirmation is a **blocking configuration failure: environment not explicitly selected**. Any environment other than `https://sandbox.straddle.com` is blocking, because integration proofs run in Sandbox.
+A resolved default with no confirmation is a **blocking configuration failure: environment not explicitly selected (`STRADDLE_ENVIRONMENT` is not set)**. Any environment other than `https://sandbox.straddle.com` is blocking, because integration proofs run in Sandbox.
 
 ## Network checks
 
