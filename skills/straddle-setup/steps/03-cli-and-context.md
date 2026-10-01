@@ -62,7 +62,7 @@ The environment is explicitly selected only when one of these holds:
 - `printenv STRADDLE_ENVIRONMENT` prints `sandbox`, or `printenv STRADDLE_BASE_URL` prints `https://sandbox.straddle.com` (an unset variable prints nothing and exits 1)
 - the developer confirms in this run that the target is Sandbox, and `runtime_context.environment` is `https://sandbox.straddle.com` (label it developer-confirmed)
 
-A resolved default with no confirmation is a **blocking configuration failure: environment not explicitly selected (`STRADDLE_ENVIRONMENT` is not set)**. Any environment other than `https://sandbox.straddle.com` is blocking, because integration proofs run in Sandbox.
+A resolved default with no confirmation is a **Blocking configuration failure: environment not explicitly selected (`STRADDLE_ENVIRONMENT` is not set).** Any environment other than `https://sandbox.straddle.com` is blocking, because integration proofs run in Sandbox.
 
 ## Network checks
 

@@ -51,7 +51,7 @@ End with the checklist below. Leave every box unchecked. The checklist is for th
 - [ ] Nothing was installed, configured, or created.
 ```
 
-Then print the handoff on one line, followed by one plain sentence that names the next step:
+Then print the handoff on one line, followed by one or two short sentences: the result, then what's next:
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-get-started","status":"<status>","report":"<one-paragraph summary of the route and open questions>"}

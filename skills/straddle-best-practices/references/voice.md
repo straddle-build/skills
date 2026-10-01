@@ -31,7 +31,7 @@ Friendly framing goes around this text, never inside it. Don't soften, round, or
 
 ## Markers
 
-`STRADDLE_PROGRESS`, `STRADDLE_HANDOFF`, and `STRADDLE_ABORT` lines stay exactly as the skill shows them, one per line, machine-readable. Put one plain sentence for the developer on the line after each marker:
+`STRADDLE_PROGRESS`, `STRADDLE_HANDOFF`, and `STRADDLE_ABORT` lines stay exactly as the skill shows them, one per line, machine-readable. Progress and abort markers get one plain sentence after them; a handoff marker may be followed by two short sentences, the result then what's next:
 
 ```text
 STRADDLE_PROGRESS {"skill":"straddle-integrate","step":"03-code"}

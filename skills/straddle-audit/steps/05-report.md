@@ -50,7 +50,7 @@ End the report with the checklist below. Leave every box unchecked. The checklis
 - [ ] `git status` was checked in every worktree before any commit.
 ```
 
-Ask the developer which findings, if any, to fix. If none, print the handoff, followed by one plain sentence that says what's next:
+Ask the developer which findings, if any, to fix. If none, print the handoff, followed by one or two short sentences: the result, then what's next:
 
 ```text
 STRADDLE_HANDOFF {"skill":"straddle-audit","status":"<status>","report":"straddle-audit-report.md: <one-paragraph summary>"}
