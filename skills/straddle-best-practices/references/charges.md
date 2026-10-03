@@ -73,5 +73,5 @@ Balance checks: `required` fails the charge before submission when Straddle can'
 ## Events and Sandbox outcomes
 
 - `charge.created.v1` on create, and `charge.event.v1` on create and on every status change. Both carry the whole charge in `data` ([webhooks.md](webhooks.md)).
-- Funding: a paid charge lands in a `charge_deposit` funding event, and a reversal in a `charge_reversal` event ([funding-and-reconciliation.md](funding-and-reconciliation.md)).
+- Funding: See [funding-and-reconciliation.md](funding-and-reconciliation.md) for how charges and reversals appear in funding events.
 - Sandbox: set `config.sandbox_outcome` to drive each path. The observed status paths for all 13 outcomes are in [sandbox-outcomes.md](sandbox-outcomes.md).

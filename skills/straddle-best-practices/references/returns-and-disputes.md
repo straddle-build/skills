@@ -37,7 +37,7 @@ Consequences of a return:
 - **R29 blocks the paykey.** The paykey moves to `blocked` with `status_details.code` R29, and `unblock_eligible` is `true` if it has never been unblocked. You can unblock it once with `unblockPaykey` ([bridge-and-paykeys.md](bridge-and-paykeys.md)). Observed in Sandbox: the block landed two seconds after the charge failed. While it lasted, a new charge, a resubmit, and a refund payout on that paykey all failed within a second with `invalid_paykey`, `watchtower`, and code R29.
 - **Earlier returns block later payments.** Straddle's docs describe pre-origination blocks, with `reason` `payment_blocked`, for bank accounts that earlier returned R02, R03, R04, R16, or R20, or had unauthorized returns.
 - **Return rates are watched.** Nacha keeps each originator's debit returns, over the preceding 60 days, under 0.5 percent for unauthorized codes (R05, R07, R10, R29, R51), 3 percent for administrative codes (R02, R03, R04), and 15 percent overall.
-- **Money moves back.** A `reversed` charge's funds are withdrawn from your linked bank account in a `charge_reversal` funding event ([funding-and-reconciliation.md](funding-and-reconciliation.md)).
+- **Money moves back.** See [funding-and-reconciliation.md](funding-and-reconciliation.md) for how a reversed charge is funded.
 
 Proof of authorization answers a dispute or a Straddle review. Upload it with `uploadChargeAuthorizationProof` or `uploadPayoutAuthorizationProof` as multipart form data in the `File` field: PDF, PNG, JPEG, DOC, or DOCX, up to 10 MiB, with the content matching the extension. Each upload adds an entry to the payment's `documents` (`document_id`, `document_name`, `document_type` `payment_authorization`, `document_size`, `uploaded_at`) and never replaces one. The payment events carry the same `documents`.
 
@@ -53,7 +53,7 @@ Proof of authorization answers a dispute or a Straddle review. Upload it with `u
 
 - `charge.event.v1` and `payout.event.v1` carry `failed` and `reversed`, with `status_details.code`.
 - `paykey.event.v1` carries the R29 block and the unblock.
-- `funding_event.created.v1` and `funding_event.event.v1` carry the `charge_reversal`.
+- See [funding-and-reconciliation.md](funding-and-reconciliation.md) for funding event notifications and return paths.
 
 Sandbox outcomes that produce returns, observed in Sandbox on 2026-09-30 with charges ([sandbox-outcomes.md](sandbox-outcomes.md) has the full paths):
 
