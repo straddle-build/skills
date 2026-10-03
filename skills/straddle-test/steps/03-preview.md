@@ -10,7 +10,7 @@ Print:
 STRADDLE_PROGRESS {"skill":"straddle-test","step":"03-preview"}
 ```
 
-Show the flow the selected scenarios exercise as one small visual, following [show-me.md](../../straddle-best-practices/references/show-me.md), inline in your reply; write no file. For a SaaS or marketplace plan, it shows the requests as account A and account B and where the account header is sent or omitted, and for every plan, how each status arrives through the selected webhook, FIFO, or polling endpoint. Show it whether or not this run builds a preview, and add nothing the plan doesn't say.
+Show the flow the selected scenarios exercise as one small visual, following [show-me.md](../../straddle-best-practices/references/show-me.md), inline in your reply; write no file. For a SaaS or marketplace plan, it shows the requests as account A and account B and where the account header is sent or omitted, and for every plan, how each status arrives through the selected webhook, FIFO, or polling endpoint. It uses the preview table's row numbers, operations, accounts and values, or, when this run builds no preview, only what the plan says, and adds nothing else. Show it whether or not this run builds a preview.
 
 When no selected scenario needs a Sandbox write, go to step 5.
 
@@ -25,6 +25,8 @@ Build and ask for approval exactly as in Integrate's [preview step](../../stradd
 
 Name the notification path each status will arrive through, and the wait limit of ten minutes.
 
-When the configuration is missing, the developer says no, or you are ending your turn to wait for an answer, send nothing. Record the Sandbox scenarios as `not run` with the reason (configuration error, denied, or awaiting approval of the preview above), print `STRADDLE_ABORT` when stopping for configuration or denial, and go to step 5, which still records discovery, then step 6 before ending the turn. A later explicit yes may continue at step 4 only if the exact preview and its environment, base URL, account, operation, and payload remain unchanged; otherwise show a new preview and obtain approval. Step 6 then updates the evidence.
+The reply that asks for approval has the three parts Integrate's [Ask for approval](../../straddle-integrate/steps/04-preview.md#ask-for-approval) gives, in that order: the whole preview table with the notification path and the wait limit under it, this step's visual right after the table, then the approval question. When you end the turn to wait for the answer, that reply is step 6's closing reply: give all three parts there, after its opening sentences, even if you showed them earlier in the turn, and never point back to a preview above.
+
+When the configuration is missing, the developer says no, or you are ending your turn to wait for an answer, send nothing. Record the Sandbox scenarios as `not run` with the reason (configuration error, denied, or awaiting approval of the Sandbox preview), print `STRADDLE_ABORT` when stopping for configuration or denial, and go to step 5, which still records discovery, then step 6 before ending the turn. A later explicit yes may continue at step 4 only if the exact preview and its environment, base URL, account, operation, and payload remain unchanged; otherwise show a new preview and obtain approval. Step 6 then updates the evidence.
 
 **Summary for step 4:** the approved rows exactly as shown, or why Sandbox scenarios will not run.
