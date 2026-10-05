@@ -34,7 +34,7 @@ Test charge: <charge ID> | none
 - Target: Straddle Sandbox | offline synthetic localhost <base URL>: offline synthetic proof, not live Straddle Sandbox proof
 - SDK: <package> <version>. CLI: <version or not used>
 - Notification path: <webhook | FIFO | polling endpoint>, <what it receives with, from Endpoint types: verified deliveries, FIFO batches, or the polling consumer ID and committed offsets>, wait limit ten minutes
-- Sandbox write approval: one-time | standing (<client and where it saved the rule>) | none
+- Sandbox write approval: one-time (chat | native prompt, <client>) | standing (<client and where it saved the rule>) | none
 - Straddle API requests sent: <how many Sandbox writes and authenticated reads this run sent to the target above; 0 when it sent none>
 
 ### Offline checks

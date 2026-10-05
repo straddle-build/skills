@@ -25,10 +25,12 @@ Status: complete | partial (<reason>) | blocked (<reason>)
 Plan: straddle-integration-plan.md
 Plan hash: <64 hex characters> | none (plan not approved)
 Target: Straddle Sandbox | offline synthetic localhost <base URL>: offline synthetic proof, not live Straddle Sandbox proof
-Sandbox write approval: one-time | standing (<client and where it saved the rule>) | none
+Sandbox write approval: one-time (chat | native prompt, <client>) | standing (<client and where it saved the rule>) | none
 
 ## Changed files
 | File | Change, in one line | Plan row |
+
+(Include the manifest and lockfile the SDK install changed, with `SDK install` as the plan row.)
 
 ## Operations wired
 | Operation | Route (SDK method or CLI command) | Acting account (Straddle-Account-Id) | File |

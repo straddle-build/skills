@@ -7,7 +7,7 @@ STRADDLE_PROGRESS {"skill":"straddle-get-started","step":"01-begin"}
 ```
 
 - **Needs:** the developer's request.
-- **Tools:** Read. Bash only for the three configuration commands below, which send no Straddle request. No other shell commands, no MCP calls, no writes.
+- **Tools:** Read. Bash only for the three configuration commands below, which send no Straddle request. No other shell commands, including shell reads such as `cat`, `ls`, `find`, `grep`, or `head`: read files with Read. No MCP calls, no writes.
 - **Next:** [02-repository.md](02-repository.md), or the `blocked` handoff when the key or environment is missing.
 
 Read [straddle-best-practices](../../straddle-best-practices/SKILL.md) and keep its rules in force for the rest of the run.

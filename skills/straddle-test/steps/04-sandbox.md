@@ -10,7 +10,7 @@ Print:
 STRADDLE_PROGRESS {"skill":"straddle-test","step":"04-sandbox"}
 ```
 
-Check configuration again before the first request. When it is missing, send nothing and go to step 5, which still records discovery.
+Check configuration again before the first request. When it is missing, send nothing: print `STRADDLE_ABORT` naming the missing key or environment, record every approved Sandbox scenario as `not run: configuration error`, and go to step 5, which still records discovery.
 
 Execute the approved rows as in Integrate's [execute step](../../straddle-integrate/steps/05-execute.md): the same reuse, returned-ID chaining, same-key recovery for unknown results, and stop-on-failure rules. Prefer the developer's application code path for the primary charge, so the test exercises what ships.
 

@@ -7,7 +7,7 @@ STRADDLE_PROGRESS {"skill":"straddle-migrate","step":"01-begin"}
 ```
 
 - **Needs:** the developer's request.
-- **Tools:** Read. Bash only for the three configuration commands below, which send no Straddle request. No other shell commands, no writes.
+- **Tools:** Read. Bash only for the three configuration commands below, which send no Straddle request. No other shell commands, including shell reads such as `cat`, `ls`, `find`, `grep`, or `head`: read files with Read. No writes.
 - **Next:** [02-inventory.md](02-inventory.md), or the `blocked` handoff when the key or environment is missing.
 
 Read [straddle-best-practices](../../straddle-best-practices/SKILL.md) and keep its rules in force.
@@ -41,6 +41,6 @@ Restate the scope to the developer in two or three sentences: new Straddle code 
 
 If the request itself asks to move data (for example "import our Dwolla customers into Straddle", "copy the Plaid access tokens over", "backfill payment history"), decline that part now, explain that customer-data transfer is outside this skill, and offer the code migration instead. Continue only with the code migration, and record the declined part for the report.
 
-If `straddle-migration-plan.md` exists, read it. An approval recorded there is valid only if the plan has not changed since; treat any edit to the plan after approval as unapproved.
+If `straddle-migration-plan.md` exists, read it. A recorded approval is valid only when `- Plan state:` is `Approved` and step 5's hash command on the plan prints the `- Approval` line's sha256. That line may be recorded by straddle-migrate, with `rows <n>`, or by straddle-test, without it; both cover the whole authorized-modifications table, because the hash covers the whole plan. Treat any other approval line, or any edit to the plan after approval, as unapproved. Treat it as unapproved too when the plan has an entry under `## Blocked` or an `Unresolved` item that affects a listed file, even with a matching hash, because an approval never clears a blocker.
 
 **Summary for step 2:** key and environment present, requested provider, declined requests, existing plan and approval state.

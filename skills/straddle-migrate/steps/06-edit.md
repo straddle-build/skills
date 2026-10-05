@@ -1,7 +1,7 @@
 # Step 6: Edit
 
-- **Needs:** an approval recorded in the plan whose sha256 still matches the file, as step 5 records it.
-- **Tools:** Read, Write, Edit on files in the approved table only. Bash for `git status --porcelain` and step 5's approval hash command.
+- **Needs:** an approval recorded in the plan whose sha256 still matches the file, valid under [step 1](01-begin.md#scope): recorded by step 5, or by straddle-test.
+- **Tools:** Read, Write, Edit on files in the approved table only. Bash for `git status --porcelain` and step 5's approval hash command. Never write or edit a file through the shell, such as `cat >>`, `sed -i`, `tee`, or a `python3` script.
 - **Next:** [07-review.md](07-review.md).
 
 Print:

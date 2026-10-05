@@ -1,7 +1,7 @@
 # Step 3: Code
 
 - **Needs:** summaries from steps 1 and 2.
-- **Tools:** Read, Glob, Grep; Write and Edit only on files in the plan's file-change table; Bash only for the repository's own test, build, and lint commands and the SDK install step 2 allows. No Straddle request.
+- **Tools:** Read, Glob, Grep; Write and Edit only on files in the plan's file-change table; Bash only for the repository's own test, build, and lint commands and for installing the plan's SDK at its exact version with the repository's package manager. No Straddle request.
 - **Next:** [04-preview.md](04-preview.md).
 
 Print:
@@ -10,7 +10,7 @@ Print:
 STRADDLE_PROGRESS {"skill":"straddle-integrate","step":"03-code"}
 ```
 
-Make the approved changes in the repository's own style. Before each Write or Edit, confirm the path is in the approved list. Add to existing files with Edit, and never rewrite a whole existing file. Do not delete, rename, or reformat code the plan does not mention. When an unlisted file needs to change, stop and ask. Say which file and why, and continue only after the developer approves and the plan's table is updated.
+Make the approved changes in the repository's own style. Before each Write or Edit, confirm the path is in the approved list. Add to existing files with Edit, and never rewrite a whole existing file. Do not delete, rename, or reformat code the plan does not mention. When an unlisted file needs to change, stop and ask. Say which file and why, and continue only after the developer approves and the plan's table is updated. The manifest and lockfile the SDK install writes are not unlisted files: keep them exactly as the package manager left them, as [Approved files only](../SKILL.md) says.
 
 ## What the code must do
 

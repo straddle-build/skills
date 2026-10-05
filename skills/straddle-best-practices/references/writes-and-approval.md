@@ -40,6 +40,13 @@ Proceed only after an explicit yes. A changed environment, account, operation, o
 
 Ask for one-time approval: a yes covers this preview's calls and nothing later. When the client's own permission prompt for the command also offers a standing grant, such as Codex's "don't ask again for commands that start with …", which saves a rule in `~/.codex/rules/default.rules` for later sessions, ask the developer to approve once instead. Record which kind the writes ran under: `one-time`, or `standing` with the client and where it saved the rule.
 
+The client's native permission prompt can be the approval, so the developer answers once, only when it is exactly equivalent to the approval question. That means all of these hold:
+
+- The complete preview was shown first, and nothing in it has changed since: environment, base URL, acting account, operations, payloads, and literal idempotency keys.
+- The prompt shows the same Sandbox actions the preview lists, and the developer gives a one-time yes to it.
+
+Otherwise ask the approval question separately, even when the client also prompts. A generic "Allow this command" prompt that doesn't show those actions, such as one for a script that runs SDK calls, never stands in. Neither does a standing grant or an earlier allow rule. Never suppress, bypass, or pre-approve the client's own checks to save a question. Any change to the context or the payload needs a new approval. Record which surface gave the yes: `chat`, or `native prompt` with the client.
+
 ## Idempotency
 
 - Send an idempotency key on every create. The contract allows 10 to 40 characters. Derive it deterministically from the logical request: a retry of the same request reuses its key, and each distinct write, including each deliberate resubmit attempt, gets its own. Concatenating an operation name with a raw ID can exceed 40 characters. Use a short operation prefix plus a fixed-length hash of the request's identity instead, for example `chg-` plus the first 32 hex characters of SHA-256 of the charge's external ID. Never truncate a raw ID to fit, because truncated IDs can collide.
@@ -58,7 +65,7 @@ Ask for one-time approval: a yes covers this preview's calls and nothing later. 
 
 ## CLI writes
 
-- Run `--dry-run` first and show its output as the preview. The dry run does not print the idempotency key, so list it in the preview yourself.
+- Run `--dry-run` first and show its output as the preview. From CLI v1.0.4 the dry run prints the `Idempotency-Key` header it would send; check it matches the key in the preview. CLI v1.0.3 does not print it, so list the key in the preview yourself either way.
 - Pass `--idempotency-key <key>` on every create. It sends the `Idempotency-Key` header. `--idempotent` is not a substitute: it only treats an already-existing result as a no-op and sends no key. `--idempotency-key` first appears in CLI v1.0.3. If the installed CLI's `--help` for that create does not list it, do not run the create through the CLI; use the SDK's idempotency option instead.
 - Add `--agent` for JSON output and non-interactive mode.
 - Pass IDs from one response straight into the next command. Do not write tool JSON to temporary files or pipe it through `jq`.

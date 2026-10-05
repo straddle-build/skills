@@ -1,7 +1,7 @@
 # Straddle migration plan
 
 - Plan state: Draft | Approved | Blocked
-- Approval: none | date, "the developer's words", rows approved, recorded by straddle-migrate, sha256 of the plan (see [step 5](../steps/05-approval.md))
+- Approval: none | date, "the developer's words", rows approved, recorded by straddle-migrate, sha256 of the plan (see [step 5](../steps/05-approval.md)) | date, "the developer's words", recorded by straddle-test, sha256 of the plan
 
 Provider: `<provider>` (reference: `references/providers/<file>.md`)
 Integration model: `<direct / SaaS / marketplace / Unresolved>`

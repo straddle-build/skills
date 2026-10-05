@@ -115,7 +115,7 @@ What the app does for each status its notification path delivers, from the Decis
 
 ## Future Sandbox writes
 
-Each row runs later, in Integrate or Test, only after its own preview and approval. A charge or payout row takes the full token from the paykey create row's `data.paykey`. Add a `revealPaykey` or `getUnmaskedPaykey` row only for an existing paykey whose token the app didn't keep. It is one of the fourteen, so it names the SDK or CLI.
+Each row runs later, in Integrate or Test, only after its own preview and approval. Charge rows here are Integrate's. Test reuses the accounts, customers, and paykeys these rows create, by exact external ID, but makes its own charges with fresh external IDs and keys for every run, as Test's [preview step](../../straddle-test/steps/03-preview.md) says. A charge or payout row takes the full token from the paykey create row's `data.paykey`. Add a `revealPaykey` or `getUnmaskedPaykey` row only for an existing paykey whose token the app didn't keep. It is one of the fourteen, so it names the SDK or CLI.
 
 | Order | Operation | Executing tool | Account | External ID | Idempotency key source |
 | --- | --- | --- | --- | --- | --- |
