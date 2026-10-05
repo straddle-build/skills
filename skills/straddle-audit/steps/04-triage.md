@@ -26,4 +26,4 @@ Assign confidence:
 
 Write a concrete recovery for every confirmed finding: the code change, the test that would prove it, and, when data in Straddle is affected, the SDK or CLI operation the developer would run after their own preview and approval (for example look up the charge by exact external ID before any resubmit).
 
-**Summary for step 5:** confirmed findings with evidence, confidence, and recovery; dismissed hypotheses with reasons.
+**Summary for step 5:** confirmed findings with evidence, confidence, and recovery; unverifiable findings at low confidence with what would settle them; dismissed hypotheses with reasons. Dismiss a P check only when code shows the handling, never because nothing matched.

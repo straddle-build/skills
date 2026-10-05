@@ -54,3 +54,14 @@ Anti-patterns to flag in notification code. Each row is something the audit dete
 | C2 | Status or event-type strings not in the contract | Handler never matches, or matches the wrong state | Contract enums and `webhooks` | Use contract values |
 | C3 | `config.sandbox_outcome` outside tests | Sandbox control in a production path | Contract field description | Gate to tests |
 | C4 | Calls to operations absent from the public contract (for example CLI commands or paths annotated internal), through any route | Code depends on an operation outside the public contract | Public contract operation list | Stop and resolve against the public contract; replace with a public operation or remove the dependency with the developer's approval |
+
+## Product model
+
+Each row triages against the linked reference's States and transitions and What your app must handle sections. Don't copy their status lists here.
+
+| ID | Look for | Hypothesis | Triage against | Recovery |
+| --- | --- | --- | --- | --- |
+| P1 | Fulfillment or crediting on a charge's `paid` with no handler for a later `reversed` | A paid charge returned (R01, R02, or an unauthorized-debit dispute weeks later) leaves the order fulfilled or the balance credited | [charges](../../straddle-best-practices/references/charges.md#what-your-app-must-handle), [returns and disputes](../../straddle-best-practices/references/returns-and-disputes.md#what-your-app-must-handle) | Handle `reversed` after `paid` and undo what `paid` did |
+| P2 | Charge creation that never reads the paykey's status | Charges sent on a paykey in review, rejected, or blocked | [bridge and paykeys](../../straddle-best-practices/references/bridge-and-paykeys.md#what-your-app-must-handle) | Charge only an active paykey; project paykey status from events |
+| P3 | Refund or resubmit calls with no guard | Duplicate refunds, or a resubmit of a return that can't be resubmitted | [refunds and resubmits](../../straddle-best-practices/references/refunds-and-resubmits.md#what-your-app-must-handle) | Check the existing refund or resubmit and the return reason first; one idempotency key per attempt |
+| P4 | Payments marked settled with no funding-event reconciliation | Books disagree with the bank when a deposit nets reversals or a payment spans events | [funding and reconciliation](../../straddle-best-practices/references/funding-and-reconciliation.md#what-your-app-must-handle) | Reconcile each funding event's payments against its amount |

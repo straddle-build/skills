@@ -14,6 +14,8 @@ Work through every row of the code section of [../references/readiness-checklist
 
 Before judging SDK behavior, read the installed SDK in the dependency tree (lockfile version, then its resource and client source). Defaults such as the base URL and how the webhook helper verifies differ by SDK and version; judge the installed one, not memory.
 
+For the Lifecycle handlers row, take the covered resources from the plan read in step 1. Without a plan, use the resources the code creates and say so in the evidence. Record one result per resource, and list each covered status that has no handler.
+
 A row is `unproven` when the code does not show it either way. Do not mark it passed.
 
 **Summary for step 4:** the code rows with result and evidence.
