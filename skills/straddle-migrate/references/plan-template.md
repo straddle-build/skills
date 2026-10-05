@@ -36,6 +36,8 @@ Identity (Plaid Identity Verification and other KYC): the Straddle customer stat
 
 ## Returns, corrections, and retries
 
+For payment flows. An identity-only migration writes `None: no payment flow`, plus the customer create's idempotency key formula and its length.
+
 - Returns before `paid` (`failed`) and after `paid` (`reversed`): how the application reacts to each, keyed on the Straddle return code.
 - Notifications of change: what Straddle does with corrections (with the source), and what the application must still handle.
 - Retries: which return codes may be re-presented, and how: Straddle resubmit or a fresh create, each with its own idempotency key of 10 to 40 characters. For every create, resubmit, and retry key, give the concrete derivation and its length, prefix included, for example `pyo-` plus the first 32 hex characters of the SHA-256 of `payout:<run id>:<employee id>:<attempt>`, which is 36 characters. A key that embeds a raw, unbounded identifier, such as `payout:<run id>:<employee id>:attempt-<n>`, is not allowed.
@@ -43,12 +45,16 @@ Identity (Plaid Identity Verification and other KYC): the Straddle customer stat
 
 ## Consent
 
+For payment flows. An identity-only migration writes `None: no payment flow`.
+
 - Existing authorization wording and whose name it carries: `<quote or summary>`
 - Decision: re-authorize on the Straddle path | reuse existing authorizations | `Unresolved`
 - Decided by: `<person or role>`
 - `consent_type` per flow (`internet` or `signed`), and flows with no matching `consent_type` value (for example TEL).
 
 ## Bank accounts on the Straddle path
+
+For payment flows. An identity-only migration writes `None: no payment flow`.
 
 - New customers: link through `<Bridge widget / Plaid processor token with straddle / direct bank details>`.
 - Existing customers: re-link through Bridge when they move to the Straddle path. Using stored provider data (for example minting Straddle tokens from existing Plaid Items) is customer-data migration; this plan does not implement it.
@@ -62,7 +68,7 @@ The old provider handler stays for payments still on the provider.
 
 ## In-flight payments
 
-Payments already submitted, scheduled, or future-dated on `<provider>` finish there. Refunds and late returns for them keep flowing through `<provider>` (unauthorized returns can arrive up to 60 days later).
+For payment flows. Payments already submitted, scheduled, or future-dated on `<provider>` finish there. Refunds and late returns for them keep flowing through `<provider>` (unauthorized returns can arrive up to 60 days later). An identity-only migration writes `None: no payment flow`.
 
 ## Authorized modifications
 

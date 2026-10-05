@@ -19,11 +19,11 @@ Make the approved changes, one row at a time:
 - Put Straddle calls behind the approved switch. The existing provider path stays the default unless the plan says otherwise, and keeps working unchanged.
 - Read the API key and environment from the application's configuration and fail with a configuration error that names the missing value before any request. Do not rely on an SDK default environment.
 - Apply account scope for the chosen model through the SDK's own parameter. Send an idempotency key of 10 to 40 characters and a stable external ID on every create.
-- Implement the plan's status mapping as one explicit translation from Straddle payment statuses to the application's states, covering every Straddle status, with `failed` and `reversed` kept distinct and the return code carried through. Do not reuse the provider's status names for Straddle payments.
-- Implement return and correction handling as the plan states it. Do not assume the old provider's automatic corrections or account blocking carry over. Rely on Straddle behavior only where the plan cites a Straddle source for it.
-- Capture authorization on the Straddle path as the consent decision states, and send the matching `consent_type`.
+- Implement each status mapping table in the plan as one explicit translation for its resource. For payments: from Straddle payment statuses to the application's states, covering all nine, with `failed` and `reversed` kept distinct and the return code carried through. For identity: from Straddle customer statuses to the application's states, covering all five (`pending`, `review`, `verified`, `rejected`, `inactive`), including a `review` customer later decided `verified` or `rejected`. Do not reuse the provider's status names for Straddle resources, and never route a customer status through the payment translation.
+- For payment flows, implement return and correction handling as the plan states it. Do not assume the old provider's automatic corrections or account blocking carry over. Rely on Straddle behavior only where the plan cites a Straddle source for it.
+- For payment flows, capture authorization on the Straddle path as the consent decision states, and send the matching `consent_type`.
 - Implement the chosen notification path per [receiving-webhooks.md](../../straddle-best-practices/references/receiving-webhooks.md). Do not port a provider status-polling loop, report query, or return-file poller onto Straddle resource reads.
-- Add tests beside the existing ones for each new path, using the repository's test style and no real key. Status-mapping tests cover every mapping row, including `failed` vs `reversed`.
+- Add tests beside the existing ones for each new path, using the repository's test style and no real key. Status-mapping tests cover every row of each mapping table: for payments including `failed` vs `reversed`, and for identity fed recorded `customer.event.v1` payloads. An identity-only migration adds no payment tests.
 
 If a change turns out to need a file or kind of change not in the table, stop, update the plan, and return to step 5.
 

@@ -50,8 +50,8 @@ End with the checklist below. Leave every box unchecked. The checklist is for th
 - [ ] The Straddle path is off by default or switched exactly as the plan says.
 - [ ] Missing Straddle key or environment raises a configuration error in the new code.
 - [ ] No customer data, provider token, or key appears in code, tests, the plan, or this report.
-- [ ] Every provider status the code used maps to a Straddle status in the plan, and `failed` and `reversed` are handled separately.
-- [ ] The consent decision for Straddle-path customers is recorded, with who made it.
+- [ ] Every provider status the code used maps to a Straddle status of the same resource in the plan: payment statuses with `failed` and `reversed` handled separately, and customer statuses for identity.
+- [ ] For payment flows, the consent decision for Straddle-path customers is recorded, with who made it.
 - [ ] Tests ran, and their result is stated above.
 ```
 
