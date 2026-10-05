@@ -10,6 +10,8 @@ Print:
 STRADDLE_PROGRESS {"skill":"straddle-migrate","step":"04-plan"}
 ```
 
+When step 1 found a valid recorded approval, and steps 2 and 3 found nothing the plan doesn't already say (no new call site, file, answer, or `Unresolved` item, and no listed file changed since the plan), keep `straddle-migration-plan.md` byte for byte. Don't rewrite it, and go to step 5, which continues on that approval. Anything new means a refreshed plan, written as below, and the earlier approval no longer applies.
+
 Write `straddle-migration-plan.md` from [../references/plan-template.md](../references/plan-template.md). Replace every placeholder with evidence, a developer answer, or `Unresolved`. Write `- Plan state: Draft`, or `Blocked` when an `Unresolved` item affects a listed file, and `- Approval: none`: a new or refreshed plan carries no approval until step 5 records one.
 
 The **Authorized modifications** table is the contract for step 6. List every file to create or modify, one row each, with:
