@@ -33,16 +33,18 @@ The review is the evidence behind the status. `getCustomerReview` returns `custo
 - `identity_details.breakdown`: one entry per check module (`email`, `phone`, `address`, `fraud`, `synthetic`, and for businesses `business_identification`, `business_validation`, and `business_evaluation`). Each has a `decision`, `risk_score` (higher means more likely fraud), `correlation_score` (higher means the details match known records more strongly), `correlation` (`low_confidence`, `potential_match`, `likely_match`, or `high_confidence`), and `codes`.
 - `identity_details.messages`: the text for each reason code in the `codes` lists.
 - `identity_details.watch_list`: `decision`, `codes`, `matched` (the list names), and `matches`, each with `list_name`, `match_fields`, `urls`, and `correlation`.
-- `identity_details.network_alerts`: consortium `alerts`. `identity_details.reputation`: a `risk_score` and `insights`. `identity_details.kyc`: per-field `validations`, when KYC ran.
+- `identity_details.network_alerts`: `decision`, `codes`, and consortium `alerts`. `identity_details.reputation`: `decision`, `codes`, a `risk_score`, and `insights`. `identity_details.kyc`: per-field `validations`, when KYC ran.
+
+The overall `decision` can be `review` or `reject` while every `breakdown` module says `accept`, because `reputation`, `network_alerts`, and `watch_list` each have their own `decision`. Observed in Sandbox on 2026-10-02: on every forced-review customer, all breakdown modules accepted, and the `review` came from `reputation`, with R-codes such as R1022, R1027, and R1046 explained in `messages`.
 
 Decide a review with `setCustomerVerificationDecision` and `status` `verified` or `rejected`. The customer's current `status` must be `review`. Observed in Sandbox: a decision on a `verified` customer returned `422` "Customers with status Verified cannot be changed." `refreshCustomerReview` starts a new review, which runs asynchronously and reports through events. Straddle's docs say an update to identity fields can also start a new verification and change the status.
 
-Identity reason codes (I-codes, and R-codes from the reputation check such as R1022) are not ACH return codes. Don't mix them up with the R-codes in [returns-and-disputes.md](returns-and-disputes.md).
+Identity codes are not ACH return codes. R-codes from identity checks, such as R1022 from the reputation check, are reasons, and I-codes are insights. Don't mix either up with the R-codes in [returns-and-disputes.md](returns-and-disputes.md).
 
 ## What your app must handle
 
 - Wait for `verified` before you create paykeys or payments for the customer. Straddle's docs say payments for a customer or paykey under review can be held with `risk_review`. The wait governs every alternative you suggest too: no bank link or paykey and no payment of any size, such as a capped first payment, until the customer is `verified`.
-- Decide who reviews. If your team decides, build a queue for `review` customers that shows the module decisions, scores, `codes` with their `messages`, and watchlist matches, and records who decided and why before calling `setCustomerVerificationDecision`, which works only while the customer's `status` is `review` (above).
+- Decide who reviews. If your team decides, build a queue for `review` customers. Show the reason from each check whose `decision` isn't `accept`, including `reputation`, `network_alerts`, and `watch_list`, not only the breakdown modules: its R-codes with their `messages` text, and watchlist matches. Show module decisions and scores as context. I-codes are insights, not reasons, so don't list them as why the customer is in review. Record who decided and why before calling `setCustomerVerificationDecision`, which works only while the customer's `status` is `review` (above).
 - On `rejected`, don't create paykeys or payments, and show the customer a neutral message, never the scores or codes.
 - For businesses, collect the KYB fields and representatives up front, and expect more modules in the breakdown.
 - Keep PII server-side: send `dob`, `ssn`, and `ein` from your backend, never log them, and don't store them unless you must. Use unmasked reads only when a person needs them, and keep their output out of logs.

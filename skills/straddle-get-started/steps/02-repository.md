@@ -1,7 +1,7 @@
 # Step 2: Repository facts
 
 - **Needs:** step 1 summary.
-- **Tools:** Read, Glob, Grep. No shell commands, no writes. Never open `.env*`, private keys, credential stores, or CLI config files, even when a glob matches them.
+- **Tools:** Read, Glob, Grep. No shell commands, including shell reads such as `cat`, `ls`, `find`, `grep`, or `head`: use Read, Glob, and Grep. No writes. Never open `.env*`, private keys, credential stores, or CLI config files, even when a glob matches them.
 - **Next:** [03-choices.md](03-choices.md).
 
 Print:

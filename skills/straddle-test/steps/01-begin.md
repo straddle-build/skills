@@ -1,7 +1,7 @@
 # Step 1: Begin
 
 - **Needs:** the developer's request, the approved plan (`straddle-integration-plan.md`, or `straddle-migration-plan.md` for a migration), and the Integrate report (`straddle-integration-report.md`) or Migrate report (`straddle-migration-report.md`) when one exists.
-- **Tools:** Read, Glob, Grep; Bash only for the offline configuration checks and the plan approval hash in Integrate's [step 1](../../straddle-integrate/steps/01-begin.md), `straddle --version`, `straddle auth status --agent`, and reading the dispute scenario's bank account number from `/dev/urandom`. Edit only for the chosen plan's two approval lines, as the [Which plan](#which-plan) section says. No other writes, and no command that can reach Straddle, including `straddle doctor`.
+- **Tools:** Read, Glob, Grep; Bash only for the offline configuration checks and the plan approval hash in Integrate's [step 1](../../straddle-integrate/steps/01-begin.md), `straddle --version`, `straddle auth status --agent`, and reading the run ID and the dispute scenario's bank account number from `/dev/urandom`. Edit only for the chosen plan's two approval lines, as the [Which plan](#which-plan) section says. No other writes, and no command that can reach Straddle, including `straddle doctor`.
 - **Next:** [02-offline.md](02-offline.md).
 
 Print:
@@ -15,7 +15,7 @@ Read [straddle-best-practices](../../straddle-best-practices/SKILL.md) and the p
 ## Which plan
 
 - `straddle-integration-plan.md` is approved under Integrate's [step 1](../../straddle-integrate/steps/01-begin.md#recorded-approval) rules: its recorded approval matches the current file, or the developer approves the current plan in this conversation. A recorded approval from an earlier session counts, and a plan changed after its recorded approval is not approved until the developer approves it again. `straddle-migration-plan.md` is approved the same way: Migrate's [step 5](../../straddle-migrate/steps/05-approval.md) records `- Plan state: Approved` and an `- Approval` line whose sha256 must match the same command run on `straddle-migration-plan.md`, or the developer approves the current file in this conversation. A migration plan edited after its approval is not approved until the developer says so again. A draft plan, or one with no approval by either route, blocks Test as if there were no plan.
-- When the chosen plan has no valid recorded approval and the developer approves the current file in this conversation, in their own words, record it before step 2 the way Integrate's [Recorded approval](../../straddle-integrate/steps/01-begin.md#recorded-approval) does: set `- Plan state: Approved`, run the hash command on the chosen plan, and write `- Approval: <YYYY-MM-DD>, "<the developer's words>", recorded by straddle-test, sha256 <hash>`. Change nothing else in the plan. The Straddle Wizard counts Test's run only for the plan's recorded hash, so an approval that isn't recorded leaves Test unfinished.
+- When the chosen plan has no valid recorded approval and the developer approves the current file in this conversation, in their own words, record it before step 2 the way Integrate's [Recorded approval](../../straddle-integrate/steps/01-begin.md#recorded-approval) does: set `- Plan state: Approved`, run the hash command on the chosen plan, and write `- Approval: <YYYY-MM-DD>, "<the developer's words>", recorded by straddle-test, sha256 <hash>`. Change nothing else in the plan. Never accept or record an approval of either plan whose state is `Blocked`, or that has an `Unresolved` item affecting a file it lists or a write it plans. This holds even when a recorded approval's hash matches, because an approval never clears a blocker. The plan stays unapproved and blocks Test as above, and the handoff names the items and sends the developer to Plan or Migrate. The Straddle Wizard counts Test's run only for the plan's recorded hash, so an approval that isn't recorded leaves Test unfinished.
 - In a session the Straddle Wizard reopened, an approval of either plan in this conversation counts, and is recorded, only when the developer gives it after the reopen message. Before that message, only the recorded approval counts, as [Reopened sessions](../../straddle-best-practices/references/wizard-program.md#reopened-sessions) says.
 - When only one plan file exists, that is the plan.
 - When both exist, use the one the developer or the handoff named: a request that mentions the migration, the Migrate report, or `straddle-migration-plan.md` selects the migration plan, and one that mentions Integrate or `straddle-integration-plan.md` selects the integration plan. When neither is named and only one is approved and lists the Straddle code under test, use that one. Otherwise ask the developer which plan to test against, and do not choose.
@@ -24,6 +24,10 @@ Read [straddle-best-practices](../../straddle-best-practices/SKILL.md) and the p
 - Keep the hash the command prints for the chosen plan as this run's plan hash, for step 6. When the plan isn't approved, the plan hash is `none (plan not approved)`.
 
 Run the offline configuration checks from Integrate's step 1 and record **configured** or **configuration error** for each route, with exactly what is missing. Never print or read a credential value. The non-secret `STRADDLE_ENVIRONMENT` and `STRADDLE_BASE_URL` values may be shown, as Integrate's step 1 does, and the target is recorded as `Straddle Sandbox` or `offline synthetic localhost <base URL>`.
+
+## Run ID
+
+Make this run's ID first, before the plan check above, so a blocked run has one too, with `LC_ALL=C tr -dc a-z0-9 < /dev/urandom | head -c 10`. Never make one up or derive it from the time, because two runs can start in the same second. Step 3 namespaces this run's external IDs with it, and step 6 writes it as `Latest run` and the run's section heading. Keep it for the whole run, including a later yes that continues this run's unchanged preview, so retries reuse the same external IDs and idempotency keys. A new Test run makes a new ID.
 
 ## Select scenarios
 
@@ -46,4 +50,4 @@ The dispute and R29 block scenario creates its paykey from its own bank account 
 
 A webhook receiver is not required: a polling endpoint is a complete notification path.
 
-**Summary for step 2:** the chosen plan and its plan hash, plan decisions, configuration result, acting accounts A and B, the selected scenarios, and the dispute scenario's own bank account number when that scenario is selected.
+**Summary for step 2:** the run ID, the chosen plan and its plan hash, plan decisions, configuration result, acting accounts A and B, the selected scenarios, and the dispute scenario's own bank account number when that scenario is selected.

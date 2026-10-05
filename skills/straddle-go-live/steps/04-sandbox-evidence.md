@@ -16,4 +16,6 @@ Say how you know each result. "No test files found" by reading the repository is
 
 Go Live does not run Sandbox writes to fill a gap. A missing proof is `unproven`, and the report sends the developer to straddle-test.
 
+A Bridge widget row Test recorded `not run: needs the widget completed in a browser` is an `unproven` gap: name it in the report, even when Test passed.
+
 **Summary for step 5:** the Sandbox rows with result and evidence.

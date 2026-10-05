@@ -34,7 +34,7 @@ Test charge: <charge ID> | none
 - Target: Straddle Sandbox | offline synthetic localhost <base URL>: offline synthetic proof, not live Straddle Sandbox proof
 - SDK: <package> <version>. CLI: <version or not used>
 - Notification path: <webhook | FIFO | polling endpoint>, <what it receives with, from Endpoint types: verified deliveries, FIFO batches, or the polling consumer ID and committed offsets>, wait limit ten minutes
-- Sandbox write approval: one-time | standing (<client and where it saved the rule>) | none
+- Sandbox write approval: one-time (chat | native prompt, <client>) | standing (<client and where it saved the rule>) | none
 - Straddle API requests sent: <how many Sandbox writes and authenticated reads this run sent to the target above; 0 when it sent none>
 
 ### Offline checks
@@ -64,7 +64,7 @@ Sanitize before writing:
 
 Give each check and scenario one evidence level: `configured` (settings or code exist, nothing exercised them), `offline-tested` (a test in this run exercised it with the network stubbed), `synthetic` (a mock, a synthetic upstream, or a delivery you signed yourself), `live-observed` (Straddle Sandbox returned or delivered it in this run), or `not verified`. Only `live-observed` rows are evidence of Straddle's behavior.
 
-For a paykey, the resources table records its ID and status, never the token.
+For a paykey, the resources table records its ID and status, never the token. The Sandbox scenarios table has one row per bank connection method in the plan, from its Bank connection methods table or, without one, its Decisions log's Bank connection answer, with its paykey ID and charge, or `not run` with the reason, and the handoff report names a skipped Bridge widget.
 
 Write "None" for empty sections. Do not describe a scenario that did not run as passed. For an offline synthetic target, the server-side resources section lists synthetic upstream records only, and notification and lifecycle scenarios such as `paid`, the `R01` return, or delivered events are `not run: offline synthetic target`.
 

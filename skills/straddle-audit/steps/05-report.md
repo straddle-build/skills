@@ -38,6 +38,8 @@ SDK: <package version, source path>   Contract: <version>   Model: <direct / Saa
 
 Order findings by impact: money movement and safety first, then account scope, notifications, SDK drift, contract drift.
 
+Unverifiable findings go in the findings table at low confidence. A report with any finding, unverifiable ones included, is not `clean`.
+
 End the report with the checklist below. Leave every box unchecked. The checklist is for the developer to tick after checking, not a record of what the skill verified.
 
 ```markdown

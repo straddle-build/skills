@@ -26,4 +26,4 @@ Assign confidence:
 
 Write a concrete recovery for every confirmed finding: the code change, the test that would prove it, and, when data in Straddle is affected, the SDK or CLI operation the developer would run after their own preview and approval (for example look up the charge by exact external ID before any resubmit).
 
-**Summary for step 5:** confirmed findings with evidence, confidence, and recovery; dismissed hypotheses with reasons.
+**Summary for step 5:** confirmed findings with evidence, confidence, and recovery; unverifiable findings at low confidence with what would settle them; dismissed hypotheses with reasons. Dismiss a P check only with cited evidence: code that shows the guard or handling, or the files where the app creates and handles payments, showing that the check's trigger doesn't exist there. Name the absent trigger: for P1, fulfillment or crediting on `paid`; for P2, a charge create; for P3, a refund or resubmit call; for P4, marking payments settled. A search that matched nothing isn't evidence by itself. A trigger the approved plan covers but the code doesn't implement yet is a gap, not a dismissal.

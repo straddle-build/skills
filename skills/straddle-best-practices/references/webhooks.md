@@ -41,8 +41,18 @@ Payload status lists differ from the REST ones. The webhook status list for char
 - Treat `data` as the resource's current state. Project it by `data.status_details.changed_at`, and never let an older change overwrite a newer one. An event without `changed_at`, such as the R29 paykey block events observed in Sandbox ([bridge-and-paykeys.md](bridge-and-paykeys.md#events-and-sandbox-outcomes)), is ordered by `data.updated_at` instead, never dropped.
 - Handle each resource's whole lifecycle, not only the happy path: a charge handler that knows only `paid` misses `failed`, `reversed`, `on_hold`, and `cancelled`.
 - Expect repeats: the same status under a new `event_id`, a create that arrives as both `.created.v1` and `.event.v1`, and redeliveries.
-- Look up your own record from `data.external_id` or the resource `id`, and ignore events for resources your app didn't create.
+- Look up your own record from `data.external_id` or the resource `id`, and ignore events for resources your app didn't create. Paykey events have no `external_id`: match them by `data.id` against the paykey `id` you stored, or by an approved `metadata` key unique per paykey. `customer_id` only confirms the owner, because a customer can have several paykeys.
 - Keep secrets out of logs: paykey events carry the full paykey token.
+
+## Reading from Straddle
+
+Events are the source of change. Keep a local projection of each resource from its events, and render pages, lists, and timer polls from that projection.
+
+- Never read one customer, paykey, review, or charge per row in a list render or a poll loop. Read from Straddle only when an event or a review decision says that resource changed, or when a safety TTL on the cached value runs out.
+- Clear a cached value on its resource's events and on your own review decisions, such as `setPaykeyVerificationDecision`, so the next read fetches it once.
+- When you must read many, use one list with filters: `listPaykeys` takes `customer_id`, and `listPayments` takes `customer_id`, `paykey_id`, and `external_id`.
+- A one-time read, such as reusing a resource by exact `external_id` or an independent check after a write, is fine. So is the polling endpoint, which is how you pull events ([notifications.md](notifications.md)).
+- Rate limits are in [errors-and-limits.md](errors-and-limits.md).
 
 ## Events and Sandbox outcomes
 
