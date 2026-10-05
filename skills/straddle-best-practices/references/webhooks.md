@@ -56,4 +56,4 @@ Events are the source of change. Keep a local projection of each resource from i
 
 ## Events and Sandbox outcomes
 
-Every `config.sandbox_outcome` in [sandbox-outcomes.md](sandbox-outcomes.md) produces the events for its path, so a Sandbox run can drive each handler. Payouts are the exception: Sandbox payouts never reach `paid` ([payouts.md](payouts.md#events-and-sandbox-outcomes)), so test those handlers with recorded payloads.
+Every `config.sandbox_outcome` in [sandbox-outcomes.md](sandbox-outcomes.md) produces the events for its path, so a Sandbox run can drive each handler. Payouts are the exception: Sandbox payouts haven't been observed reaching `paid` ([payouts.md](payouts.md#events-and-sandbox-outcomes)), so test those handlers with recorded payloads.

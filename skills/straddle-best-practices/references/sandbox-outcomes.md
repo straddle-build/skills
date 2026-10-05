@@ -44,7 +44,7 @@ Charges and payouts, with `config.sandbox_outcome` on the create. Times are from
 | `reversed_customer_dispute` | Same, with `disputed`, `customer_dispute`, and R05. | Stayed `pending`. | A dispute after `paid`. |
 | `reversed_not_authorized` | Same, with `disputed`, `customer_dispute`, and R29. | Stayed `pending`. | A dispute after `paid`. |
 
-Every charge path above logged `pending` three times (sent, posted, received), and failures and reversals kept the full `status_history`. Payouts never left `pending` (ME-896, [payouts.md](payouts.md#events-and-sandbox-outcomes)). A resubmit or refund can't carry a `sandbox_outcome`: its `config.sandbox_outcome` is `standard` ([refunds-and-resubmits.md](refunds-and-resubmits.md#events-and-sandbox-outcomes)).
+Every charge path above logged `pending` three times (sent, posted, received), and failures and reversals kept the full `status_history`. In the ME-896 runs, payouts didn't leave `pending` ([payouts.md](payouts.md#events-and-sandbox-outcomes)). A resubmit or refund can't carry a `sandbox_outcome`: its `config.sandbox_outcome` is `standard` ([refunds-and-resubmits.md](refunds-and-resubmits.md#events-and-sandbox-outcomes)).
 
 ### Funding and account simulations
 

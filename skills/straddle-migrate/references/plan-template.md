@@ -91,6 +91,6 @@ Customer records, bank accounts, provider tokens, mandates and authorizations, a
 - Test command: `<command>`
 - New tests: `<paths>`
 - Status-mapping tests cover every row of each status mapping table: for payments, including `failed` vs `reversed`; for identity, each customer status the app reacts to, fed recorded `customer.event.v1` payloads.
-- Sandbox proof: run straddle-test after review. Payments use charge `sandbox_outcome` values for `paid`, `failed_*`, and `reversed_*`. Sandbox payouts don't reach `paid` today, so payout `paid`, `failed`, and `reversed` handling is covered by the offline tests with recorded event payloads. Identity uses customer `sandbox_outcome` values `verified`, `review`, and `rejected`. An identity-only migration needs no payment tests or charge scenarios.
+- Sandbox proof: run straddle-test after review. Payments use charge `sandbox_outcome` values for `paid`, `failed_*`, and `reversed_*`. Sandbox payouts haven't been observed reaching `paid`, so payout `paid`, `failed`, and `reversed` handling is covered by the offline tests with recorded event payloads. Identity uses customer `sandbox_outcome` values `verified`, `review`, and `rejected`. An identity-only migration needs no payment tests or charge scenarios.
 
 ## Unresolved
