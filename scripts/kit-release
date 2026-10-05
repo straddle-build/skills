@@ -391,12 +391,17 @@ def instructions(plugin, archive_name, archive_sha, content_sha256, skill_count,
                       "Cursor's copy is not checked against SHA256SUMS or plugin.content_sha256. Validate checks the "
                       "installed version metadata, the skill count and the MCP server names, not file contents.",
                       "Saving STRADDLE_API_KEY in Configure and an authenticated straddle-api call have not been "
-                      "exercised in Cursor."],
+                      "exercised in Cursor.",
+                      "On 2026-10-05 a marketplace imported only in the Cursor team dashboard did not appear in the "
+                      "IDE catalog within 3 minutes. Importing the same repository from the IDE showed it at once, "
+                      "without a second dashboard marketplace. So the install imports from the IDE. Cursor's plugin "
+                      "docs describe Dashboard -> Plugins & MCPs -> Add Marketplace -> Import from Repo, and on "
+                      "Enterprise plans only admins can add team marketplaces."],
             "candidate": "not available from a local archive: Cursor imports a team marketplace from a GitHub "
                          "repository's default branch",
             "release": {
-                "install": [f"Import https://github.com/{inputs['plugin_repository']} as a team marketplace, in the "
-                            "Cursor team dashboard or in the Cursor IDE.",
+                "install": [f"In the Cursor IDE, open Add Marketplace, choose Import from GitHub, enter "
+                            f"https://github.com/{inputs['plugin_repository']}, set Scope to Team and press Import.",
                             "In the Cursor IDE, add the Straddle plugin from that marketplace.",
                             "Open the Straddle plugin's Configure and enter your Straddle API key for "
                             "STRADDLE_API_KEY. Cursor doesn't ask for it when you add the plugin."],

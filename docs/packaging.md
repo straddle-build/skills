@@ -53,7 +53,7 @@ The validator requires the `mcp.json` header, the Codex manifest's servers, and 
 | -- | -- |
 | Claude Code | `claude plugin marketplace add straddle-build/skills`, then `claude plugin install straddle@straddle` |
 | Codex | `codex plugin marketplace add straddle-build/skills`, then `codex plugin add straddle@straddle` |
-| Cursor | Import `https://github.com/straddle-build/skills` as a team marketplace. Cursor serves the default branch. |
+| Cursor | In the Cursor IDE, Add Marketplace > Import from GitHub, `https://github.com/straddle-build/skills`, Scope Team. Cursor serves the default branch. On 2026-10-05 a marketplace imported only in the team dashboard did not appear in the IDE catalog within 3 minutes, and importing the same repository from the IDE showed it at once, so import from the IDE. Cursor's plugin docs (`cursor.com/docs/plugins`, "Add a team marketplace") describe the dashboard import, and on Enterprise plans only admins can add team marketplaces. |
 
 `npx skills add straddle-build/skills` installs the skills only. It doesn't install the manifests or MCP servers, so it isn't evidence that the plugin works. `scripts/validate-package` checks the skill files that both distribution paths ship, including each skill's `references/`.
 
