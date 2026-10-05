@@ -388,20 +388,25 @@ def instructions(plugin, archive_name, archive_sha, content_sha256, skill_count,
             "notes": ["Cursor serves a team marketplace from the repository's default branch. Its import takes only "
                       "the owner/repo URL and has no tag, branch or version control, so it can't select or pin tag "
                       f"{tag}.",
-                      "Cursor's copy is not checked against SHA256SUMS or plugin.content_sha256; validate checks the "
-                      "listed version and contents only."],
+                      "Cursor's copy is not checked against SHA256SUMS or plugin.content_sha256. Validate checks the "
+                      "installed version metadata, the skill count and the MCP server names, not file contents.",
+                      "Saving STRADDLE_API_KEY in Configure and an authenticated straddle-api call have not been "
+                      "exercised in Cursor."],
             "candidate": "not available from a local archive: Cursor imports a team marketplace from a GitHub "
                          "repository's default branch",
             "release": {
-                "install": [f"In the Cursor dashboard, import https://github.com/{inputs['plugin_repository']} as a "
-                            "team marketplace, then add the Straddle plugin.",
+                "install": [f"Import https://github.com/{inputs['plugin_repository']} as a team marketplace, in the "
+                            "Cursor team dashboard or in the Cursor IDE.",
+                            "In the Cursor IDE, add the Straddle plugin from that marketplace.",
                             "Open the Straddle plugin's Configure and enter your Straddle API key for "
                             "STRADDLE_API_KEY. Cursor doesn't ask for it when you add the plugin."],
                 "update": ["Refresh the team marketplace, or keep its Auto Refresh on, so Cursor reads the "
                            "repository's default branch again."],
                 "remove": ["Uninstall the Straddle plugin, then remove the team marketplace."],
-                "validate": [f"Cursor lists Straddle {version} with {skill_count} straddle-* skills and the "
-                             "straddle-api and straddle-docs MCP servers."],
+                "validate": [f"Check that the installed copy's .cursor-plugin/plugin.json, under "
+                             f"~/.cursor/plugins/cache/, has version {version}.",
+                             f"Check that Cursor shows {skill_count} straddle-* skills and the straddle-api and "
+                             "straddle-docs MCP servers for the Straddle plugin."],
             },
         },
     }
