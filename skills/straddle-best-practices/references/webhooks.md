@@ -44,6 +44,16 @@ Payload status lists differ from the REST ones. The webhook status list for char
 - Look up your own record from `data.external_id` or the resource `id`, and ignore events for resources your app didn't create.
 - Keep secrets out of logs: paykey events carry the full paykey token.
 
+## Reading from Straddle
+
+Events are the source of change. Keep a local projection of each resource from its events, and render pages, lists, and timer polls from that projection.
+
+- Never read one customer, paykey, review, or charge per row in a list render or a poll loop. Read from Straddle only when an event or a review decision says that resource changed, or when a safety TTL on the cached value runs out.
+- Clear a cached value on its resource's events and on your own review decisions, such as `setPaykeyVerificationDecision`, so the next read fetches it once.
+- When you must read many, use one list with filters: `listPaykeys` takes `customer_id`, and `listPayments` takes `customer_id`, `paykey_id`, and `external_id`.
+- A one-time read, such as reusing a resource by exact `external_id` or an independent check after a write, is fine. So is the polling endpoint, which is how you pull events ([notifications.md](notifications.md)).
+- Rate limits are in [errors-and-limits.md](errors-and-limits.md).
+
 ## Events and Sandbox outcomes
 
 Every `config.sandbox_outcome` in [sandbox-outcomes.md](sandbox-outcomes.md) produces the events for its path, so a Sandbox run can drive each handler. Payouts are the exception: Sandbox payouts never reach `paid` ([payouts.md](payouts.md#events-and-sandbox-outcomes)), so test those handlers with recorded payloads.

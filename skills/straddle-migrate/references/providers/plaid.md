@@ -1,11 +1,11 @@
 # Plaid
 
-Two different integrations hide behind "Plaid": **Auth/Link with a processor** (Plaid links the account, another company moves money) and **Plaid Transfer** (Plaid moves money). Establish which one the code uses first.
+Three integrations hide behind "Plaid": **Auth/Link with a processor** (Plaid links the account, another company moves money), **Plaid Transfer** (Plaid moves money), and **Plaid Identity Verification** (Plaid verifies the person). Establish which ones the code uses first. Transfer and Identity Verification are what Migrate moves. Link with processor tokens only is a bank connection decision in Plan: keep Plaid tokens with `createPlaidPaykey`, or move Link to the Bridge widget. When `straddle-integration-plan.md` already settles it, take that answer.
 
 ## Find it
 
 - Packages: npm `plaid`, `react-plaid-link`; PyPI `plaid-python`; gem `plaid`; Go `github.com/plaid/plaid-go/vNN/plaid`; Maven `com.plaid:plaid-java`. No official NuGet package was found.
-- Strings: `linkTokenCreate`, `itemPublicTokenExchange`, `processorTokenCreate`, `authGet`, `transferAuthorizationCreate`, `transferCreate`, `transferEventSync`, `TRANSFER_EVENTS_UPDATE`, `Plaid-Verification`, `PLAID_CLIENT_ID`, `PLAID_SECRET`, `PLAID_ENV`, `cdn.plaid.com/link`.
+- Strings: `linkTokenCreate`, `itemPublicTokenExchange`, `processorTokenCreate`, `authGet`, `transferAuthorizationCreate`, `transferCreate`, `transferIntentCreate`, `transferRecurringCreate`, `bankTransferCreate`, `transferEventSync`, `TRANSFER_EVENTS_UPDATE`, `identityVerificationCreate`, `identityVerificationGet`, `/identity_verification/`, a Link token whose `products` include `identity_verification`, `Plaid-Verification`, `PLAID_CLIENT_ID`, `PLAID_SECRET`, `PLAID_ENV`, `cdn.plaid.com/link`.
 
 ## Auth/Link with a processor
 
@@ -37,6 +37,19 @@ Status mapping ([reading transfers](https://plaid.com/docs/api/products/transfer
 
 Plaid allows at most two retries, only for R01 and R09, marked with "Retry 1" and "Retry 2" descriptions; R10 can't be resubmitted. That convention does not port: on Straddle, a retry creates a new Straddle charge, either through resubmit (`POST /v1/charges/{id}/resubmit`, which copies a failed, reversed, or cancelled charge and takes an idempotency key) or a fresh create. The Plaid Transfer docs reviewed describe no NOC object.
 
+## Plaid Identity Verification
+
+Straddle verifies identity when the app creates a customer, so a Plaid verification session becomes a customer create and its review ([customers-identity.md](../../../straddle-best-practices/references/customers-identity.md)).
+
+| Plaid Identity Verification | Straddle |
+| --- | --- |
+| `/identity_verification/create`, or a Link token with `identity_verification` | customer create with `name`, `type`, `email`, `phone`, and `device`, plus `compliance_profile` for the regulated checks |
+| session `success` | customer `verified` |
+| `failed` | customer `rejected` |
+| `pending_review` | customer `review`, decided by the team that owns customer review, with `getCustomerReview` for the evidence |
+
+Confirm the mapping with the developer in step 3. Plaid's document and selfie steps have no Straddle equivalent in API contract 1.0.4; record any the app relies on as Unresolved.
+
 ## Consent
 
 Without Plaid's Transfer UI, the merchant already collects and keeps NACHA proof of authorization for at least two years. Whether that authorization must be re-collected for Straddle is a compliance decision; default proposal is a new authorization on the Straddle path.
@@ -47,7 +60,7 @@ Without Plaid's Transfer UI, the merchant already collects and keeps NACHA proof
 
 ## Never moves
 
-Access tokens, link and public tokens, other processors' tokens, raw numbers and tokenized account numbers, and Plaid transfer, event, and sweep history. Refunds and late returns on Plaid Transfer payments stay on Plaid.
+Access tokens, link and public tokens, other processors' tokens, raw numbers and tokenized account numbers, Plaid transfer, event, and sweep history, and Plaid Identity Verification sessions and documents. Refunds and late returns on Plaid Transfer payments stay on Plaid. No bulk backfill of Straddle customers from stored identity data: each user gets a Straddle customer when they first use the Straddle path.
 
 ## Pitfalls
 

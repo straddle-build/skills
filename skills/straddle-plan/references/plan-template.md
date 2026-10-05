@@ -25,7 +25,9 @@ The interview's log, in the order asked, with questions numbered across rounds. 
 | --- | --- | --- | --- | --- |
 | | Integration type | direct (`account`) / SaaS / marketplace | | |
 | | Products | charges / payouts / both | | |
-| | Bank connection | Bridge widget / Plaid / Quiltt / bank details | | |
+| | Bank connection | one or more of Bridge widget / Plaid / Quiltt / bank details, primary first; the Bank connection methods table has a row for each | | |
+| | Your identifiers | `external_id` and `metadata` keys per create | | |
+| | Read strategy | local projection from events, cache cleared by events and review decisions, safety TTL | | |
 | | SDK | TypeScript / Python / Ruby / C# / Go | | |
 | | Notification path | webhook endpoint / FIFO endpoint / polling endpoint | | |
 | | Customer-facing onboarding (platforms) | hosted iframe | | |
@@ -45,12 +47,36 @@ Terms the interview settled, in Straddle's meaning where Straddle has one, with 
 - Entry points where Straddle calls belong:
 - Existing tests to extend:
 
+## Bank connection methods
+
+One row per method the Bank connection decision chose, in its order: 1 is the primary, each later number a fallback. Delete the rows it didn't choose. Integrate wires every row, and Test runs a Sandbox paykey for each.
+
+| Order | Method | When the app uses it | Create operation | Paykey token |
+| --- | --- | --- | --- | --- |
+| | Bridge widget | | `createBridgeToken`, then the customer completes the widget in the browser | from the widget's paykey, stored encrypted |
+| | Bank account details | | `createBankAccountPaykey` | `data.paykey` from the create, stored encrypted; `revealPaykey` only to recover one the app didn't keep |
+| | Plaid processor token | | `createPlaidPaykey` | `data.paykey` from the create, stored encrypted; `revealPaykey` only to recover one the app didn't keep |
+| | Quiltt token | | `createQuilttPaykey` | `data.paykey` from the create, stored encrypted |
+
+## Identifiers and reads
+
+| Create | `external_id` | `metadata` keys |
+| --- | --- | --- |
+| `createCustomer` | | |
+| `createBridgeToken` | | none: the create doesn't accept `metadata` |
+| paykey create, per method | | |
+| `createCharge` | | |
+| `createPayout` | | |
+
+- Read strategy, from the Decisions log: which views read the local projection, which events and review decisions clear the cache, and the safety TTL.
+- Logs or activity view: the stored IDs each trace joins, following [The object chain](../../straddle-best-practices/references/bridge-and-paykeys.md#the-object-chain).
+
 ## Application flow
 
 Numbered, using the installed SDK's method names with their source file. Remove steps that do not apply.
 
 1. Create or reuse the customer by external ID.
-2. Connect a bank account through Bridge. The create returns the paykey `id` and the full token in `paykey`. Store the token encrypted, and never record it in this plan.
+2. Connect a bank account through the method the Bank connection methods table gives for this customer. A paykey create returns the paykey `id` and the full token in `paykey`. For the Bridge widget, `createBridgeToken` returns only a `bridge_token` for the widget, and the paykey comes from the customer completing the widget. Store the token encrypted, and never record it in this plan.
 3. Create the charge or payout with that token in `paykey`, plus consent, payment date, external ID, and idempotency key.
 4. Receive status changes through the chosen notification path.
 5. Reconcile from delivered events.

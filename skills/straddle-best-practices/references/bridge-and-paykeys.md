@@ -21,6 +21,27 @@ The three paykey creates run only through the SDK or CLI after approval ([writes
 
 **The token.** A payment's `paykey` field takes the full token, not the paykey `id`. A paykey create returns the full token in `data.paykey`: use that value for the charge or payout that follows, and store it encrypted. Get and list responses mask it. `revealPaykey` and `getUnmaskedPaykey` recover the token of an existing paykey whose token your app didn't keep: both run only through the SDK or CLI after approval, and `getUnmaskedPaykey`, which also unmasks the bank details, needs Straddle to enable unmasking for the account (`allow_data_unmask`). The `paykey.created.v1` and `paykey.event.v1` payloads carry the full token too. Treat it as a secret: store it encrypted, and never log it or send it to a browser. [Idempotency](writes-and-approval.md#idempotency) has the handling rules.
 
+**More than one method.** An app can offer several of these paths, for example Plaid first and bank account details as the fallback. Each is its own create with its own `source`, and every paykey belongs to the same customer, so the rest of the flow doesn't change. A customer who connected through Plaid Link with a Plaid processor token keeps that path with `createPlaidPaykey`; moving Link itself to the Bridge widget is the other option. Plaid Transfer and Plaid Identity Verification are a migration, not a bank connection ([straddle-migrate](../../straddle-migrate/references/providers/plaid.md)).
+
+## The object chain
+
+Each pay-by-bank flow is one chain. The Bridge session and each paykey carry the customer's `customer_id`, and a charge or payout carries the paykey token, not its `id`:
+
+| Step | Operation | Links to the step before by | Accepts `external_id` | Accepts `metadata` |
+| --- | --- | --- | --- | --- |
+| Customer | `createCustomer` | nothing | yes | yes |
+| Bridge session | `createBridgeToken` | `customer_id` | yes | no |
+| Paykey | `createBankAccountPaykey`, `createPlaidPaykey`, `createQuilttPaykey` | `customer_id` | yes | yes |
+| Charge | `createCharge` | `paykey` (the token) | yes | yes |
+| Payout | `createPayout` | `paykey` (the token) | yes | yes |
+| Events | `customer.event.v1`, `paykey.event.v1`, `charge.event.v1`, `payout.event.v1` | the resource `id` in `data` | | |
+
+The yes and no come from each create's request schema in API contract 1.0.4. `createBridgeToken` takes no `metadata`, and the contract doesn't say whether its `external_id` reaches the paykey the widget makes, so don't assume it does.
+
+- **Your identifiers.** Put your own ID in `external_id` on every create that accepts it, and your other keys, such as an order ID or app user ID, in `metadata` where accepted. Events carry them back in `data`, so a handler finds your record without a lookup.
+- **Correlate by the chain, not by your order ID.** Store each returned `id` with your record: customer `id` on the user, paykey `id` on the bank account, charge `id` on the order. A per-order trace or support view joins those stored IDs; it doesn't send your order ID through every route.
+- **Request logs.** Log the operation, the returned `id`, `status`, and the HTTP status code. The paykey token isn't its `id`: log the paykey `id`, never `paykey`, and keep the token encrypted.
+
 ## States and transitions
 
 `status` is `pending`, `active`, `review`, `rejected`, `blocked`, or `inactive`. Only `active` paykeys can be used for payments.
