@@ -230,7 +230,7 @@ clients:
     observed: "2026-10-05: isolated candidate 0.1.1 install, validation and removal, and published 0.1.0-to-candidate 0.1.1 upgrade, passed on source 23a5d4ef5cb8b940579509b39d05ceaeabadbb37; archive sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b. Both MCP URLs and STRADDLE_API_KEY bearer variable validated; no model session or Straddle request; not published 0.1.1 release-channel acceptance"
   cursor:
     observed_version: "3.22.12"
-    observed: "2026-10-05, isolated desktop profile, pre-tag candidate (not published 0.1.1 release-channel acceptance). In separate runs the Cursor IDE imported https://github.com/straddle-build/skills as a team marketplace. Every import resolved the default branch at source f2d9656194612b4c15fdcbf881d884b93d5245c9, including an import of a /tree/v0.1.0 URL; the IDE import and marketplace edit offer no ref control. Install listed straddle 0.1.1 with 9 skills and straddle-api/straddle-docs, and a fresh reinstall after removal also succeeded. The Straddle API key variable field appeared under Configure after install, not at Add; no value was entered or saved. With the existing Local 0.1.0 plugin temporarily removed, the 0.1.1 plugin registered plugin-straddle-straddle-api and plugin-straddle-straddle-docs, and after reload both ran MCP initialization and tool discovery (straddle-api 4 tools) with no key and no tool call. Each run ended with uninstall and marketplace removal, and Local 0.1.0 and the plugin and MCP configuration files were restored with identical per-file sha256. Not restored: Cursor's own built-in skills sync and small ~/.cursor file rewrites, and the Straddle MCP transports were left connected where they had been idle-suspended. Update was not exercised. The Cursor web dashboard procedure was not verified because it needs a team-admin sign-in. No business API request"
+    observed: "2026-10-05, isolated desktop profile, pre-tag candidate (not published 0.1.1 release-channel acceptance). In separate runs the Cursor IDE imported https://github.com/straddle-build/skills as a team marketplace. Every import resolved the default branch at source f2d9656194612b4c15fdcbf881d884b93d5245c9, including an import of a /tree/v0.1.0 URL; the IDE import and marketplace edit offer no ref control. Install listed straddle 0.1.1 with 9 skills and straddle-api/straddle-docs, and a fresh reinstall after removal also succeeded. The Straddle API key variable field appeared under Configure after install, not at Add; no value was entered or saved. With the existing Local 0.1.0 plugin temporarily removed, the 0.1.1 plugin registered plugin-straddle-straddle-api and plugin-straddle-straddle-docs, and after reload both ran MCP initialization and tool discovery (straddle-api 4 tools) with no key and no tool call. Each run ended with uninstall and marketplace removal, and Local 0.1.0 and the plugin and MCP configuration files were restored with identical per-file sha256. Not restored: Cursor's own built-in skills sync and small ~/.cursor file rewrites, and the Straddle MCP transports were left connected where they had been idle-suspended. The Cursor web dashboard was inspected after a team-admin sign-in: Import from Repo takes only a repository URL and rejected https://github.com/straddle-build/skills/tree/v0.1.0 as an invalid URL format; the owner/repo import used the default branch, and its settings offer Refresh and Auto Refresh but no ref, tag or branch control; that marketplace was then deleted, returning the dashboard to no connected marketplace. The supported Cursor update is a refresh of the default branch. A 0.1.0-to-0.1.1 update was not exercised, because main is already 0.1.1. No business API request"
 instructions:
   wizard:
     candidate: null
@@ -479,13 +479,16 @@ instructions:
         )
   cursor:
     manual: true
-    candidate: "not available: Cursor imports a team marketplace from a GitHub repository, not a local archive"
+    notes:
+      - "Cursor serves a team marketplace from the repository's default branch. Its import takes only the owner/repo URL and has no tag, branch or version control, so it can't select or pin tag v0.1.1."
+      - "Cursor's copy is not checked against SHA256SUMS or plugin.content_sha256; validate checks the listed version and contents only."
+    candidate: "not available from a local archive: Cursor imports a team marketplace from a GitHub repository's default branch"
     release:
       install:
-        - "In the Cursor dashboard, import https://github.com/straddle-build/skills at v0.1.1 as a team marketplace, then install the Straddle plugin."
-        - "Enter your Straddle API key when Cursor prompts for STRADDLE_API_KEY."
+        - "In the Cursor dashboard, import https://github.com/straddle-build/skills as a team marketplace, then add the Straddle plugin."
+        - "Open the Straddle plugin's Configure and enter your Straddle API key for STRADDLE_API_KEY. Cursor doesn't ask for it when you add the plugin."
       update:
-        - "Point the team marketplace at the new tag and update the Straddle plugin."
+        - "Refresh the team marketplace, or keep its Auto Refresh on, so Cursor reads the repository's default branch again."
       remove:
         - "Uninstall the Straddle plugin, then remove the team marketplace."
       validate:
