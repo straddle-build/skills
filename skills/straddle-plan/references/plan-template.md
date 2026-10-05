@@ -53,7 +53,7 @@ One row per method the Bank connection decision chose, in its order: 1 is the pr
 
 | Order | Method | When the app uses it | Create operation | Paykey token |
 | --- | --- | --- | --- | --- |
-| | Bridge widget | | `createBridgeToken`, then the customer completes the widget in the browser | from the widget's paykey, stored encrypted |
+| | Bridge widget | | `createBridgeToken`, then the customer completes the widget in the browser | the full token the app receives for the widget's paykey, stored encrypted; `revealPaykey` only to recover one the app didn't keep. A masked `paykey` from a list or get never goes into a payment |
 | | Bank account details | | `createBankAccountPaykey` | `data.paykey` from the create, stored encrypted; `revealPaykey` only to recover one the app didn't keep |
 | | Plaid processor token | | `createPlaidPaykey` | `data.paykey` from the create, stored encrypted; `revealPaykey` only to recover one the app didn't keep |
 | | Quiltt token | | `createQuilttPaykey` | `data.paykey` from the create, stored encrypted |

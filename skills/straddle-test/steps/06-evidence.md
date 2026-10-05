@@ -64,7 +64,7 @@ Sanitize before writing:
 
 Give each check and scenario one evidence level: `configured` (settings or code exist, nothing exercised them), `offline-tested` (a test in this run exercised it with the network stubbed), `synthetic` (a mock, a synthetic upstream, or a delivery you signed yourself), `live-observed` (Straddle Sandbox returned or delivered it in this run), or `not verified`. Only `live-observed` rows are evidence of Straddle's behavior.
 
-For a paykey, the resources table records its ID and status, never the token. The Sandbox scenarios table has one row per bank connection method in the plan, with its paykey ID and charge, or `not run` with the reason, and the handoff report names a skipped Bridge widget.
+For a paykey, the resources table records its ID and status, never the token. The Sandbox scenarios table has one row per bank connection method in the plan, from its Bank connection methods table or, without one, its Decisions log's Bank connection answer, with its paykey ID and charge, or `not run` with the reason, and the handoff report names a skipped Bridge widget.
 
 Write "None" for empty sections. Do not describe a scenario that did not run as passed. For an offline synthetic target, the server-side resources section lists synthetic upstream records only, and notification and lifecycle scenarios such as `paid`, the `R01` return, or delivered events are `not run: offline synthetic target`.
 

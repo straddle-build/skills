@@ -22,9 +22,16 @@ Switch: `<flag or setting name, default>`
 
 ## Status mapping
 
-Every provider status the application stores or reacts to, mapped to a Straddle payment status (`created`, `scheduled`, `validating`, `pending`, `on_hold`, `paid`, `failed`, `cancelled`, `reversed`) and to the application's own state.
+Every provider status the application stores or reacts to, mapped to a Straddle status of the same kind of resource and to the application's own state. Keep one table per resource, and delete a table the migration doesn't use.
 
-| Provider status or event | Straddle status | Application state | Where handled |
+Payments (Transfer and other money movement): the Straddle payment status (`created`, `scheduled`, `validating`, `pending`, `on_hold`, `paid`, `failed`, `cancelled`, `reversed`).
+
+| Provider status or event | Straddle payment status | Application state | Where handled |
+| --- | --- | --- | --- |
+
+Identity (Plaid Identity Verification and other KYC): the Straddle customer status (`pending`, `review`, `verified`, `rejected`, `inactive`). Never map an identity status to a payment status.
+
+| Provider status or event | Straddle customer status | Application state | Where handled |
 | --- | --- | --- | --- |
 
 ## Returns, corrections, and retries
@@ -77,7 +84,7 @@ Customer records, bank accounts, provider tokens, mandates and authorizations, a
 
 - Test command: `<command>`
 - New tests: `<paths>`
-- Status-mapping tests cover every row of the status mapping, including `failed` vs `reversed`.
-- Sandbox proof: run straddle-test after review, using charge `sandbox_outcome` values for `paid`, `failed_*`, and `reversed_*`. Sandbox payouts don't reach `paid` today, so payout `paid`, `failed`, and `reversed` handling is covered by the offline tests with recorded event payloads.
+- Status-mapping tests cover every row of each status mapping table: for payments, including `failed` vs `reversed`; for identity, each customer status the app reacts to, fed recorded `customer.event.v1` payloads.
+- Sandbox proof: run straddle-test after review. Payments use charge `sandbox_outcome` values for `paid`, `failed_*`, and `reversed_*`. Sandbox payouts don't reach `paid` today, so payout `paid`, `failed`, and `reversed` handling is covered by the offline tests with recorded event payloads. Identity uses customer `sandbox_outcome` values `verified`, `review`, and `rejected`. An identity-only migration needs no payment tests or charge scenarios.
 
 ## Unresolved

@@ -44,8 +44,12 @@ The client's native permission prompt can be the approval, so the developer answ
 
 - The complete preview was shown first, and nothing in it has changed since: environment, base URL, acting account, operations, payloads, and literal idempotency keys.
 - The prompt shows the same Sandbox actions the preview lists, and the developer gives a one-time yes to it.
+- One prompt covers every row of the preview, before any row runs.
+- You know the client intercepts this exact command for a fresh one-time decision before any request is sent, and that no standing allow rule covers it. Don't read or change the client's settings to find out: when you can't tell, treat it as unknown and ask in chat.
 
-Otherwise ask the approval question separately, even when the client also prompts. A generic "Allow this command" prompt that doesn't show those actions, such as one for a script that runs SDK calls, never stands in. Neither does a standing grant or an earlier allow rule. Never suppress, bypass, or pre-approve the client's own checks to save a question. Any change to the context or the payload needs a new approval. Record which surface gave the yes: `chat`, or `native prompt` with the client.
+Never run a write hoping a permission prompt will appear. Otherwise, including when the rows would need more than one native prompt, ask the approval question in chat once for the whole preview before any row runs. The client may still prompt for each command after that; those prompts are its own checks, not the approval. A no to one of them stops that row and every row after it. Report the rows that already ran as sent, because a later no doesn't undo them. A no or an unknown answer to the approval question sends zero requests.
+
+A generic "Allow this command" prompt that doesn't show those actions, such as one for a script that runs SDK calls, never stands in. Neither does a standing grant or an earlier allow rule. Never suppress, bypass, or pre-approve the client's own checks to save a question. Any change to the context or the payload needs a new approval. Record which surface gave the yes: `chat`, or `native prompt` with the client.
 
 ## Idempotency
 
