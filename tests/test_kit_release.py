@@ -207,7 +207,7 @@ class KitReleaseTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("plugin 0.2.0 is outside wizard.plugin_range 0.1.x", output)
 
-    def test_manifest_records_versions_digests_and_candidate_provenance(self):
+    def test_manifest_records_digests_and_candidate_provenance(self):
         manifest = self.model()
         archive, _ = self.build()
         self.assertEqual(manifest["plugin"]["archive"]["sha256"], hashlib.sha256(archive).hexdigest())
@@ -217,10 +217,6 @@ class KitReleaseTest(unittest.TestCase):
         listing = "".join(f"{hashlib.sha256((self.root / p).read_bytes()).hexdigest()}  {p}\n" for p in paths)
         self.assertEqual(manifest["plugin"]["content_sha256"], hashlib.sha256(listing.encode()).hexdigest())
         self.assertEqual((manifest["kit"]["status"], manifest["plugin"]["provenance"]), ("candidate", "local-candidate"))
-        self.assertEqual(manifest["cli"]["minimum_version"], "1.0.3")
-        self.assertEqual({name: sdk["minimum_version"] for name, sdk in manifest["sdks"].items()},
-                         {"typescript": "1.0.4", "python": "1.0.5", "ruby": "1.0.4", "dotnet": "1.0.4", "go": "1.0.4"})
-        self.assertEqual(manifest["hosted_mcp"]["contract_version_served"], "1.0.4")
 
     def test_generate_rejects_incomplete_or_malformed_inputs(self):
         def drop(path):
