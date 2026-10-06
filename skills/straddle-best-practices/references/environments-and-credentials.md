@@ -15,6 +15,7 @@ The hosted API MCP installation is named `production` inside Scalar. That name s
 
 - Application code, the SDKs, and the CLI read the key from the process environment as `STRADDLE_API_KEY`. The plugin's API MCP declaration reads the same variable from the environment the client starts from, as described in [tools.md](tools.md). It never holds the key itself.
 - Never open, print, copy, or summarize `.env*` files, credential stores, private keys, or the CLI's config files. Report whether a key is present, never its value. This covers commands and code you suggest to the developer too: do not propose `cat`, `awk`, `grep`, `dotenv`, or similar against a `.env*` file to inspect a key, even to print only its length or format. Use `straddle auth status --agent` for presence and the dashboard for the key's environment.
+- A key check you run or suggest against the running process's `STRADDLE_API_KEY` reports only whether it is set, its length, and whether it has leading or trailing whitespace or a newline. It never prints any part of the key, such as a prefix, a suffix, or a slice.
 - Never echo a key, include it in a log, plan, test fixture, commit, or chat message, or ship it in a browser bundle. Browser code talks to your server, and your server talks to Straddle.
 - Do not export a key saved in the CLI to another tool.
 

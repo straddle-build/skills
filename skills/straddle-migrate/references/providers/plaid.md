@@ -1,6 +1,6 @@
 # Plaid
 
-Three integrations hide behind "Plaid": **Auth/Link with a processor** (Plaid links the account, another company moves money), **Plaid Transfer** (Plaid moves money), and **Plaid Identity Verification** (Plaid verifies the person). Establish which ones the code uses first. Transfer and Identity Verification are what Migrate moves. Link with processor tokens only is a bank connection decision in Plan: keep Plaid tokens with `createPlaidPaykey`, or move Link to the Bridge widget. When `straddle-integration-plan.md` already settles it, take that answer.
+Three integrations hide behind "Plaid": **Auth/Link with a processor** (Plaid links the account, another company moves money), **Plaid Transfer** (Plaid moves money), and **Plaid Identity Verification** (Plaid verifies the person). Establish which ones the code uses first. Transfer and Identity Verification are what Migrate moves. For an existing Plaid Link app, the plan names both new-link options: keep Plaid Link and request a `straddle` processor token, which Straddle turns into a paykey through `POST /v1/bridge/plaid` (`createPlaidPaykey`), or move Link to the Bridge widget. Moving bank linking to Straddle covers both. Record the developer's choice, the answer an approved `straddle-integration-plan.md` already gives, or `Unresolved`.
 
 ## Find it
 
