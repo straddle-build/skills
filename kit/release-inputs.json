@@ -1,6 +1,6 @@
 {
   "kit": {
-    "status": "candidate"
+    "status": "release"
   },
   "plugin_repository": "straddle-build/skills",
   "plugin_release": {
@@ -242,15 +242,15 @@
     },
     "cursor": {
       "observed_version": "3.22.12",
-      "observed": "2026-10-05: isolated desktop profile visibly lists an existing Local Straddle 0.1.0 plugin with 9 skills and straddle-api/straddle-docs. Team-marketplace install/update/remove and the STRADDLE_API_KEY prompt remain unobserved; no shared team configuration changed"
+      "observed": "2026-10-05, isolated desktop profile, pre-tag candidate (not published 0.1.1 release-channel acceptance). In separate runs the Cursor IDE imported https://github.com/straddle-build/skills as a team marketplace. Every import resolved the default branch at source f2d9656194612b4c15fdcbf881d884b93d5245c9, including an import of a /tree/v0.1.0 URL; the IDE import and marketplace edit offer no ref control. Install listed straddle 0.1.1 with 9 skills and straddle-api/straddle-docs, and a fresh reinstall after removal also succeeded. The Straddle API key variable field appeared under Configure after install, not at Add; no value was entered or saved. With the existing Local 0.1.0 plugin temporarily removed, the 0.1.1 plugin registered plugin-straddle-straddle-api and plugin-straddle-straddle-docs, and after reload both ran MCP initialization and tool discovery (straddle-api 4 tools) with no key and no tool call. Each run ended with uninstall and marketplace removal, and Local 0.1.0 and the plugin and MCP configuration files were restored with identical per-file sha256. Not restored: Cursor's own built-in skills sync and small ~/.cursor file rewrites, and the Straddle MCP transports were left connected where they had been idle-suspended. The Cursor web dashboard was inspected after a team-admin sign-in: Import from Repo takes only a repository URL and rejected https://github.com/straddle-build/skills/tree/v0.1.0 as an invalid URL format; the owner/repo import succeeded with no ref control, and its settings offer Refresh and Auto Refresh but no ref, tag or branch control; that marketplace was then deleted, returning the dashboard to no connected marketplace. Update was exercised with a fixture repository, hello-keith/me810-cursor-fixture-20261005 (public, Actions disabled): its default branch was pushed at 6e7320dc81c7a7c20464a7aec7fe1e5496b0e9e0 (plugin 0.1.0), imported as a team marketplace and the plugin added, and Cursor installed straddle from that commit (plugin.json 0.1.0, 9 skills, both MCP servers; the detail view showed no version label) with the Straddle API key field under Configure, left empty. The default branch was then fast-forwarded to f2d9656194612b4c15fdcbf881d884b93d5245c9 (0.1.1). About a minute later, after the marketplace view was opened and before Refresh was pressed, Cursor installed straddle from f2d9656 (plugin.json 0.1.1, 9 skills) and removed the 0.1.0 copy, with Auto Refresh on and no re-add or reconfiguration. The plugin was then uninstalled and the marketplace removed, and Local 0.1.0 was restored with identical per-file sha256. Deleting the fixture repository is pending with its owner. No business API request"
     }
   },
   "gates": [
     {
       "id": "walkthrough-approval",
       "requirement": "Keith's explicit yes on the source and client walkthrough before publication (ME-666, ME-668, ME-669, ME-670, ME-815)",
-      "status": "open",
-      "evidence": "Not given for v0.1.1. Keith's 2026-10-05 approval covered v0.1.0 only: plugin source 260614fa91a361902159f8726643211f0517916e, straddle-plugin-0.1.0.zip sha256 e4e66555eb23ce9b845ffcab99b31e628189cf99566810f6b3be66caa15dc6c0"
+      "status": "passed",
+      "evidence": "Keith approved the skills v0.1.1 release in the ask UI on 2026-10-05 (relayed by Main) after the exact source and client walkthrough: plugin source f2d9656194612b4c15fdcbf881d884b93d5245c9 (merge of PR 35), straddle-plugin-0.1.1.zip sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b"
     },
     {
       "id": "wizard-npm-publication",
@@ -261,14 +261,14 @@
     {
       "id": "plugin-release-tag",
       "requirement": "Separately approved tag under the version-tag immutability ruleset, with the plugin checksum published (ME-810)",
-      "status": "open",
-      "evidence": "Tag v0.1.1 is not approved for publication. On 2026-10-05 Keith permitted only an isolated, unpushed local v0.1.1 tag after merge, to run the exact-merge-commit release check. Ruleset version-tag-immutability (id 22067157) and immutable releases on straddle-build/skills were recorded for v0.1.0"
+      "status": "passed",
+      "evidence": "Keith approved tag v0.1.1 in the ask UI on 2026-10-05 (relayed by Main), conditional on a records-only commit after f2d9656194612b4c15fdcbf881d884b93d5245c9 whose plugin archive bytes are unchanged (sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b) and on the release checks passing. Ruleset version-tag-immutability (id 22067157) and immutable releases on straddle-build/skills were recorded for v0.1.0. The plugin checksum is published by the tag's release.yml run, which attaches SHA256SUMS in the same gh release create as straddle-plugin-0.1.1.zip"
     },
     {
       "id": "clean-client-acceptance",
       "requirement": "Manifest-generated install, update and remove instructions pass in clean Claude Code, Codex and Cursor environments (ME-810, ME-659)",
-      "status": "open",
-      "evidence": "Partial coverage recorded on 2026-10-05: Claude Code and Codex passed published 0.1.0 lifecycle and candidate 0.1.1 install/upgrade/validate/remove in isolated profiles; Cursor's existing Local 0.1.0 surface was observed, not its team-marketplace lifecycle. Published 0.1.1 release-channel acceptance is not complete. Keith's earlier deferral covered 0.1.0 only; no renewed deferral covers 0.1.1"
+      "status": "deferred",
+      "evidence": "Deferred by Keith 2026-10-05 for v0.1.1 only: published release-channel install/update/remove in clean Claude Code, Codex and Cursor runs immediately after publication of tag v0.1.1; owner Main (agent conductor). Before the tag, Claude Code and Codex passed candidate 0.1.1 install/validate/remove and published 0.1.0-to-candidate 0.1.1 upgrade on source 23a5d4ef5cb8b940579509b39d05ceaeabadbb37, archive sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b. This deferral does not cover Cursor's pre-tag team-marketplace lifecycle, which is recorded under clients.cursor"
     }
   ]
 }
