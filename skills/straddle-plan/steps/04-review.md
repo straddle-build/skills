@@ -15,7 +15,7 @@ Read `straddle-integration-plan.md` from disk with the Read tool now, even if yo
 - [ ] Every Decisions row has an answer and a source, and none is still `open`. Each `Unresolved` row is also under Unresolved decisions, and each `assumption` is still marked as one.
 - [ ] The plan uses each Glossary term the way the Glossary defines it. A refund is only the payout `refundCharge` creates, never a cancelled or reversed charge.
 - [ ] Lifecycle handling covers every status the notification path delivers for each resource in scope, including `reversed` after `paid`, and names the decision behind each row.
-- [ ] Each Sandbox scenario in Verification is a row of the Sandbox outcomes scenario matrix. A Sandbox payout, refund payouts included, is expected to reach `paid`, `failed`, or `reversed` only when the plan names a run on this developer's account that showed a payout reach `paid`.
+- [ ] Each Sandbox scenario in Verification is a row of the Sandbox outcomes scenario matrix. A Payout row is marked optional, and the plan doesn't count its `paid`, `failed`, or `reversed` as proof unless they arrive; payout handlers still have offline tests.
 - [ ] No planned write uses `execute-request` for customer, paykey, charge, or payout creation, a `DELETE`, an unmask, or paykey reveal.
 - [ ] Every planned operation is in the public API contract. Anything outside it, or with unclear contract or account scope, is removed and listed under unresolved decisions, with no SDK or CLI fallback.
 - [ ] No status is discovered by repeating `GET` on a charge, payout, or list endpoint, and `straddle tail` is not a notification path.

@@ -67,6 +67,7 @@ A Sandbox test run proves the handlers, not only the happy path. Pick the rows t
 | Straddle hold | Charge `on_hold_daily_limit` | `on_hold` with `amount_too_large` | Hold messaging |
 | Blocked payment | Charge `cancelled_for_fraud_risk` | `failed` with `payment_blocked` | Blocked-payment messaging |
 | Refund | Charge `paid`, then `refundCharge` | A payout with `is_refund` | Refund linking. The payout wasn't observed reaching `paid` ([payouts.md](payouts.md#events-and-sandbox-outcomes)). |
+| Payout (optional) | Payout `paid`, plus a payouts funding simulation, run only with the developer's approval | `paid` when the account settles it; otherwise record each status that didn't arrive as `not observed` | Payout handling against live events. Offline payout tests stay required ([payouts.md](payouts.md#events-and-sandbox-outcomes)). |
 | Cancel window | Charge `standard`, then `holdCharge`, `releaseCharge`, `cancelCharge` | `on_hold`, `created`, `cancelled` | User actions |
 | Funding | A charges funding simulation | `funding_event.created.v1` and `funding_event.event.v1` | Reconciliation |
 
