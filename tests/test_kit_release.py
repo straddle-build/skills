@@ -68,8 +68,9 @@ def wizard_input(data):
 
 class KitReleaseTest(unittest.TestCase):
     def setUp(self):
-        self.root = Path(tempfile.mkdtemp())
-        self.addCleanup(shutil.rmtree, self.root)
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name)
         for rel in PLUGIN_PATHS:
             source = REPO / rel
             (shutil.copytree if source.is_dir() else shutil.copy)(source, self.root / rel)
@@ -92,9 +93,9 @@ class KitReleaseTest(unittest.TestCase):
         self.commit_all("source")
 
     def scratch(self):
-        path = Path(tempfile.mkdtemp())
-        self.addCleanup(shutil.rmtree, path)
-        return path
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        return Path(temp.name)
 
     def write_inputs(self, inputs):
         (self.root / "kit").mkdir(exist_ok=True)
