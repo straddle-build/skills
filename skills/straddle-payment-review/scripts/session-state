@@ -13,12 +13,36 @@ export LC_ALL=C
 git_raw=(git --no-pager -c core.fsmonitor=false -c core.untrackedCache=false -c core.hooksPath=/dev/null)
 fail() { echo "session-state: $1" >&2; exit 1; }
 
+# The Wizard's discovery rules for files it never opens (Wizard src/discovery.ts, sensitiveReason), applied to every
+# directory and file name in the path, so a sensitive directory hides everything under it. The Wizard also writes the
+# developer's `--exclude` globs, as anchored regular expressions, one per line, to .straddle-wizard/payment-review-exclude; each is
+# matched against the path and each of its parent directories, as discovery does.
+user_excludes=()
+
+sensitive_name() {
+  local name="$1" lower
+  lower="$(printf '%s' "$name" | tr '[:upper:]' '[:lower:]')"
+  [[ "$name" == .env* ]] && return 0
+  [[ "$lower" =~ \.(pem|key|p12|pfx|jks|keystore|crt|cer|der)$ ]] && return 0
+  [[ "$name" =~ ^id_(rsa|dsa|ecdsa|ed25519) ]] && return 0
+  [[ "$name" =~ ^\.(npmrc|pypirc|netrc|git-credentials|aws|ssh|gnupg|docker|kube|config|straddle.*)$ ]] && return 0
+  [[ "$lower" =~ secret|credential|\.tfvars$ ]] && return 0
+  return 1
+}
+
 excluded() {
   case "$1" in
     .straddle-wizard/* | straddle-payment-review.md | straddle-go-live-report.md) return 0 ;;
-    .env* | */.env* | *.pem | *.key) return 0 ;;
   esac
-  return 1
+  local rest="$1" prefix="" name re
+  while :; do
+    name="${rest%%/*}"
+    prefix="${prefix:+$prefix/}$name"
+    sensitive_name "$name" && return 0
+    for re in ${user_excludes[@]+"${user_excludes[@]}"}; do [[ "$prefix" =~ $re ]] && return 0; done
+    [ "$rest" = "$name" ] && return 1
+    rest="${rest#*/}"
+  done
 }
 
 # "<mode> <blob> <path>" per non-excluded file on disk, tracked or untracked. Paths stay byte-exact, spaces
@@ -70,6 +94,16 @@ sha256() { if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 25
 
 top="$("${git_raw[@]}" rev-parse --show-toplevel)" || fail "not inside a Git repository"
 cd "$top"
+exclude_file=.straddle-wizard/payment-review-exclude
+if [ -L .straddle-wizard ] || [ -L "$exclude_file" ] || { [ -e "$exclude_file" ] && [ ! -f "$exclude_file" ]; }; then
+  fail "$exclude_file isn't a regular file"
+fi
+if [ -f "$exclude_file" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in *$'\r'*) fail "$exclude_file has a carriage return" ;; esac
+    [ -n "$line" ] && user_excludes+=("$line")
+  done < "$exclude_file"
+fi
 
 case "${1:-}" in
   snapshot)

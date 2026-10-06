@@ -40,7 +40,7 @@ Run `scripts/session-state compare <snapshot>` from this skill's directory, with
 - **Modified:** compare the start version with the file now to find the session's lines. An edit made before the session is already in the snapshot, so it doesn't count. In a Wizard review, the start version is `<dir>/start/<path>`. Outside one, `git cat-file blob <snapshot>:<path> | diff - <path>` shows the lines directly.
 - **Deleted:** the session removed the file. Judge whether its removal drops a guard that other code relied on.
 
-The script and the snapshot leave out `.straddle-wizard/`, `straddle-payment-review.md`, `straddle-go-live-report.md`, and secret-shaped files at any depth, the same ones the Boundaries forbid opening. Nothing else is skipped.
+The script and the snapshot leave out `.straddle-wizard/`, `straddle-payment-review.md`, `straddle-go-live-report.md`, every path under a directory or file name the Wizard never opens (environment files, private keys and certificates, credential and CLI configuration, names holding `secret` or `credential`), and the developer's `--exclude` globs from `.straddle-wizard/payment-review-exclude`. Nothing else is skipped. Never open an excluded path.
 
 Don't run `git diff`, `git show`, `git status`, or `git hash-object` here. They can run filter, textconv, or fsmonitor commands the repository's configuration names. The script and `git cat-file blob` read raw bytes and run none of them.
 

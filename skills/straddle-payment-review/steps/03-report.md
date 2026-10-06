@@ -31,7 +31,6 @@ The report, in both cases:
 Status: clean | findings | incomplete (<reason>)
 Plan hash: <64 hex characters> | none | unknown
 Code hash: <64 hex characters> | none
-Snapshot: <snapshot sha | none>, started <startedAt>
 Session files reviewed: <count>
 
 This review is advisory. It is not a security audit, and a clean report does not mean the code is safe.

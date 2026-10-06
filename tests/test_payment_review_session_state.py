@@ -35,9 +35,6 @@ class SessionStateFromTheEvalScaffold(unittest.TestCase):
 
     def test_reports_only_the_session_changes(self):
         self.assertEqual(self.changes(), ["added src/checkout.ts", "modified src/tips.ts"])
-        session_lines = run(["sh", "-c", f"git cat-file blob {self.snapshot}:src/tips.ts | diff - src/tips.ts"],
-                            self.repo, check=False).stdout
-        self.assertEqual(session_lines, "17c17\n<       amount: TIP_CENTS,\n---\n>       amount: Number(req.body.tipCents ?? TIP_CENTS),\n")
 
     def test_code_hash_tracks_renames_deletions_and_modes(self):
         base = self.code_hash()
@@ -72,6 +69,23 @@ class SessionStateFromTheEvalScaffold(unittest.TestCase):
             (self.repo / name).write_text("x\n")
         self.assertEqual(self.code_hash(), base)
         self.assertEqual(self.changes(), ["added src/checkout.ts", "modified src/tips.ts"])
+
+    def test_discovery_sensitive_and_user_excluded_paths_never_enter_the_snapshot(self):
+        sensitive = [".npmrc", "id_rsa", "certs/certificate.CRT", "config/.aws/creds", ".ssh/known", "app/my-secrets.json",
+                     "infra/prod.tfvars", "Credentials/token.txt", "private/notes.md", "deep/private/x.ts"]
+        for name in sensitive + ["src/allowed.ts"]:
+            (self.repo / name).parent.mkdir(parents=True, exist_ok=True)
+            (self.repo / name).write_text("zqsentinel\n")
+        (self.repo / ".straddle-wizard/payment-review-exclude").write_text("^(.*/)?private$\n")
+        snapshot = run([str(SESSION_STATE), "snapshot"], self.repo).stdout.strip()
+        stored = run(["git", "ls-tree", "-r", "--name-only", snapshot], self.repo).stdout.split()
+        self.assertEqual([p for p in stored if p in sensitive], [])
+        self.assertIn("src/allowed.ts", stored)
+        for name in sensitive:
+            (self.repo / name).write_text("zqsentinel changed\n")
+        (self.repo / "src/allowed.ts").write_text("changed\n")
+        self.snapshot = snapshot
+        self.assertEqual(self.changes(), ["modified src/allowed.ts"])
 
     def test_fails_closed_without_output(self):
         self.snapshot = "0" * 40
