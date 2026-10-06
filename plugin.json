@@ -1,6 +1,6 @@
 {
   "name": "straddle",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Straddle Developer Kit skills plus the hosted Straddle API and Docs MCP servers, for building and verifying a Straddle integration.",
   "author": {
     "name": "Straddle",
