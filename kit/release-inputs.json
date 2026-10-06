@@ -4,92 +4,92 @@
   },
   "plugin_repository": "straddle-build/skills",
   "plugin_release": {
-    "tag": "v0.1.1",
-    "checksum_url": "https://github.com/straddle-build/skills/releases/download/v0.1.1/SHA256SUMS"
+    "tag": "v0.1.2",
+    "checksum_url": "https://github.com/straddle-build/skills/releases/download/v0.1.2/SHA256SUMS"
   },
   "wizard": {
     "package": "@straddlecom/wizard",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "bin": "wizard",
     "provenance": "released",
     "evidence": {
-      "url": "https://registry.npmjs.org/@straddlecom/wizard/0.1.1",
+      "url": "https://registry.npmjs.org/@straddlecom/wizard/0.1.2",
       "digest": {
         "algorithm": "sha512",
-        "value": "sha512-wnWYdryNl4z1K71AM2HeHbbqRK0JMoekWTK49d8ezyLH+FPdQRhHkVqnIvVhcXlTJ6U9rcqms1K/Jmxud+Y6NA==",
-        "of": "wizard-0.1.1.tgz (npm dist.integrity)"
+        "value": "sha512-z73F2M3hf1MSlHW/GHDr1X13Zpa1c8qUJGuIrfgAfQ6UvOPN7zGVt/rca1MzFSsyC4m5T9Y1VSQ8WIDvdMGvGQ==",
+        "of": "wizard-0.1.2.tgz (npm dist.integrity)"
       }
     },
     "artifact": {
-      "file": "straddlecom-wizard-0.1.1.tgz",
-      "url": "https://registry.npmjs.org/@straddlecom/wizard/-/wizard-0.1.1.tgz",
-      "bytes": 86132,
-      "sha256": "b7464ddecb3fee543a4cbc7c45dd826b34cb3398f412f28497e3a24ce75ab0c2",
-      "integrity": "sha512-wnWYdryNl4z1K71AM2HeHbbqRK0JMoekWTK49d8ezyLH+FPdQRhHkVqnIvVhcXlTJ6U9rcqms1K/Jmxud+Y6NA=="
+      "file": "straddlecom-wizard-0.1.2.tgz",
+      "url": "https://registry.npmjs.org/@straddlecom/wizard/-/wizard-0.1.2.tgz",
+      "bytes": 86174,
+      "sha256": "c673d423057929e1386e083133ecb06f7b5d918e8f87815adceaff0fda5858c6",
+      "integrity": "sha512-z73F2M3hf1MSlHW/GHDr1X13Zpa1c8qUJGuIrfgAfQ6UvOPN7zGVt/rca1MzFSsyC4m5T9Y1VSQ8WIDvdMGvGQ=="
     },
     "source": {
       "repository": "straddle-build/wizard",
-      "commit": "2ccc47c2c64c1b4bb4d90e379f184cb1f019fe19"
+      "commit": "b312ce689ebddd18c70ff313fa4080bcbea04039"
     },
     "plugin_range": "0.1.x"
   },
   "cli": {
     "package": "@straddlecom/cli",
-    "version": "1.0.3",
-    "minimum_version": "1.0.3",
+    "version": "1.0.4",
+    "minimum_version": "1.0.4",
     "provenance": "released",
     "repository": "https://github.com/straddle-build/straddle-cli",
-    "release_tag": "v1.0.3",
-    "commit": "ab45e54ddde6b60055a4559618a449b18e07e5d4",
-    "published_at": "2026-09-28T01:40:37Z",
+    "release_tag": "v1.0.4",
+    "commit": "6ae9558130b83a6ed908e1cbaeb4dbd0bdf93d85",
+    "published_at": "2026-10-05T05:12:11Z",
     "evidence": {
-      "url": "https://github.com/straddle-build/straddle-cli/releases/tag/v1.0.3",
+      "url": "https://github.com/straddle-build/straddle-cli/releases/tag/v1.0.4",
       "digest": {
         "algorithm": "sha256",
-        "value": "8160e66592d0053aa237eeda57669958682243b7e16ec44373e00d77bb0c5d7f",
+        "value": "2bb5eee6bfd70c29b887bb032f1e5602ce4661bd9c47612dcd0fc3bba86f95b2",
         "of": "checksums.txt, which lists the sha256 of every platform archive"
       }
     },
     "artifacts": [
       {
         "file": "checksums.txt",
-        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/checksums.txt",
-        "sha256": "8160e66592d0053aa237eeda57669958682243b7e16ec44373e00d77bb0c5d7f"
+        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/checksums.txt",
+        "sha256": "2bb5eee6bfd70c29b887bb032f1e5602ce4661bd9c47612dcd0fc3bba86f95b2"
       },
       {
-        "file": "straddle_1.0.3_darwin_arm64.tar.gz",
-        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_darwin_arm64.tar.gz",
-        "sha256": "4f21f4c9fb82801365bf932fb872f3ce6f2354608944fc6009038502b4868201"
+        "file": "straddle_1.0.4_darwin_arm64.tar.gz",
+        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_darwin_arm64.tar.gz",
+        "sha256": "54ec01065d166d0b9273cca629358be05af77d7bfae0f5b5cf76c75ca67f9147"
       },
       {
-        "file": "straddle_1.0.3_darwin_amd64.tar.gz",
-        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_darwin_amd64.tar.gz",
-        "sha256": "f28ea4cb0f9cc105b87f53d06971157b721b132472f4e1d50ee1eff840edf53e"
+        "file": "straddle_1.0.4_darwin_amd64.tar.gz",
+        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_darwin_amd64.tar.gz",
+        "sha256": "100eadaaef2ce8d6ff88fe296bd1247f19609ccd484de3bfc698af9ed800a47b"
       },
       {
-        "file": "straddle_1.0.3_linux_arm64.tar.gz",
-        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_linux_arm64.tar.gz",
-        "sha256": "db1f810f3bc3cf252eaef2e15860f5475fbe7a245aaa80a33ddfdc96fa0083fc"
+        "file": "straddle_1.0.4_linux_arm64.tar.gz",
+        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_linux_arm64.tar.gz",
+        "sha256": "bbeb12f2d4f17df7c83a5bd2cf637d9e60ff40f395829fcc96b7129b31686242"
       },
       {
-        "file": "straddle_1.0.3_linux_amd64.tar.gz",
-        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_linux_amd64.tar.gz",
-        "sha256": "eae3eda0d91b9c55fdfb7ce42d8b24cbb8c109c3fc43e3de790130ab8840b9b5"
+        "file": "straddle_1.0.4_linux_amd64.tar.gz",
+        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_linux_amd64.tar.gz",
+        "sha256": "37f86da8a88b4f5882743661d2be6833f509b81edeafefae5de2712e84527c08"
       },
       {
-        "file": "straddle_1.0.3_windows_arm64.zip",
-        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_windows_arm64.zip",
-        "sha256": "1c35a62e38f6d9b7ae8e596226f01b4a1df20e852bae6fbb88d5adcbb7d0f087"
+        "file": "straddle_1.0.4_windows_arm64.zip",
+        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_windows_arm64.zip",
+        "sha256": "3428c168397bb3713107e0e4cb93d35de5f61404b5d0c342a6927ead04e0af01"
       },
       {
-        "file": "straddle_1.0.3_windows_amd64.zip",
-        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_windows_amd64.zip",
-        "sha256": "fd27a8f039bd9421ca4ff9e8eea558deb6c15e630102024f60b3166fde9eeedf"
+        "file": "straddle_1.0.4_windows_amd64.zip",
+        "url": "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_windows_amd64.zip",
+        "sha256": "4c999a25b7dad71bca3277985c976a67e3e392d5d98dceb5c37b85a13869aac5"
       },
       {
-        "file": "cli-1.0.3.tgz",
-        "url": "https://registry.npmjs.org/@straddlecom/cli/-/cli-1.0.3.tgz",
-        "integrity": "sha512-Ra9Tr53pMa/uXaBVEGvgbE0Z09HYn9SpwnOpCUzVOywVrAQ+JpmsDB9qKTAMRj0Flduv3yOGOWsWQi8ON97g9w==",
+        "file": "cli-1.0.4.tgz",
+        "url": "https://registry.npmjs.org/@straddlecom/cli/-/cli-1.0.4.tgz",
+        "integrity": "sha512-7Dt07BdlSbJiZWQ2a9PPC7V9GJC7oxq9LYNXmkRM+fao7Xj3pp6eA1TjvTWwHjzUEPSPv8QvNF2E3fzFw06kzA==",
         "note": "npm registry dist.integrity, matched by a SHA-512 of the downloaded tarball bytes"
       }
     ]
@@ -249,26 +249,23 @@
     {
       "id": "walkthrough-approval",
       "requirement": "Keith's explicit yes on the source and client walkthrough before publication (ME-666, ME-668, ME-669, ME-670, ME-815)",
-      "status": "passed",
-      "evidence": "Keith approved the skills v0.1.1 release in the ask UI on 2026-10-05 (relayed by Main) after the exact source and client walkthrough: plugin source f2d9656194612b4c15fdcbf881d884b93d5245c9 (merge of PR 35), straddle-plugin-0.1.1.zip sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b"
+      "status": "open"
     },
     {
       "id": "wizard-npm-publication",
       "requirement": "@straddlecom/wizard installs from npm with provenance, built from straddle-build/wizard (ME-667)",
       "status": "passed",
-      "evidence": "@straddlecom/wizard 0.1.1 on npm (latest), dist.integrity sha512-wnWYdryNl4z1K71AM2HeHbbqRK0JMoekWTK49d8ezyLH+FPdQRhHkVqnIvVhcXlTJ6U9rcqms1K/Jmxud+Y6NA==, published by trusted publishing from straddle-build/wizard .github/workflows/release.yml at tag v0.1.1, commit 2ccc47c2c64c1b4bb4d90e379f184cb1f019fe19, run https://github.com/straddle-build/wizard/actions/runs/37254492729; SLSA provenance https://registry.npmjs.org/-/npm/v1/attestations/@straddlecom%2fwizard@0.1.1 (Rekor logIndex 3080474669), subject digest equal to dist.integrity; GitHub release https://github.com/straddle-build/wizard/releases/tag/v0.1.1"
+      "evidence": "@straddlecom/wizard 0.1.2 on npm (latest), dist.integrity sha512-z73F2M3hf1MSlHW/GHDr1X13Zpa1c8qUJGuIrfgAfQ6UvOPN7zGVt/rca1MzFSsyC4m5T9Y1VSQ8WIDvdMGvGQ==, published by trusted publishing from straddle-build/wizard .github/workflows/release.yml at tag v0.1.2, commit b312ce689ebddd18c70ff313fa4080bcbea04039 (merge of wizard PR 18), run https://github.com/straddle-build/wizard/actions/runs/37268897053; SLSA provenance https://registry.npmjs.org/-/npm/v1/attestations/@straddlecom%2fwizard@0.1.2 (Rekor logIndex 3082933801), subject digest equal to dist.integrity; GitHub release https://github.com/straddle-build/wizard/releases/tag/v0.1.2"
     },
     {
       "id": "plugin-release-tag",
       "requirement": "Separately approved tag under the version-tag immutability ruleset, with the plugin checksum published (ME-810)",
-      "status": "passed",
-      "evidence": "Keith approved tag v0.1.1 in the ask UI on 2026-10-05 (relayed by Main), conditional on a records-only commit after f2d9656194612b4c15fdcbf881d884b93d5245c9 whose plugin archive bytes are unchanged (sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b) and on the release checks passing. Ruleset version-tag-immutability (id 22067157) and immutable releases on straddle-build/skills were recorded for v0.1.0. The plugin checksum is published by the tag's release.yml run, which attaches SHA256SUMS in the same gh release create as straddle-plugin-0.1.1.zip"
+      "status": "open"
     },
     {
       "id": "clean-client-acceptance",
       "requirement": "Manifest-generated install, update and remove instructions pass in clean Claude Code, Codex and Cursor environments (ME-810, ME-659)",
-      "status": "deferred",
-      "evidence": "Deferred by Keith 2026-10-05 for v0.1.1 only: published release-channel install/update/remove in clean Claude Code, Codex and Cursor runs immediately after publication of tag v0.1.1; owner Main (agent conductor). Before the tag, Claude Code and Codex passed candidate 0.1.1 install/validate/remove and published 0.1.0-to-candidate 0.1.1 upgrade on source 23a5d4ef5cb8b940579509b39d05ceaeabadbb37, archive sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b. This deferral does not cover Cursor's pre-tag team-marketplace lifecycle, which is recorded under clients.cursor"
+      "status": "open"
     }
   ]
 }

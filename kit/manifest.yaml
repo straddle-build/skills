@@ -4,112 +4,112 @@
 schema: 1
 kit:
   name: "straddle-developer-kit"
-  version: "0.1.1"
+  version: "0.1.2"
   status: "release"
 plugin:
   name: "straddle"
-  version: "0.1.1"
+  version: "0.1.2"
   provenance: "released"
   repository: "straddle-build/skills"
   archive:
-    file: "straddle-plugin-0.1.1.zip"
+    file: "straddle-plugin-0.1.2.zip"
     format: "zip, stored entries, fixed timestamps"
-    sha256: "1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b"
-    bytes: 516160
-    files: 111
-  content_sha256: "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"
+    sha256: "38522897367a72650000b2c27c59b17e54f7eb8475c0a91b4783b91103626bad"
+    bytes: 565632
+    files: 112
+  content_sha256: "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"
   release:
-    tag: "v0.1.1"
-    checksum_url: "https://github.com/straddle-build/skills/releases/download/v0.1.1/SHA256SUMS"
+    tag: "v0.1.2"
+    checksum_url: "https://github.com/straddle-build/skills/releases/download/v0.1.2/SHA256SUMS"
 skills:
   - name: "straddle-audit"
     version: "0.1.0"
-    sha256: "ec79cc3b9aea65b836be0f1506d9a8d193b46bd07121d7d99a3b96b638942ce8"
+    sha256: "449c6e3b658bb85f74ae20a9ea6727454ba86d0c2a9c8042b0ceaef154c92e7a"
   - name: "straddle-best-practices"
     version: "0.1.0"
-    sha256: "c727279bf9a17534aa3ebde0d6a2ff093cd742f11b9ea96554cf2a7aea8bb390"
+    sha256: "9810fa9d266defd6003af41ca21e7fb3634ce071541debf302ddef750b3d7cd5"
   - name: "straddle-get-started"
     version: "0.1.0"
-    sha256: "27811af92c51eb5250cb88c90617be17b68c42c9529baa1cc0976beaf110e63d"
+    sha256: "aba8560dda617456abe205d524fdaa9b120bc4acf9159ccc7cac8b3ef1dd75fe"
   - name: "straddle-go-live"
     version: "0.1.0"
-    sha256: "d373ccde8526faa105a691bf0c3db766bf0f336254febf9f7c07b7e10066b067"
+    sha256: "4f67efc82cc9b1f74999fc094d2b62e11716cbf88e1490cc6efb571c2cbebd64"
   - name: "straddle-integrate"
     version: "0.1.0"
-    sha256: "be5a6e2a6beedecef8db85ef4015ad97ec826b965529a6b9194b94cf6fd7587d"
+    sha256: "64e09ee1bef9a97ae66d74aa77a96a5528bebb01664695788175280e3449ecb0"
   - name: "straddle-migrate"
     version: "0.1.0"
-    sha256: "225a691b8efed94095a74becd70c5a944197e848e4fcbbc7a3cf557a57a9d7bb"
+    sha256: "36c6fdc93ce0d65dc148be528112a06e20956438f8dc2fd645ddc7a6f3e54895"
   - name: "straddle-plan"
     version: "0.1.0"
-    sha256: "30bafb44d87f36c463368132da780475645a4e889fae427526572b7b1f91228f"
+    sha256: "5c0b740b0fd0195ba0ca3d0ceb1482b3c76d26eb5be4d27ffec25213bfcdb738"
   - name: "straddle-setup"
     version: "0.1.0"
     sha256: "7184d0da048feb723ccd2733da982c3d82cbb54af112e72c79792e090c08e5ed"
   - name: "straddle-test"
     version: "0.1.0"
-    sha256: "cb03963e667e0b63777ecf758f79b7b9ee251ee4d1ea25e4616bbdc9570f8e07"
+    sha256: "007df7ff40dc45979586310ab42308ec2e258f98fb7fd6e6327c3d1c1df87830"
 wizard:
   package: "@straddlecom/wizard"
-  version: "0.1.1"
+  version: "0.1.2"
   bin: "wizard"
   provenance: "released"
   evidence:
-    url: "https://registry.npmjs.org/@straddlecom/wizard/0.1.1"
+    url: "https://registry.npmjs.org/@straddlecom/wizard/0.1.2"
     digest:
       algorithm: "sha512"
-      value: "sha512-wnWYdryNl4z1K71AM2HeHbbqRK0JMoekWTK49d8ezyLH+FPdQRhHkVqnIvVhcXlTJ6U9rcqms1K/Jmxud+Y6NA=="
-      of: "wizard-0.1.1.tgz (npm dist.integrity)"
+      value: "sha512-z73F2M3hf1MSlHW/GHDr1X13Zpa1c8qUJGuIrfgAfQ6UvOPN7zGVt/rca1MzFSsyC4m5T9Y1VSQ8WIDvdMGvGQ=="
+      of: "wizard-0.1.2.tgz (npm dist.integrity)"
   artifact:
-    file: "straddlecom-wizard-0.1.1.tgz"
-    url: "https://registry.npmjs.org/@straddlecom/wizard/-/wizard-0.1.1.tgz"
-    bytes: 86132
-    sha256: "b7464ddecb3fee543a4cbc7c45dd826b34cb3398f412f28497e3a24ce75ab0c2"
-    integrity: "sha512-wnWYdryNl4z1K71AM2HeHbbqRK0JMoekWTK49d8ezyLH+FPdQRhHkVqnIvVhcXlTJ6U9rcqms1K/Jmxud+Y6NA=="
+    file: "straddlecom-wizard-0.1.2.tgz"
+    url: "https://registry.npmjs.org/@straddlecom/wizard/-/wizard-0.1.2.tgz"
+    bytes: 86174
+    sha256: "c673d423057929e1386e083133ecb06f7b5d918e8f87815adceaff0fda5858c6"
+    integrity: "sha512-z73F2M3hf1MSlHW/GHDr1X13Zpa1c8qUJGuIrfgAfQ6UvOPN7zGVt/rca1MzFSsyC4m5T9Y1VSQ8WIDvdMGvGQ=="
   source:
     repository: "straddle-build/wizard"
-    commit: "2ccc47c2c64c1b4bb4d90e379f184cb1f019fe19"
+    commit: "b312ce689ebddd18c70ff313fa4080bcbea04039"
   plugin_range: "0.1.x"
 cli:
   package: "@straddlecom/cli"
-  version: "1.0.3"
-  minimum_version: "1.0.3"
+  version: "1.0.4"
+  minimum_version: "1.0.4"
   provenance: "released"
   repository: "https://github.com/straddle-build/straddle-cli"
-  release_tag: "v1.0.3"
-  commit: "ab45e54ddde6b60055a4559618a449b18e07e5d4"
-  published_at: "2026-09-28T01:40:37Z"
+  release_tag: "v1.0.4"
+  commit: "6ae9558130b83a6ed908e1cbaeb4dbd0bdf93d85"
+  published_at: "2026-10-05T05:12:11Z"
   evidence:
-    url: "https://github.com/straddle-build/straddle-cli/releases/tag/v1.0.3"
+    url: "https://github.com/straddle-build/straddle-cli/releases/tag/v1.0.4"
     digest:
       algorithm: "sha256"
-      value: "8160e66592d0053aa237eeda57669958682243b7e16ec44373e00d77bb0c5d7f"
+      value: "2bb5eee6bfd70c29b887bb032f1e5602ce4661bd9c47612dcd0fc3bba86f95b2"
       of: "checksums.txt, which lists the sha256 of every platform archive"
   artifacts:
     - file: "checksums.txt"
-      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/checksums.txt"
-      sha256: "8160e66592d0053aa237eeda57669958682243b7e16ec44373e00d77bb0c5d7f"
-    - file: "straddle_1.0.3_darwin_arm64.tar.gz"
-      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_darwin_arm64.tar.gz"
-      sha256: "4f21f4c9fb82801365bf932fb872f3ce6f2354608944fc6009038502b4868201"
-    - file: "straddle_1.0.3_darwin_amd64.tar.gz"
-      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_darwin_amd64.tar.gz"
-      sha256: "f28ea4cb0f9cc105b87f53d06971157b721b132472f4e1d50ee1eff840edf53e"
-    - file: "straddle_1.0.3_linux_arm64.tar.gz"
-      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_linux_arm64.tar.gz"
-      sha256: "db1f810f3bc3cf252eaef2e15860f5475fbe7a245aaa80a33ddfdc96fa0083fc"
-    - file: "straddle_1.0.3_linux_amd64.tar.gz"
-      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_linux_amd64.tar.gz"
-      sha256: "eae3eda0d91b9c55fdfb7ce42d8b24cbb8c109c3fc43e3de790130ab8840b9b5"
-    - file: "straddle_1.0.3_windows_arm64.zip"
-      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_windows_arm64.zip"
-      sha256: "1c35a62e38f6d9b7ae8e596226f01b4a1df20e852bae6fbb88d5adcbb7d0f087"
-    - file: "straddle_1.0.3_windows_amd64.zip"
-      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.3/straddle_1.0.3_windows_amd64.zip"
-      sha256: "fd27a8f039bd9421ca4ff9e8eea558deb6c15e630102024f60b3166fde9eeedf"
-    - file: "cli-1.0.3.tgz"
-      url: "https://registry.npmjs.org/@straddlecom/cli/-/cli-1.0.3.tgz"
-      integrity: "sha512-Ra9Tr53pMa/uXaBVEGvgbE0Z09HYn9SpwnOpCUzVOywVrAQ+JpmsDB9qKTAMRj0Flduv3yOGOWsWQi8ON97g9w=="
+      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/checksums.txt"
+      sha256: "2bb5eee6bfd70c29b887bb032f1e5602ce4661bd9c47612dcd0fc3bba86f95b2"
+    - file: "straddle_1.0.4_darwin_arm64.tar.gz"
+      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_darwin_arm64.tar.gz"
+      sha256: "54ec01065d166d0b9273cca629358be05af77d7bfae0f5b5cf76c75ca67f9147"
+    - file: "straddle_1.0.4_darwin_amd64.tar.gz"
+      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_darwin_amd64.tar.gz"
+      sha256: "100eadaaef2ce8d6ff88fe296bd1247f19609ccd484de3bfc698af9ed800a47b"
+    - file: "straddle_1.0.4_linux_arm64.tar.gz"
+      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_linux_arm64.tar.gz"
+      sha256: "bbeb12f2d4f17df7c83a5bd2cf637d9e60ff40f395829fcc96b7129b31686242"
+    - file: "straddle_1.0.4_linux_amd64.tar.gz"
+      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_linux_amd64.tar.gz"
+      sha256: "37f86da8a88b4f5882743661d2be6833f509b81edeafefae5de2712e84527c08"
+    - file: "straddle_1.0.4_windows_arm64.zip"
+      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_windows_arm64.zip"
+      sha256: "3428c168397bb3713107e0e4cb93d35de5f61404b5d0c342a6927ead04e0af01"
+    - file: "straddle_1.0.4_windows_amd64.zip"
+      url: "https://github.com/straddle-build/straddle-cli/releases/download/v1.0.4/straddle_1.0.4_windows_amd64.zip"
+      sha256: "4c999a25b7dad71bca3277985c976a67e3e392d5d98dceb5c37b85a13869aac5"
+    - file: "cli-1.0.4.tgz"
+      url: "https://registry.npmjs.org/@straddlecom/cli/-/cli-1.0.4.tgz"
+      integrity: "sha512-7Dt07BdlSbJiZWQ2a9PPC7V9GJC7oxq9LYNXmkRM+fao7Xj3pp6eA1TjvTWwHjzUEPSPv8QvNF2E3fzFw06kzA=="
       note: "npm registry dist.integrity, matched by a SHA-512 of the downloaded tarball bytes"
 sdks:
   typescript:
@@ -238,12 +238,12 @@ instructions:
       install: |-
         (
           set -eu
-          npm install --global @straddlecom/wizard@0.1.1
+          npm install --global @straddlecom/wizard@0.1.2
         )
       update: |-
         (
           set -eu
-          npm install --global @straddlecom/wizard@0.1.1
+          npm install --global @straddlecom/wizard@0.1.2
         )
       remove: |-
         (
@@ -253,8 +253,8 @@ instructions:
       validate: |-
         (
           set -eu
-          test "$(wizard --version)" = "0.1.1"
-          test "$(npm view @straddlecom/wizard@0.1.1 dist.integrity)" = "sha512-wnWYdryNl4z1K71AM2HeHbbqRK0JMoekWTK49d8ezyLH+FPdQRhHkVqnIvVhcXlTJ6U9rcqms1K/Jmxud+Y6NA=="
+          test "$(wizard --version)" = "0.1.2"
+          test "$(npm view @straddlecom/wizard@0.1.2 dist.integrity)" = "sha512-z73F2M3hf1MSlHW/GHDr1X13Zpa1c8qUJGuIrfgAfQ6UvOPN7zGVt/rca1MzFSsyC4m5T9Y1VSQ8WIDvdMGvGQ=="
         )
   claude-code:
     notes:
@@ -266,9 +266,9 @@ instructions:
           : "${STRADDLE_KIT_DIR:?set STRADDLE_KIT_DIR to a durable directory for Straddle kit artifacts}"
           cd "$STRADDLE_KIT_DIR"
           rm -rf claude-code-plugin.new
-          echo "1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b  straddle-plugin-0.1.1.zip" | shasum -a 256 -c -
-          unzip -q straddle-plugin-0.1.1.zip -d claude-code-plugin.new
-          { test -z "$(cd claude-code-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd claude-code-plugin.new && find . ! -type f ! -type d)" && test "$(cd claude-code-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"; } || { echo "claude-code-plugin.new is not exactly the verified plugin (plugin.content_sha256 d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6): unexpected entries, links or content" >&2; rm -rf claude-code-plugin.new; exit 1; }
+          echo "38522897367a72650000b2c27c59b17e54f7eb8475c0a91b4783b91103626bad  straddle-plugin-0.1.2.zip" | shasum -a 256 -c -
+          unzip -q straddle-plugin-0.1.2.zip -d claude-code-plugin.new
+          { test -z "$(cd claude-code-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd claude-code-plugin.new && find . ! -type f ! -type d)" && test "$(cd claude-code-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"; } || { echo "claude-code-plugin.new is not exactly the verified plugin (plugin.content_sha256 737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128): unexpected entries, links or content" >&2; rm -rf claude-code-plugin.new; exit 1; }
           rm -rf claude-code-plugin
           mv claude-code-plugin.new claude-code-plugin
           claude plugin marketplace add "$PWD/claude-code-plugin"
@@ -281,9 +281,9 @@ instructions:
           cd "$STRADDLE_KIT_DIR"
           test -d claude-code-plugin || { echo "no installed plugin directory $PWD/claude-code-plugin; run install" >&2; exit 1; }
           rm -rf claude-code-plugin.new claude-code-plugin.old
-          echo "1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b  straddle-plugin-0.1.1.zip" | shasum -a 256 -c -
-          unzip -q straddle-plugin-0.1.1.zip -d claude-code-plugin.new
-          { test -z "$(cd claude-code-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd claude-code-plugin.new && find . ! -type f ! -type d)" && test "$(cd claude-code-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"; } || { echo "claude-code-plugin.new is not exactly the verified plugin (plugin.content_sha256 d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6): unexpected entries, links or content" >&2; rm -rf claude-code-plugin.new; exit 1; }
+          echo "38522897367a72650000b2c27c59b17e54f7eb8475c0a91b4783b91103626bad  straddle-plugin-0.1.2.zip" | shasum -a 256 -c -
+          unzip -q straddle-plugin-0.1.2.zip -d claude-code-plugin.new
+          { test -z "$(cd claude-code-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd claude-code-plugin.new && find . ! -type f ! -type d)" && test "$(cd claude-code-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"; } || { echo "claude-code-plugin.new is not exactly the verified plugin (plugin.content_sha256 737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128): unexpected entries, links or content" >&2; rm -rf claude-code-plugin.new; exit 1; }
           mv claude-code-plugin claude-code-plugin.old
           mv claude-code-plugin.new claude-code-plugin
           if claude plugin marketplace update straddle && claude plugin update straddle@straddle; then
@@ -307,7 +307,7 @@ instructions:
       validate: |-
         (
           set -eu
-          claude plugin list --json | python3 -c 'import json,sys; p={x["id"]: x for x in json.load(sys.stdin)}["straddle@straddle"]; assert p["version"]=="0.1.1" and p["enabled"] and {k: v["url"] for k, v in p["mcpServers"].items()}=={"straddle-api": "https://mcp.scalar.com/mcp/d5d1b1c2-ae5b-432d-b795-4fcb31cfdedd", "straddle-docs": "https://straddle-build-straddle-openapi.apidocumentation.com/mcp"}, p'
+          claude plugin list --json | python3 -c 'import json,sys; p={x["id"]: x for x in json.load(sys.stdin)}["straddle@straddle"]; assert p["version"]=="0.1.2" and p["enabled"] and {k: v["url"] for k, v in p["mcpServers"].items()}=={"straddle-api": "https://mcp.scalar.com/mcp/d5d1b1c2-ae5b-432d-b795-4fcb31cfdedd", "straddle-docs": "https://straddle-build-straddle-openapi.apidocumentation.com/mcp"}, p'
         )
     release:
       install: |-
@@ -317,11 +317,11 @@ instructions:
           cd "$STRADDLE_KIT_DIR"
           rm -rf claude-code-plugin.new
           rm -rf claude-code-plugin.new.src
-          git clone -q --depth 1 --branch v0.1.1 https://github.com/straddle-build/skills.git claude-code-plugin.new.src
+          git clone -q --depth 1 --branch v0.1.2 https://github.com/straddle-build/skills.git claude-code-plugin.new.src
           mkdir claude-code-plugin.new
           git -C claude-code-plugin.new.src archive --format=tar HEAD -- .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party | tar -x -C claude-code-plugin.new -f -
           rm -rf claude-code-plugin.new.src
-          { test -z "$(cd claude-code-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd claude-code-plugin.new && find . ! -type f ! -type d)" && test "$(cd claude-code-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"; } || { echo "claude-code-plugin.new is not exactly the verified plugin (plugin.content_sha256 d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6): unexpected entries, links or content" >&2; rm -rf claude-code-plugin.new; exit 1; }
+          { test -z "$(cd claude-code-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd claude-code-plugin.new && find . ! -type f ! -type d)" && test "$(cd claude-code-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"; } || { echo "claude-code-plugin.new is not exactly the verified plugin (plugin.content_sha256 737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128): unexpected entries, links or content" >&2; rm -rf claude-code-plugin.new; exit 1; }
           rm -rf claude-code-plugin
           mv claude-code-plugin.new claude-code-plugin
           claude plugin marketplace add "$PWD/claude-code-plugin"
@@ -335,11 +335,11 @@ instructions:
           test -d claude-code-plugin || { echo "no installed plugin directory $PWD/claude-code-plugin; run install" >&2; exit 1; }
           rm -rf claude-code-plugin.new claude-code-plugin.old
           rm -rf claude-code-plugin.new.src
-          git clone -q --depth 1 --branch v0.1.1 https://github.com/straddle-build/skills.git claude-code-plugin.new.src
+          git clone -q --depth 1 --branch v0.1.2 https://github.com/straddle-build/skills.git claude-code-plugin.new.src
           mkdir claude-code-plugin.new
           git -C claude-code-plugin.new.src archive --format=tar HEAD -- .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party | tar -x -C claude-code-plugin.new -f -
           rm -rf claude-code-plugin.new.src
-          { test -z "$(cd claude-code-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd claude-code-plugin.new && find . ! -type f ! -type d)" && test "$(cd claude-code-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"; } || { echo "claude-code-plugin.new is not exactly the verified plugin (plugin.content_sha256 d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6): unexpected entries, links or content" >&2; rm -rf claude-code-plugin.new; exit 1; }
+          { test -z "$(cd claude-code-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd claude-code-plugin.new && find . ! -type f ! -type d)" && test "$(cd claude-code-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"; } || { echo "claude-code-plugin.new is not exactly the verified plugin (plugin.content_sha256 737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128): unexpected entries, links or content" >&2; rm -rf claude-code-plugin.new; exit 1; }
           mv claude-code-plugin claude-code-plugin.old
           mv claude-code-plugin.new claude-code-plugin
           if claude plugin marketplace update straddle && claude plugin update straddle@straddle; then
@@ -363,7 +363,7 @@ instructions:
       validate: |-
         (
           set -eu
-          claude plugin list --json | python3 -c 'import json,sys; p={x["id"]: x for x in json.load(sys.stdin)}["straddle@straddle"]; assert p["version"]=="0.1.1" and p["enabled"] and {k: v["url"] for k, v in p["mcpServers"].items()}=={"straddle-api": "https://mcp.scalar.com/mcp/d5d1b1c2-ae5b-432d-b795-4fcb31cfdedd", "straddle-docs": "https://straddle-build-straddle-openapi.apidocumentation.com/mcp"}, p'
+          claude plugin list --json | python3 -c 'import json,sys; p={x["id"]: x for x in json.load(sys.stdin)}["straddle@straddle"]; assert p["version"]=="0.1.2" and p["enabled"] and {k: v["url"] for k, v in p["mcpServers"].items()}=={"straddle-api": "https://mcp.scalar.com/mcp/d5d1b1c2-ae5b-432d-b795-4fcb31cfdedd", "straddle-docs": "https://straddle-build-straddle-openapi.apidocumentation.com/mcp"}, p'
         )
   codex:
     notes:
@@ -376,9 +376,9 @@ instructions:
           : "${STRADDLE_KIT_DIR:?set STRADDLE_KIT_DIR to a durable directory for Straddle kit artifacts}"
           cd "$STRADDLE_KIT_DIR"
           rm -rf codex-plugin.new
-          echo "1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b  straddle-plugin-0.1.1.zip" | shasum -a 256 -c -
-          unzip -q straddle-plugin-0.1.1.zip -d codex-plugin.new
-          { test -z "$(cd codex-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd codex-plugin.new && find . ! -type f ! -type d)" && test "$(cd codex-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"; } || { echo "codex-plugin.new is not exactly the verified plugin (plugin.content_sha256 d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6): unexpected entries, links or content" >&2; rm -rf codex-plugin.new; exit 1; }
+          echo "38522897367a72650000b2c27c59b17e54f7eb8475c0a91b4783b91103626bad  straddle-plugin-0.1.2.zip" | shasum -a 256 -c -
+          unzip -q straddle-plugin-0.1.2.zip -d codex-plugin.new
+          { test -z "$(cd codex-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd codex-plugin.new && find . ! -type f ! -type d)" && test "$(cd codex-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"; } || { echo "codex-plugin.new is not exactly the verified plugin (plugin.content_sha256 737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128): unexpected entries, links or content" >&2; rm -rf codex-plugin.new; exit 1; }
           rm -rf codex-plugin
           mv codex-plugin.new codex-plugin
           codex plugin marketplace add "$PWD/codex-plugin"
@@ -391,9 +391,9 @@ instructions:
           cd "$STRADDLE_KIT_DIR"
           test -d codex-plugin || { echo "no installed plugin directory $PWD/codex-plugin; run install" >&2; exit 1; }
           rm -rf codex-plugin.new codex-plugin.old
-          echo "1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b  straddle-plugin-0.1.1.zip" | shasum -a 256 -c -
-          unzip -q straddle-plugin-0.1.1.zip -d codex-plugin.new
-          { test -z "$(cd codex-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd codex-plugin.new && find . ! -type f ! -type d)" && test "$(cd codex-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"; } || { echo "codex-plugin.new is not exactly the verified plugin (plugin.content_sha256 d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6): unexpected entries, links or content" >&2; rm -rf codex-plugin.new; exit 1; }
+          echo "38522897367a72650000b2c27c59b17e54f7eb8475c0a91b4783b91103626bad  straddle-plugin-0.1.2.zip" | shasum -a 256 -c -
+          unzip -q straddle-plugin-0.1.2.zip -d codex-plugin.new
+          { test -z "$(cd codex-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd codex-plugin.new && find . ! -type f ! -type d)" && test "$(cd codex-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"; } || { echo "codex-plugin.new is not exactly the verified plugin (plugin.content_sha256 737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128): unexpected entries, links or content" >&2; rm -rf codex-plugin.new; exit 1; }
           mv codex-plugin codex-plugin.old
           mv codex-plugin.new codex-plugin
           if codex plugin add straddle@straddle; then
@@ -417,7 +417,7 @@ instructions:
       validate: |-
         (
           set -eu
-          codex plugin list --json | python3 -c 'import json,sys; p={x["pluginId"]: x for x in json.load(sys.stdin)["installed"]}["straddle@straddle"]; assert p["version"]=="0.1.1" and p["enabled"], p'
+          codex plugin list --json | python3 -c 'import json,sys; p={x["pluginId"]: x for x in json.load(sys.stdin)["installed"]}["straddle@straddle"]; assert p["version"]=="0.1.2" and p["enabled"], p'
           codex mcp list --json | python3 -c 'import json,sys; t={x["name"]: x.get("transport") or {} for x in json.load(sys.stdin) if x.get("enabled")}; s={k: t.get(k, {}).get("url")==v for k, v in {"straddle-api": "https://mcp.scalar.com/mcp/d5d1b1c2-ae5b-432d-b795-4fcb31cfdedd", "straddle-docs": "https://straddle-build-straddle-openapi.apidocumentation.com/mcp"}.items()}; s["straddle-api bearer_token_env_var is STRADDLE_API_KEY"]=t.get("straddle-api", {}).get("bearer_token_env_var")=="STRADDLE_API_KEY"; all(s.values()) or sys.exit("Codex Straddle MCP configuration does not match: " + json.dumps(s))'
         )
     release:
@@ -428,11 +428,11 @@ instructions:
           cd "$STRADDLE_KIT_DIR"
           rm -rf codex-plugin.new
           rm -rf codex-plugin.new.src
-          git clone -q --depth 1 --branch v0.1.1 https://github.com/straddle-build/skills.git codex-plugin.new.src
+          git clone -q --depth 1 --branch v0.1.2 https://github.com/straddle-build/skills.git codex-plugin.new.src
           mkdir codex-plugin.new
           git -C codex-plugin.new.src archive --format=tar HEAD -- .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party | tar -x -C codex-plugin.new -f -
           rm -rf codex-plugin.new.src
-          { test -z "$(cd codex-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd codex-plugin.new && find . ! -type f ! -type d)" && test "$(cd codex-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"; } || { echo "codex-plugin.new is not exactly the verified plugin (plugin.content_sha256 d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6): unexpected entries, links or content" >&2; rm -rf codex-plugin.new; exit 1; }
+          { test -z "$(cd codex-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd codex-plugin.new && find . ! -type f ! -type d)" && test "$(cd codex-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"; } || { echo "codex-plugin.new is not exactly the verified plugin (plugin.content_sha256 737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128): unexpected entries, links or content" >&2; rm -rf codex-plugin.new; exit 1; }
           rm -rf codex-plugin
           mv codex-plugin.new codex-plugin
           codex plugin marketplace add "$PWD/codex-plugin"
@@ -446,11 +446,11 @@ instructions:
           test -d codex-plugin || { echo "no installed plugin directory $PWD/codex-plugin; run install" >&2; exit 1; }
           rm -rf codex-plugin.new codex-plugin.old
           rm -rf codex-plugin.new.src
-          git clone -q --depth 1 --branch v0.1.1 https://github.com/straddle-build/skills.git codex-plugin.new.src
+          git clone -q --depth 1 --branch v0.1.2 https://github.com/straddle-build/skills.git codex-plugin.new.src
           mkdir codex-plugin.new
           git -C codex-plugin.new.src archive --format=tar HEAD -- .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party | tar -x -C codex-plugin.new -f -
           rm -rf codex-plugin.new.src
-          { test -z "$(cd codex-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd codex-plugin.new && find . ! -type f ! -type d)" && test "$(cd codex-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6"; } || { echo "codex-plugin.new is not exactly the verified plugin (plugin.content_sha256 d690233a7f5c9587959ae8b2191972f5e9110ddba93b99657e1e106f71c126a6): unexpected entries, links or content" >&2; rm -rf codex-plugin.new; exit 1; }
+          { test -z "$(cd codex-plugin.new && find . -mindepth 1 -maxdepth 1 ! -name .claude-plugin ! -name .codex-plugin ! -name .cursor-plugin ! -name LICENSE ! -name README.md ! -name assets ! -name mcp.json ! -name plugin.json ! -name skills ! -name third_party)" && test -z "$(cd codex-plugin.new && find . ! -type f ! -type d)" && test "$(cd codex-plugin.new && find .claude-plugin .codex-plugin .cursor-plugin LICENSE README.md assets mcp.json plugin.json skills third_party -type f | LC_ALL=C sort | while IFS= read -r f; do shasum -a 256 "$f"; done | shasum -a 256 | cut -c1-64)" = "737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128"; } || { echo "codex-plugin.new is not exactly the verified plugin (plugin.content_sha256 737366aaf27347de5e5b3deb385c57f2ea4ba4d8d00d143816163b8aa3cb8128): unexpected entries, links or content" >&2; rm -rf codex-plugin.new; exit 1; }
           mv codex-plugin codex-plugin.old
           mv codex-plugin.new codex-plugin
           if codex plugin add straddle@straddle; then
@@ -474,13 +474,13 @@ instructions:
       validate: |-
         (
           set -eu
-          codex plugin list --json | python3 -c 'import json,sys; p={x["pluginId"]: x for x in json.load(sys.stdin)["installed"]}["straddle@straddle"]; assert p["version"]=="0.1.1" and p["enabled"], p'
+          codex plugin list --json | python3 -c 'import json,sys; p={x["pluginId"]: x for x in json.load(sys.stdin)["installed"]}["straddle@straddle"]; assert p["version"]=="0.1.2" and p["enabled"], p'
           codex mcp list --json | python3 -c 'import json,sys; t={x["name"]: x.get("transport") or {} for x in json.load(sys.stdin) if x.get("enabled")}; s={k: t.get(k, {}).get("url")==v for k, v in {"straddle-api": "https://mcp.scalar.com/mcp/d5d1b1c2-ae5b-432d-b795-4fcb31cfdedd", "straddle-docs": "https://straddle-build-straddle-openapi.apidocumentation.com/mcp"}.items()}; s["straddle-api bearer_token_env_var is STRADDLE_API_KEY"]=t.get("straddle-api", {}).get("bearer_token_env_var")=="STRADDLE_API_KEY"; all(s.values()) or sys.exit("Codex Straddle MCP configuration does not match: " + json.dumps(s))'
         )
   cursor:
     manual: true
     notes:
-      - "Cursor serves a team marketplace from the repository's default branch. Its import takes only the owner/repo URL and has no tag, branch or version control, so it can't select or pin tag v0.1.1."
+      - "Cursor serves a team marketplace from the repository's default branch. Its import takes only the owner/repo URL and has no tag, branch or version control, so it can't select or pin tag v0.1.2."
       - "Cursor's copy is not checked against SHA256SUMS or plugin.content_sha256. Validate checks the installed version metadata, the skill count and the MCP server names, not file contents."
       - "Saving STRADDLE_API_KEY in Configure and an authenticated straddle-api call have not been exercised in Cursor."
       - "On 2026-10-05 a marketplace imported only in the Cursor team dashboard did not appear in the IDE catalog within 3 minutes. Importing the same repository from the IDE showed it at once, without a second dashboard marketplace. So the install imports from the IDE. Cursor's plugin docs describe Dashboard -> Plugins & MCPs -> Add Marketplace -> Import from Repo, and on Enterprise plans only admins can add team marketplaces."
@@ -495,22 +495,19 @@ instructions:
       remove:
         - "Uninstall the Straddle plugin, then remove the team marketplace."
       validate:
-        - "Check that the installed copy's .cursor-plugin/plugin.json, under ~/.cursor/plugins/cache/, has version 0.1.1."
+        - "Check that the installed copy's .cursor-plugin/plugin.json, under ~/.cursor/plugins/cache/, has version 0.1.2."
         - "Check that Cursor shows 9 straddle-* skills and the straddle-api and straddle-docs MCP servers for the Straddle plugin."
 gates:
   - id: "walkthrough-approval"
     requirement: "Keith's explicit yes on the source and client walkthrough before publication (ME-666, ME-668, ME-669, ME-670, ME-815)"
-    status: "passed"
-    evidence: "Keith approved the skills v0.1.1 release in the ask UI on 2026-10-05 (relayed by Main) after the exact source and client walkthrough: plugin source f2d9656194612b4c15fdcbf881d884b93d5245c9 (merge of PR 35), straddle-plugin-0.1.1.zip sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b"
+    status: "open"
   - id: "wizard-npm-publication"
     requirement: "@straddlecom/wizard installs from npm with provenance, built from straddle-build/wizard (ME-667)"
     status: "passed"
-    evidence: "@straddlecom/wizard 0.1.1 on npm (latest), dist.integrity sha512-wnWYdryNl4z1K71AM2HeHbbqRK0JMoekWTK49d8ezyLH+FPdQRhHkVqnIvVhcXlTJ6U9rcqms1K/Jmxud+Y6NA==, published by trusted publishing from straddle-build/wizard .github/workflows/release.yml at tag v0.1.1, commit 2ccc47c2c64c1b4bb4d90e379f184cb1f019fe19, run https://github.com/straddle-build/wizard/actions/runs/37254492729; SLSA provenance https://registry.npmjs.org/-/npm/v1/attestations/@straddlecom%2fwizard@0.1.1 (Rekor logIndex 3080474669), subject digest equal to dist.integrity; GitHub release https://github.com/straddle-build/wizard/releases/tag/v0.1.1"
+    evidence: "@straddlecom/wizard 0.1.2 on npm (latest), dist.integrity sha512-z73F2M3hf1MSlHW/GHDr1X13Zpa1c8qUJGuIrfgAfQ6UvOPN7zGVt/rca1MzFSsyC4m5T9Y1VSQ8WIDvdMGvGQ==, published by trusted publishing from straddle-build/wizard .github/workflows/release.yml at tag v0.1.2, commit b312ce689ebddd18c70ff313fa4080bcbea04039 (merge of wizard PR 18), run https://github.com/straddle-build/wizard/actions/runs/37268897053; SLSA provenance https://registry.npmjs.org/-/npm/v1/attestations/@straddlecom%2fwizard@0.1.2 (Rekor logIndex 3082933801), subject digest equal to dist.integrity; GitHub release https://github.com/straddle-build/wizard/releases/tag/v0.1.2"
   - id: "plugin-release-tag"
     requirement: "Separately approved tag under the version-tag immutability ruleset, with the plugin checksum published (ME-810)"
-    status: "passed"
-    evidence: "Keith approved tag v0.1.1 in the ask UI on 2026-10-05 (relayed by Main), conditional on a records-only commit after f2d9656194612b4c15fdcbf881d884b93d5245c9 whose plugin archive bytes are unchanged (sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b) and on the release checks passing. Ruleset version-tag-immutability (id 22067157) and immutable releases on straddle-build/skills were recorded for v0.1.0. The plugin checksum is published by the tag's release.yml run, which attaches SHA256SUMS in the same gh release create as straddle-plugin-0.1.1.zip"
+    status: "open"
   - id: "clean-client-acceptance"
     requirement: "Manifest-generated install, update and remove instructions pass in clean Claude Code, Codex and Cursor environments (ME-810, ME-659)"
-    status: "deferred"
-    evidence: "Deferred by Keith 2026-10-05 for v0.1.1 only: published release-channel install/update/remove in clean Claude Code, Codex and Cursor runs immediately after publication of tag v0.1.1; owner Main (agent conductor). Before the tag, Claude Code and Codex passed candidate 0.1.1 install/validate/remove and published 0.1.0-to-candidate 0.1.1 upgrade on source 23a5d4ef5cb8b940579509b39d05ceaeabadbb37, archive sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b. This deferral does not cover Cursor's pre-tag team-marketplace lifecycle, which is recorded under clients.cursor"
+    status: "open"
