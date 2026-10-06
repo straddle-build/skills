@@ -1,13 +1,15 @@
 import express from "express";
-import { findOrderByCharge, saveEvent, saveOrder } from "./db.js";
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import { recordEvent } from "./db.ts";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
 const secret = process.env.STRADDLE_WEBHOOK_SECRET;
 if (!secret) throw new Error("STRADDLE_WEBHOOK_SECRET is not set");
 
-const SETTLED = new Set(["paid", "failed", "reversed", "cancelled"]);
-const KNOWN = new Set(["created", "scheduled", "on_hold", "pending", ...SETTLED]);
+// The charge statuses a charge.event.v1 delivers. Anything else is stored as `unsettled`, never as settled.
+const KNOWN: Record<string, true> = {
+  created: true, scheduled: true, on_hold: true, pending: true, paid: true, failed: true, reversed: true, cancelled: true,
+};
 
 router.post("/webhooks/straddle", express.raw({ type: "*/*" }), async (req, res) => {
   let event;
@@ -17,13 +19,29 @@ router.post("/webhooks/straddle", express.raw({ type: "*/*" }), async (req, res)
     console.warn("straddle webhook rejected", { stage: "signature", headers: Object.keys(req.headers).filter((h) => h.startsWith("webhook-")) });
     return res.sendStatus(400);
   }
-  if (!(await saveEvent(event.event_id))) return res.sendStatus(200);
-  if (event.event_type === "charge.event.v1") {
-    const order = await findOrderByCharge(event.data.id);
-    // An unrecognized status (such as validating) is stored but never treated as settled.
-    const status = KNOWN.has(event.data.status) ? event.data.status : "unsettled";
-    if (order) await saveOrder({ ...order, chargeStatus: status });
-    console.info("straddle charge status", { charge: event.data.id, status, returnCode: event.data.status_details?.code, requestId: event.data.request_id });
+  const charge = event.event_type === "charge.event.v1" ? event.data : undefined;
+  try {
+    // The event and the status it carries are committed together before the 2xx; a failed write answers 500 so
+    // Straddle retries, and a redelivery of a stored event is a no-op.
+    const stored = await recordEvent({
+      eventId: event.event_id,
+      eventType: event.event_type,
+      payload: req.body.toString("utf8"),
+      charge: charge && {
+        chargeId: charge.id,
+        status: Object.hasOwn(KNOWN, charge.status) ? charge.status : "unsettled",
+        // Ordered by when the status changed, not by arrival; events without changed_at use updated_at.
+        changedAt: charge.status_details?.changed_at ?? charge.updated_at,
+        reason: charge.status_details?.reason,
+        code: charge.status_details?.code,
+      },
+    });
+    if (stored && charge) {
+      console.info("straddle charge status", { charge: charge.id, status: charge.status, returnCode: charge.status_details?.code, requestId: event.data.request_id });
+    }
+  } catch (err) {
+    console.error("straddle webhook not stored", { event: event.event_id, error: err instanceof Error ? err.name : "unknown" });
+    return res.sendStatus(500);
   }
   res.sendStatus(200);
 });

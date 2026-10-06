@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Commits the fixture's base as the session's starting point, snapshots it with the payment review's session-state
 # script, applies the session's changes uncommitted, then writes the payment review report the Wizard saved after
-# its review: current for this plan and code, with one Critical and one High finding.
-# Runs only under `claude plugin eval --scaffold`.
+# its review: current for this plan and code, with one Critical and one High finding. Last, it installs the app's
+# declared dependencies from its lockfile (registry downloads only, no install scripts, no Straddle request), so the
+# installed SDK can be read; node_modules stays git-ignored. Runs only under `claude plugin eval --scaffold`.
 set -euo pipefail
 case_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 session_state="$case_dir/../../skills/straddle-payment-review/scripts/session-state"
@@ -35,6 +36,7 @@ Code hash: $code_hash
 
 | Severity | File:line | Impact | Fix |
 | --- | --- | --- | --- |
-| Critical | src/checkout.ts:40 | The tip charge amount comes from the request body, so a signed-in user can charge any amount to the order's paykey. | Charge a tip amount chosen from server-side options, or validate it against server-side limits. |
-| High | src/checkout.ts:39 | The tip route never checks that the order belongs to the signed-in user, so any user can charge a tip to another owner's bank account. | Require order.ownerId to equal the signed-in user before charging. |
+| Critical | src/checkout.ts:60 | The tip charge amount comes from the request body, so a signed-in user can charge any amount to the order's paykey. | Charge a tip amount chosen from server-side options, or validate it against server-side limits. |
+| High | src/checkout.ts:59 | The tip route never checks that the order belongs to the signed-in user, so any user can charge a tip to another owner's bank account. | Require order.ownerId to equal the signed-in user before charging. |
 EOF
+npm ci --ignore-scripts --no-audit --no-fund --prefer-offline --loglevel=error >/dev/null

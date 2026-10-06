@@ -11,13 +11,17 @@ Direct integration on `@straddlecom/straddle` 1.0.4. Walk owners pay for walks w
 
 ## Notification path
 
-Webhook endpoint at `/api/webhooks/straddle`, verified with the SDK's `webhooks.unwrap` on the raw body.
+Webhook endpoint at `/api/webhooks/straddle`, verified with the SDK's `webhooks.unwrap` on the raw body. Each verified event is stored with its charge status in one SQLite transaction before the `2xx`; status is projected by `status_details.changed_at`, per charge ID.
 
 ## Files
 
 - `src/straddle.ts`: client from server configuration.
 - `src/checkout.ts`: charge the order's stored total, and a tip.
 - `src/webhooks.ts`: verify, store, and apply charge events.
+- `src/db.ts`: orders and webhook events in a file-backed `node:sqlite` database (Node 24, single instance).
+- `src/server.ts`: register the checkout and webhook routes.
+- `test/db.test.ts`: event store checks.
+- `package.json`, `README.md`: Node 24 and the test script.
 
 ## Future Sandbox writes
 
