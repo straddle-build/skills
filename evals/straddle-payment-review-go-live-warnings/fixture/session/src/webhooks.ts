@@ -34,6 +34,7 @@ router.post("/webhooks/straddle", express.raw({ type: "*/*" }), async (req, res)
         changedAt: charge.status_details?.changed_at ?? charge.updated_at,
         reason: charge.status_details?.reason,
         code: charge.status_details?.code,
+        source: charge.status_details?.source,
       },
     });
     if (stored && charge) {

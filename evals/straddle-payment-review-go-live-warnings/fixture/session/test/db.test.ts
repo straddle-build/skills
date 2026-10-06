@@ -4,14 +4,57 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { test } from "node:test";
-import { openStore } from "../src/db.ts";
+import { openStore, paymentState } from "../src/db.ts";
 
 const freshPath = () => join(mkdtempSync(join(tmpdir(), "walkies-db-")), "walkies.sqlite");
-const event = (eventId: string, chargeId: string, status: string, changedAt: string) => ({
+const event = (eventId: string, chargeId: string, status: string, changedAt: string, details: { reason?: string; code?: string; source?: string } = {}) => ({
   eventId,
   eventType: "charge.event.v1",
-  payload: JSON.stringify({ event_id: eventId, data: { id: chargeId, status, status_details: { changed_at: changedAt } } }),
-  charge: { chargeId, status, changedAt },
+  payload: JSON.stringify({ event_id: eventId, data: { id: chargeId, status, status_details: { changed_at: changedAt, ...details } } }),
+  charge: { chargeId, status, changedAt, ...details },
+});
+
+test("a paid walk charge later reversed stops being payable, while the tip stays paid", () => {
+  const store = openStore(freshPath());
+  store.recordEvent(event("evt-walk-paid", "ch-walk", "paid", "2026-10-05T04:00:00Z", { reason: "ok", source: "system" }));
+  store.recordEvent(event("evt-tip-paid", "ch-tip", "paid", "2026-10-05T04:30:00Z", { reason: "ok", source: "system" }));
+  assert.deepEqual(paymentState(store.getChargeStatus("ch-walk")), { state: "paid", payable: true, reason: "ok", code: null, source: "system", supportAction: null });
+  store.recordEvent(event("evt-walk-reversed", "ch-walk", "reversed", "2026-10-07T09:00:00Z", { reason: "insufficient_funds", code: "R01", source: "bank_decline" }));
+  // A late pending and a redelivered paid change nothing.
+  store.recordEvent(event("evt-walk-pending", "ch-walk", "pending", "2026-10-04T12:00:00Z", { reason: "ok", source: "system" }));
+  store.recordEvent(event("evt-walk-paid", "ch-walk", "paid", "2026-10-05T04:00:00Z", { reason: "ok", source: "system" }));
+  const walk = paymentState(store.getChargeStatus("ch-walk"));
+  assert.equal(walk.state, "reversed");
+  assert.equal(walk.payable, false);
+  assert.equal(walk.code, "R01");
+  assert.equal(walk.supportAction, "Contact the owner; support may resubmit once within Nacha's reinitiation limits.");
+  assert.equal(paymentState(store.getChargeStatus("ch-tip")).state, "paid");
+});
+
+test("only a user_action hold is ours, a watchtower hold is under review, any other hold needs review", () => {
+  const store = openStore(freshPath());
+  store.recordEvent(event("evt-1", "ch-own", "on_hold", "2026-10-05T04:00:00Z", { reason: "user_request", source: "user_action" }));
+  store.recordEvent(event("evt-2", "ch-risk", "on_hold", "2026-10-05T04:00:00Z", { reason: "risk_review", source: "watchtower" }));
+  store.recordEvent(event("evt-3", "ch-odd", "on_hold", "2026-10-05T04:00:00Z", { reason: "other" }));
+  assert.equal(paymentState(store.getChargeStatus("ch-own")).state, "on_hold");
+  assert.equal(paymentState(store.getChargeStatus("ch-risk")).state, "under_review");
+  assert.deepEqual([paymentState(store.getChargeStatus("ch-odd")).state, paymentState(store.getChargeStatus("ch-odd")).payable], ["needs_review", false]);
+});
+
+test("failed and cancelled charges are not payable and name a support action by reason", () => {
+  const store = openStore(freshPath());
+  store.recordEvent(event("evt-1", "ch-closed", "failed", "2026-10-05T04:00:00Z", { reason: "closed_bank_account", code: "R02", source: "bank_decline" }));
+  store.recordEvent(event("evt-2", "ch-cancel", "cancelled", "2026-10-05T04:00:00Z", { reason: "user_request", source: "user_action" }));
+  const failed = paymentState(store.getChargeStatus("ch-closed"));
+  assert.deepEqual([failed.state, failed.payable, failed.supportAction], ["failed", false, "Ask the owner to link another bank account; don't retry this one."]);
+  const cancelled = paymentState(store.getChargeStatus("ch-cancel"));
+  assert.deepEqual([cancelled.state, cancelled.payable, cancelled.supportAction], ["cancelled", false, "Contact support; no new charge is made automatically."]);
+});
+
+test("an unknown status is processing and never paid; no charge yet is payable", () => {
+  const store = openStore(freshPath());
+  store.recordEvent(event("evt-1", "ch-walk", "unsettled", "2026-10-05T04:00:00Z"));
+  assert.deepEqual([paymentState(store.getChargeStatus("ch-walk")).state, paymentState(undefined).state], ["processing", "none"]);
 });
 
 test("a repeated event is stored once and changes nothing", () => {

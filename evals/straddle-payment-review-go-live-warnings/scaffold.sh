@@ -36,7 +36,7 @@ Code hash: $code_hash
 
 | Severity | File:line | Impact | Fix |
 | --- | --- | --- | --- |
-| Critical | src/checkout.ts:60 | The tip charge amount comes from the request body, so a signed-in user can charge any amount to the order's paykey. | Charge a tip amount chosen from server-side options, or validate it against server-side limits. |
-| High | src/checkout.ts:59 | The tip route never checks that the order belongs to the signed-in user, so any user can charge a tip to another owner's bank account. | Require order.ownerId to equal the signed-in user before charging. |
+| Critical | src/checkout.ts:65 | The tip charge amount comes from the request body, so a signed-in user can charge any amount to the order's paykey. | Charge a tip amount chosen from server-side options, or validate it against server-side limits. |
+| High | src/checkout.ts:64 | The tip route never checks that the order belongs to the signed-in user, so any user can charge a tip to another owner's bank account. | Require order.ownerId to equal the signed-in user before charging. |
 EOF
 npm ci --ignore-scripts --no-audit --no-fund --prefer-offline --loglevel=error >/dev/null

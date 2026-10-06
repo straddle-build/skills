@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { APIError } from "@straddlecom/straddle";
 import express, { type NextFunction, type Response } from "express";
 import { requireUser, type AuthedRequest } from "./auth.ts";
-import { getOrder, saveOrder } from "./db.ts";
+import { getOrder, getPaymentState, saveOrder, type PaymentState } from "./db.ts";
 import { router } from "./routes.ts";
 import { straddle } from "./straddle.ts";
 
@@ -44,7 +44,12 @@ router.post("/orders/:id/checkout", express.json(), requireUser, async (req, res
     const { user } = req as AuthedRequest;
     const order = await getOrder(req.params.id);
     if (!order || order.ownerId !== user.id) return res.status(404).json({ error: "order not found" });
-    if (order.chargeId) return res.json({ chargeId: order.chargeId });
+    if (order.chargeId) {
+      const payment = await getPaymentState(order.chargeId);
+      // A charge that ended without paying is never reused as payment, and no new charge is made: support recovers it.
+      if (!payment.payable) return res.status(409).json({ error: "payment needs support", chargeId: order.chargeId, payment });
+      return res.json({ chargeId: order.chargeId, payment });
+    }
     const chargeId = await charge(order, order.amountCents, `order-${order.id}`, req.ip ?? "0.0.0.0");
     await saveOrder({ ...order, chargeId });
     res.json({ chargeId });
@@ -60,6 +65,28 @@ router.post("/orders/:id/tip", express.json(), requireUser, async (req, res: Res
     const tipChargeId = await charge(order, Number(req.body.tipCents), `tip-${order.id}`, req.ip ?? "0.0.0.0");
     await saveOrder({ ...order, tipChargeId });
     res.json({ chargeId: tipChargeId });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// The walk is ready to fulfil only while its charge is paid; a later reversal suspends it.
+const FULFILLMENT: Partial<Record<PaymentState["state"], string>> = { paid: "ready", reversed: "suspended" };
+
+router.get("/orders/:id", requireUser, async (req, res: Response, next: NextFunction) => {
+  try {
+    const { user } = req as AuthedRequest;
+    const order = await getOrder(req.params.id);
+    if (!order || order.ownerId !== user.id) return res.status(404).json({ error: "order not found" });
+    const walk = await getPaymentState(order.chargeId);
+    const tip = await getPaymentState(order.tipChargeId);
+    res.json({
+      orderId: order.id,
+      amountCents: order.amountCents,
+      currency: order.currency,
+      walk: { chargeId: order.chargeId ?? null, ...walk, fulfillment: FULFILLMENT[walk.state] ?? "not_ready" },
+      tip: { chargeId: order.tipChargeId ?? null, ...tip },
+    });
   } catch (err) {
     next(err);
   }
