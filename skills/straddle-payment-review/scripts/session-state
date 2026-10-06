@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# Session state for the Straddle payment review, read from the bytes on disk. No Git clean or smudge filter,
+# textconv, external diff, fsmonitor hook, Git hook, pager, or signing program runs, because a repository's configuration
+# can point any of them at an arbitrary command.
+#
+#   session-state snapshot           Wizard and eval scaffolds only: writes the start-state commit, prints its sha
+#   session-state compare <snapshot> read-only: prints "code-hash <64 hex>", then "added|modified|deleted <path>"
+#
+# Exits non-zero with nothing on stdout when it can't read the repository, the snapshot, or a file.
+set -euo pipefail
+export LC_ALL=C
+
+git_raw=(git --no-pager -c core.fsmonitor=false -c core.untrackedCache=false -c core.hooksPath=/dev/null)
+fail() { echo "session-state: $1" >&2; exit 1; }
+
+excluded() {
+  case "$1" in
+    .straddle-wizard/* | straddle-payment-review.md | straddle-go-live-report.md) return 0 ;;
+    .env* | */.env* | *.pem | *.key) return 0 ;;
+  esac
+  return 1
+}
+
+# "<mode> <blob> <path>" per non-excluded file on disk, tracked or untracked. Paths stay byte-exact, spaces
+# included. Pass -w to store the blobs (snapshot); without it nothing is written.
+file_records() {
+  local write="${1:-}" path mode blob target regular=() i=0
+  "${git_raw[@]}" ls-files -z --cached --others --exclude-standard >/dev/null || return 1
+  while IFS= read -r -d '' path; do
+    excluded "$path" && continue
+    # Records are lines, and hash-object --stdin-paths unquotes a leading quote and drops a trailing CR.
+    case "$path" in
+      *$'\n'* | *$'\r'* | \"*) echo "session-state: unsupported path: $path" >&2; return 1 ;;
+    esac
+    if [ -L "$path" ]; then
+      target="$(readlink -n -- "$path" && printf x)" || return 1
+      target="${target%x}"
+      blob="$(printf '%s' "$target" | "${git_raw[@]}" hash-object $write --no-filters --stdin)" || return 1
+      printf '120000 %s %s\n' "$blob" "$path"
+    elif [ -d "$path" ]; then
+      echo "session-state: submodule or nested repository at $path isn't supported" >&2
+      return 1
+    elif [ -e "$path" ]; then
+      [ -f "$path" ] && [ -r "$path" ] || { echo "session-state: cannot read $path" >&2; return 1; }
+      regular+=("$path")
+    fi
+  done < <("${git_raw[@]}" ls-files -z --cached --others --exclude-standard | sort -z -u)
+  [ ${#regular[@]} -gt 0 ] || return 0
+  while IFS= read -r blob; do
+    path="${regular[$i]}"
+    if [ -x "$path" ]; then mode=100755; else mode=100644; fi
+    printf '%s %s %s\n' "$mode" "$blob" "$path"
+    i=$((i + 1))
+  done < <(printf '%s\n' "${regular[@]}" | "${git_raw[@]}" hash-object $write --no-filters --stdin-paths)
+  [ "$i" -eq ${#regular[@]} ] || { echo "session-state: could not hash every file" >&2; return 1; }
+}
+
+snapshot_records() {
+  local meta path
+  "${git_raw[@]}" ls-tree -r -z --full-tree "$1" >/dev/null || return 1
+  while IFS= read -r -d '' meta; do
+    path="${meta#*$'\t'}"
+    excluded "$path" && continue
+    meta="${meta%%$'\t'*}"
+    printf '%s %s %s\n' "${meta%% *}" "${meta##* }" "$path"
+  done < <("${git_raw[@]}" ls-tree -r -z --full-tree "$1")
+}
+
+sha256() { if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 256; fi; }
+
+top="$("${git_raw[@]}" rev-parse --show-toplevel)" || fail "not inside a Git repository"
+cd "$top"
+
+case "${1:-}" in
+  snapshot)
+    [ $# -eq 1 ] || fail "usage: session-state snapshot"
+    tmp="$(mktemp -d)"
+    trap 'rm -rf "$tmp"' EXIT
+    records="$(file_records -w)" || fail "could not read the working tree"
+    if [ -n "$records" ]; then
+      printf '%s\n' "$records" | while IFS= read -r record; do
+        rest="${record#* }"
+        printf '%s %s\t%s\n' "${record%% *}" "${rest%% *}" "${rest#* }"
+      done |
+        GIT_INDEX_FILE="$tmp/index" "${git_raw[@]}" update-index --add --index-info || fail "could not build the snapshot index"
+    fi
+    tree="$(GIT_INDEX_FILE="$tmp/index" "${git_raw[@]}" write-tree)" || fail "could not write the snapshot tree"
+    parent=()
+    if head="$("${git_raw[@]}" rev-parse --verify --quiet HEAD)"; then parent=(-p "$head"); fi
+    "${git_raw[@]}" commit-tree --no-gpg-sign "$tree" ${parent[@]+"${parent[@]}"} -m "straddle wizard session start" ||
+      fail "could not write the snapshot commit"
+    ;;
+  compare)
+    [ $# -eq 2 ] || fail "usage: session-state compare <snapshot>"
+    "${git_raw[@]}" rev-parse --verify --quiet "$2^{commit}" >/dev/null || fail "snapshot $2 is not a commit"
+    now="$(file_records | sort -t ' ' -k3)" || fail "could not read the working tree"
+    before="$(snapshot_records "$2")" || fail "could not read snapshot $2"
+    hash="$(printf '%s\n' "$now" | sha256)" || fail "could not hash"
+    echo "code-hash ${hash%% *}"
+    awk 'NR == FNR { if ($0 != "") start[substr($0, length($1) + length($2) + 3)] = $1 " " $2; next }
+         $0 != "" { p = substr($0, length($1) + length($2) + 3)
+                    if (!(p in start)) print "added " p
+                    else if (start[p] != $1 " " $2) print "modified " p
+                    delete start[p] }
+         END { for (p in start) print "deleted " p }' \
+      <(printf '%s\n' "$before") <(printf '%s\n' "$now") | sort -k2
+    ;;
+  *) fail "usage: session-state snapshot | session-state compare <snapshot>" ;;
+esac
