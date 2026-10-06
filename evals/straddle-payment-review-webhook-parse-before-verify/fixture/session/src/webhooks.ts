@@ -1,7 +1,7 @@
 import express from "express";
-import { saveEvent } from "./db.js";
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import { saveEvent } from "./db.ts";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
 router.post("/webhooks/straddle", express.text({ type: "*/*" }), async (req, res) => {
   const event = JSON.parse(req.body);

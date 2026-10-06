@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
-import type { Response } from "express";
-import { requireUser, type AuthedRequest } from "./auth.js";
-import { saveOrder } from "./db.js";
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import express, { type Response } from "express";
+import { requireUser, type AuthedRequest } from "./auth.ts";
+import { saveOrder } from "./db.ts";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
 const WALK_PRICE_CENTS = 2500;
 
-router.post("/walks/book", requireUser, async (req, res: Response) => {
+router.post("/walks/book", express.json(), requireUser, async (req, res: Response) => {
   const { user } = req as AuthedRequest;
   const order = { id: randomUUID(), ownerId: user.id, amountCents: WALK_PRICE_CENTS, currency: "USD" as const, paykey: "" };
   await saveOrder(order);

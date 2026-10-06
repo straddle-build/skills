@@ -1,11 +1,11 @@
-import type { Response } from "express";
-import { requireUser, type AuthedRequest } from "./auth.js";
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import express, { type Response } from "express";
+import { requireUser, type AuthedRequest } from "./auth.ts";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
 const TEST_BANK = { account_number: "123456789", routing_number: "011000028" };
 
-router.post("/bank/link", requireUser, async (req, res: Response) => {
+router.post("/bank/link", express.json(), requireUser, async (req, res: Response) => {
   const { user } = req as AuthedRequest;
   const bank = req.body.useTestBank
     ? TEST_BANK

@@ -1,6 +1,8 @@
 import express from "express";
-import { router } from "./routes.js";
+import "./legacy-payouts.ts";
+import "./tips.ts";
+import { router } from "./routes.ts";
 
 const app = express();
 app.use("/api", router);
-app.listen(3000);
+app.listen(Number(process.env.PORT ?? 3000));

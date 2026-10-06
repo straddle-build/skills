@@ -1,10 +1,10 @@
 import Straddle from "@straddlecom/straddle";
-import type { Response } from "express";
-import { requireUser, type AuthedRequest } from "./auth.js";
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import express, { type Response } from "express";
+import { requireUser, type AuthedRequest } from "./auth.ts";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
-router.post("/customers", requireUser, async (req, res: Response) => {
+router.post("/customers", express.json(), requireUser, async (req, res: Response) => {
   const { user } = req as AuthedRequest;
   const email = String(req.body.email);
   try {

@@ -1,10 +1,10 @@
-import type { Response } from "express";
-import { requireUser } from "./auth.js";
-import { getOrder } from "./db.js";
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import express, { type Response } from "express";
+import { requireUser } from "./auth.ts";
+import { getOrder } from "./db.ts";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
-router.post("/orders/:id/refund", requireUser, async (req, res: Response) => {
+router.post("/orders/:id/refund", express.json(), requireUser, async (req, res: Response) => {
   const order = await getOrder(req.params.id);
   if (!order || !order.chargeId) return res.status(404).json({ error: "order not found" });
   const payout = await straddle.payouts.create(

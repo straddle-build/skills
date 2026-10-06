@@ -1,7 +1,8 @@
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import express from "express";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
-router.post("/payouts", async (req, res) => {
+router.post("/payouts", express.json(), async (req, res) => {
   const payout = await straddle.payouts.create({
     paykey: req.body.paykey,
     amount: req.body.amount,

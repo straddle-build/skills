@@ -1,12 +1,12 @@
-import type { Response } from "express";
-import { requireUser, type AuthedRequest } from "./auth.js";
-import { getOrder } from "./db.js";
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import express, { type Response } from "express";
+import { requireUser, type AuthedRequest } from "./auth.ts";
+import { getOrder } from "./db.ts";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
 const TIP_CENTS = 500;
 
-router.post("/orders/:id/tip", requireUser, async (req, res: Response) => {
+router.post("/orders/:id/tip", express.json(), requireUser, async (req, res: Response) => {
   const { user } = req as AuthedRequest;
   const order = await getOrder(req.params.id);
   if (!order || order.ownerId !== user.id) return res.status(404).json({ error: "order not found" });

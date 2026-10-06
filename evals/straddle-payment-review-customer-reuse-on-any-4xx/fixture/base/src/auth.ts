@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { verifySessionToken } from "./tokens.js";
+import { verifySessionToken } from "./tokens.ts";
 
 export interface AuthedRequest extends Request {
   user: { id: string };

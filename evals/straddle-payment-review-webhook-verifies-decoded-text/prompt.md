@@ -3,7 +3,8 @@ description: "Reports webhook verification that runs on a text-decoded body inst
 tags: [straddle-payment-review]
 max_turns: 40
 timeout_seconds: 600
-allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, Bash]
+allowed_tools: [Read, Glob, Grep, Skill]
 ---
 Straddle Wizard review: print the report; don't write files.
-Use the straddle-payment-review skill on this repository. The session baseline is in `.straddle-wizard/session-baseline.json`.
+Use the straddle-payment-review skill on this repository.
+Straddle Wizard review scope: .straddle-wizard/runs/eval/review-scope

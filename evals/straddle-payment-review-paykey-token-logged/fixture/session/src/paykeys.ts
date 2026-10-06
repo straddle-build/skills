@@ -1,9 +1,9 @@
-import type { Response } from "express";
-import { requireUser, type AuthedRequest } from "./auth.js";
-import { router } from "./routes.js";
-import { straddle } from "./straddle.js";
+import express, { type Response } from "express";
+import { requireUser, type AuthedRequest } from "./auth.ts";
+import { router } from "./routes.ts";
+import { straddle } from "./straddle.ts";
 
-router.post("/bank/link", requireUser, async (req, res: Response) => {
+router.post("/bank/link", express.json(), requireUser, async (req, res: Response) => {
   const { user } = req as AuthedRequest;
   const paykey = await straddle.bridge.link.plaid(
     { customer_id: `owner-${user.id}`, plaid_token: String(req.body.plaidToken) },
