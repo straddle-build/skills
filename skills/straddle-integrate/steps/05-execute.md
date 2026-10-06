@@ -25,7 +25,7 @@ Record, for every row: the operation, executing tool, acting account, external I
 
 ## Notification endpoints
 
-Webhook, FIFO, and polling endpoints are created and enabled in the Straddle dashboard by the developer. Ask the developer which endpoint they enabled and which events it subscribes to, and record that as a server-side resource. Do not create or change endpoints through the API or MCP. When the handler is reachable, ask the developer to trigger one Sandbox event or wait for the next status change, then confirm through the handler's stored events, or the polling consumer's committed offset, that the event was persisted once. Wait at most ten minutes. Never poll a charge or account read instead.
+Webhook, FIFO, and polling endpoints are created and enabled in the Straddle dashboard by the developer. Ask the developer which endpoint they enabled and which events it subscribes to, and record that as a server-side resource. Do not create or change endpoints through the API or MCP. When the handler is reachable, ask the developer to trigger one Sandbox event for a resource this run created, or wait for the next status change, then confirm through the handler's stored events, or the polling consumer's committed offset, that the event was persisted once. A Dashboard Testing or Svix Play example send proves the handler, not Straddle delivery. Wait at most ten minutes. Never poll a charge or account read instead.
 
 ## Independent verification
 
