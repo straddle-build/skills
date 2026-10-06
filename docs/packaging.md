@@ -28,7 +28,7 @@ Native installation in each client has not been accepted yet. The commands below
 | `.github/workflows/release.yml` | GitHub Actions, on a `v*` tag push | The plugin release cut. See [Plugin releases](#plugin-releases). |
 | `third_party/LICENSES.md` | Maintainers | Every vendored third-party file and its license. A skill that vendors a file also carries the notice in its own `references/third-party-licenses.md`, so skills-only installs keep it. |
 
-The version is `0.1.1` in `plugin.json`, all three native manifests, and both version fields in `.claude-plugin/marketplace.json`. Clients stay on a release until the version changes, so bump every copy together. The validator fails when they differ.
+The version is `0.1.2` in `plugin.json`, all three native manifests, and both version fields in `.claude-plugin/marketplace.json`. Clients stay on a release until the version changes, so bump every copy together. The validator fails when they differ.
 
 ## MCP servers and credentials
 
