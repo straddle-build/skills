@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: straddle-payment-review-customer-reuse-on-any-4xx
+context:
+  scaffold_script: scaffold.sh

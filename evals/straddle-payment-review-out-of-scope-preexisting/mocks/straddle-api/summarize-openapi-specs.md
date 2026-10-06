@@ -1,0 +1,1 @@
+Straddle API (contract 1.0.4). Resources: customers, bridge, paykeys, charges, payouts, funding_events, payments, organizations, accounts, representatives, linked_bank_accounts, account_settings, capability_requests. Default server `https://sandbox.straddle.com`. Webhook events include charge.created.v1 and charge.event.v1.

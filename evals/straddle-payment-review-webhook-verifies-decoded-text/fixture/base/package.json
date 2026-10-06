@@ -1,0 +1,9 @@
+{
+  "name": "walkies",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@straddlecom/straddle": "1.0.4",
+    "express": "4.21.2"
+  }
+}
