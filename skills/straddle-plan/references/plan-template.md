@@ -153,7 +153,7 @@ Each row runs later, in Integrate or Test, only after its own preview and approv
 - Retry with the same idempotency key:
 - Two-account proof (SaaS and marketplace):
 - Notification proof (one signed event received, duplicate ignored):
-- Payout handlers, refund payouts included (`paid`, `failed`, `reversed`): offline, fed recorded `payout.event.v1` payloads, because Sandbox payouts haven't been observed reaching `paid`.
+- Payout handlers, refund payouts included (`paid`, `failed`, `reversed`): offline, fed recorded `payout.event.v1` payloads. Sandbox payouts haven't been observed reaching `paid`, so add a Sandbox payout scenario only with a named run on this account that showed one reach `paid`.
 
 Sandbox scenarios: the rows of the scenario matrix in the best-practices `sandbox-outcomes.md` (What your app must handle) for each lifecycle this plan covers.
 

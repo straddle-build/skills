@@ -2,7 +2,7 @@
 
 `Straddle-Account-Id` names the embedded account a platform acts for. Whether to send it depends on the integration type and the operation. This table follows the Straddle CLI account-scope policy (`internal/straddleacct` in `straddle-build/straddle-cli`) for API contract 1.0.4.
 
-Keep three facts apart: the integration type the developer chose (their answer, the plan, or a local setting such as `STRADDLE_INTEGRATION_TYPE`), the platform that owns the API key, and the header behavior observed in requests. A local setting records the choice; it doesn't prove what kind of platform owns the key, and API contract 1.0.4 has no field that reports it. When they seem to disagree, ask the developer instead of inferring a type or inventing a lookup. A SaaS platform's accounts A and B can't stand in for a marketplace's, so a type change needs that type's own platform and accounts.
+Keep three facts apart: the integration type the developer chose (their answer, the plan, or the CLI's `integration_type` in `platform.toml`, which `straddle agent-context` reports), the platform that owns the API key, and the header behavior observed in requests. A local setting records the choice; it doesn't prove what kind of platform owns the key, and API contract 1.0.4 has no field that reports it. When they seem to disagree, ask the developer instead of inferring a type or inventing a lookup.
 
 | Operation group | Direct (`account`) | SaaS | Marketplace |
 | --- | --- | --- | --- |

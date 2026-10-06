@@ -66,7 +66,7 @@ A Sandbox test run proves the handlers, not only the happy path. Pick the rows t
 | Dispute and R29 block | Charge `failed_not_authorized` on a paykey made from a bank account number no other scenario, run, or demo uses | `failed` with R29, paykey `blocked` | Dispute handling and the unblock |
 | Straddle hold | Charge `on_hold_daily_limit` | `on_hold` with `amount_too_large` | Hold messaging |
 | Blocked payment | Charge `cancelled_for_fraud_risk` | `failed` with `payment_blocked` | Blocked-payment messaging |
-| Refund | Charge `paid`, then `refundCharge` | A payout with `is_refund` | Refund linking (the payout stays unpaid) |
+| Refund | Charge `paid`, then `refundCharge` | A payout with `is_refund` | Refund linking. The payout wasn't observed reaching `paid` ([payouts.md](payouts.md#events-and-sandbox-outcomes)). |
 | Cancel window | Charge `standard`, then `holdCharge`, `releaseCharge`, `cancelCharge` | `on_hold`, `created`, `cancelled` | User actions |
 | Funding | A charges funding simulation | `funding_event.created.v1` and `funding_event.event.v1` | Reconciliation |
 
@@ -75,7 +75,7 @@ Rules for the run:
 - Count a status only when it arrives through the webhook, FIFO, or polling endpoint. A create response only shows `created`.
 - Give each run's resources fresh external IDs, because the simulations and a new polling consumer also show other testers' activity on the account. Give each customer the run creates a fresh email too, because a customer's email is unique on the account and a repeated one fails with `422` ([customers-identity.md](customers-identity.md)).
 - Give each dispute and R29 scenario its own bank account number, never one another scenario or the developer's demo uses. The R29 blocks every paykey made from that account, across customers, and refuses new links of it.
-- Record the payout gap as not testable in Sandbox, and cover those handlers with recorded payloads.
+- Cover payout handlers with recorded payloads ([payouts.md](payouts.md#events-and-sandbox-outcomes)), and record whether this run observed a payout reaching `paid`.
 
 ## Events and Sandbox outcomes
 
