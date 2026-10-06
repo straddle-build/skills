@@ -1,7 +1,7 @@
 # Step 1: Scope
 
 - **Needs:** the repository in the current working directory.
-- **Tools:** Read, Glob, Grep. In a Wizard review, nothing else: no Bash. Outside a Wizard review, Bash only for this skill's `scripts/session-state compare <snapshot>` and `git cat-file blob <snapshot>:<path> | diff - <path>`.
+- **Tools:** Read, Glob, Grep. In a Wizard review, nothing else, except the read-only shell commands the Boundaries allow when a shell is your only way to read files. Outside a Wizard review, Bash only for this skill's `scripts/session-state compare <snapshot>` and `git cat-file blob <snapshot>:<path> | diff - <path>`.
 - **Next:** [02-review.md](02-review.md).
 
 Print:
@@ -12,7 +12,7 @@ STRADDLE_PROGRESS {"skill":"straddle-payment-review","step":"01-scope"}
 
 ## Wizard review scope
 
-In a Wizard review the request also carries a line `Straddle Wizard review scope: <dir>`, a directory the Wizard wrote before starting you. Use it instead of the baseline and script below, and run no command:
+In a Wizard review the request also carries a line `Straddle Wizard review scope: <dir>`, a directory the Wizard wrote before starting you. Use it instead of the baseline and script below, and compute nothing:
 
 - `<dir>/changes.txt` is the compare output: the first line `code-hash <64 hex>`, then `added <path>`, `modified <path>`, or `deleted <path>` lines.
 - `<dir>/plan-hash.txt` holds the report's `Plan hash` value.
