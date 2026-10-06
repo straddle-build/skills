@@ -64,6 +64,8 @@ cat > straddle-integration-plan.md <<'PLAN'
 | Q11 | App behavior per dues status | while the charge is `created`, `scheduled`, `on_hold`, or `pending`, the dues show "payment processing" and can't be paid again; on `paid`, mark the dues paid; on `failed` with `insufficient_funds` (an R01 or R09 return, or a failed balance check), resubmit once and keep showing "payment processing"; on another `failed` reason or `cancelled`, the dues stay unpaid and the member is emailed to pay again; on `reversed` after `paid`, mark the dues unpaid again, email the member, and resubmit once for R01 or R09 only | developer | `paid` isn't final for ACH. |
 | Q12 | Reconciliation | record each charge's `funding_ids`; match deposits by funding event `id` | developer, accepted recommendation | The bank shows one line per funding event. |
 | Q13 | Refunds and resubmits | no refunds through Straddle for now; resubmit only `insufficient_funds`, once | developer | The club doesn't refund dues. |
+| Q14 | Your identifiers | customer `external_id` = member `id` (Q5); charge `external_id` = dues `id` with `metadata` `member_id` and `period`; the one resubmit uses `<dues id>-r1`; no Bridge session `external_id`, so paykey events are matched by the paykey `id` stored on the member (Q7) | developer, accepted recommendation | A dues `id` covers exactly one charge, and charge events return the member and period. |
+| Q15 | Read strategy | dues and member status are stored on the app's records and updated only from webhook events; pages never call Straddle per row; the only direct read is a one-time lookup by exact `external_id` after an unclear create result | developer, accepted recommendation | Events drive state changes. |
 
 ## Glossary
 
