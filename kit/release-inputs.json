@@ -234,11 +234,11 @@
   "clients": {
     "claude-code": {
       "observed_version": "2.1.289",
-      "observed": "2026-10-05: isolated candidate 0.1.1 install, validation and removal, and published 0.1.0-to-candidate 0.1.1 upgrade, passed on source 23a5d4ef5cb8b940579509b39d05ceaeabadbb37; archive sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b. No model session or Straddle request; not published 0.1.1 release-channel acceptance"
+      "observed": "2026-10-06: isolated candidate 0.1.2 install, validation and removal, and published 0.1.1-to-candidate 0.1.2 upgrade, passed on source 4343ff4cd5728f6d2508f583db8e1a8542e62c37; archive sha256 38522897367a72650000b2c27c59b17e54f7eb8475c0a91b4783b91103626bad. No model session or Straddle request; not published 0.1.2 release-channel acceptance"
     },
     "codex": {
       "observed_version": "0.157.1",
-      "observed": "2026-10-05: isolated candidate 0.1.1 install, validation and removal, and published 0.1.0-to-candidate 0.1.1 upgrade, passed on source 23a5d4ef5cb8b940579509b39d05ceaeabadbb37; archive sha256 1437093ccc629a183e99c44d77feeff83c63d16d5c71a7b4382156209f732e5b. Both MCP URLs and STRADDLE_API_KEY bearer variable validated; no model session or Straddle request; not published 0.1.1 release-channel acceptance"
+      "observed": "2026-10-06: isolated candidate 0.1.2 install, validation and removal, and published 0.1.1-to-candidate 0.1.2 upgrade, passed on source 4343ff4cd5728f6d2508f583db8e1a8542e62c37; archive sha256 38522897367a72650000b2c27c59b17e54f7eb8475c0a91b4783b91103626bad. Both MCP URLs and STRADDLE_API_KEY bearer variable validated; no model session or Straddle request; not published 0.1.2 release-channel acceptance"
     },
     "cursor": {
       "observed_version": "3.22.12",
