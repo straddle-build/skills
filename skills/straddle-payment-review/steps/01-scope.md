@@ -34,13 +34,13 @@ When the file is missing or isn't valid JSON, the session's changes can't be tol
 
 ## Session changes
 
-Run `scripts/session-state compare <snapshot>` from this skill's directory, with the repository as the working directory. Its first line is `code-hash <64 hex>`; keep the hash for the report. Each later line is `added <path>`, `modified <path>`, or `deleted <path>`, comparing the bytes on disk now with the snapshot. When it exits non-zero, go to step 3 with `Status: incomplete (<its error>)`.
+Run `scripts/session-state compare <snapshot>` from this skill's directory, with the directory that holds `.straddle-wizard/` as the working directory. Its first line is `code-hash <64 hex>`; keep the hash for the report. Each later line is `added <path>`, `modified <path>`, or `deleted <path>`, comparing the bytes on disk now with the snapshot. When it exits non-zero, go to step 3 with `Status: incomplete (<its error>)`.
 
 - **Added:** the whole file is session code.
 - **Modified:** compare the start version with the file now to find the session's lines. An edit made before the session is already in the snapshot, so it doesn't count. In a Wizard review, the start version is `<dir>/start/<path>`. Outside one, `git cat-file blob <snapshot>:<path> | diff - <path>` shows the lines directly.
 - **Deleted:** the session removed the file. Judge whether its removal drops a guard that other code relied on.
 
-The script and the snapshot leave out `.straddle-wizard/`, `straddle-payment-review.md`, `straddle-go-live-report.md`, every path under a directory or file name the Wizard never opens (environment files, private keys and certificates, credential and CLI configuration, names holding `secret` or `credential`), and the developer's `--exclude` globs from `.straddle-wizard/payment-review-exclude`. Nothing else is skipped. Never open an excluded path.
+The script and the snapshot leave out `.straddle-wizard/`, `straddle-payment-review.md`, `straddle-go-live-report.md`, paths under a symlinked directory, every path under a directory or file name the Wizard never opens (environment files, private keys and certificates, credential and CLI configuration, names holding `secret` or `credential`), and the developer's `--exclude` globs from `.straddle-wizard/payment-review-exclude`. Nothing else is skipped. Never open an excluded path.
 
 Don't run `git diff`, `git show`, `git status`, or `git hash-object` here. They can run filter, textconv, or fsmonitor commands the repository's configuration names. The script and `git cat-file blob` read raw bytes and run none of them.
 
