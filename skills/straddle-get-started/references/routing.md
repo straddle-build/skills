@@ -46,5 +46,6 @@ The published docs are at `https://straddle-build-straddle-openapi.apidocumentat
 | No Straddle code, no provider to replace | [straddle-setup](../../straddle-setup/SKILL.md), then [straddle-plan](../../straddle-plan/SKILL.md) |
 | Existing provider code (Stripe, Plaid, Moov, Modern Treasury, Dwolla, Paya, Payliance, or Other) to replace or run beside | [straddle-migrate](../../straddle-migrate/SKILL.md) |
 | Straddle code already present and the developer reports a problem or wants a review | [straddle-audit](../../straddle-audit/SKILL.md) |
+| A Straddle Wizard session finished Test, and the developer wants a payment review of the code it wrote | [straddle-payment-review](../../straddle-payment-review/SKILL.md) |
 | Straddle integration tested in Sandbox and heading to production | [straddle-go-live](../../straddle-go-live/SKILL.md) |
 | A choice is still open | No skill yet. Answer the open choice first. |

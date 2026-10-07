@@ -1,0 +1,16 @@
+{
+  "name": "walkies",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/server.ts",
+    "test": "node --test test/db.test.ts"
+  },
+  "dependencies": {
+    "@straddlecom/straddle": "1.0.4",
+    "express": "4.21.2"
+  }
+}

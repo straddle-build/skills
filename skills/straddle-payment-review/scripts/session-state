@@ -1,0 +1,191 @@
+#!/usr/bin/env bash
+# Session state for the Straddle payment review, read from the bytes on disk. No Git clean or smudge filter,
+# textconv, external diff, fsmonitor hook, Git hook, pager, or signing program runs, because a repository's configuration
+# can point any of them at an arbitrary command.
+#
+#   session-state snapshot           Wizard and eval scaffolds only: writes the start-state commit, prints its sha
+#   session-state compare <snapshot> read-only: prints "code-hash <64 hex>", then "added|modified|deleted <path>"
+#
+# Paths are relative to the directory it runs from, the directory the Wizard was pointed at, which holds
+# .straddle-wizard/. Files outside it, such as another app in the same repository, are not part of the state, and a
+# snapshot's tree is rooted there. At the repository root, that is the whole repository.
+#
+# Exits non-zero with nothing on stdout when it can't read the repository, the snapshot, or a file.
+set -euo pipefail
+export LC_ALL=C
+
+git_raw=(git --no-pager -c core.fsmonitor=false -c core.untrackedCache=false -c core.hooksPath=/dev/null)
+fail() { echo "session-state: $1" >&2; exit 1; }
+
+# The Wizard's discovery rules for files it never opens (Wizard src/discovery.ts, sensitiveReason), applied to every
+# directory and file name in the path, so a sensitive directory hides everything under it. The Wizard also writes the
+# developer's `--exclude` globs, as its own JavaScript regular expressions, one per line, to
+# .straddle-wizard/payment-review-exclude. exclude-match.mjs tests them on the path and each of its parent directories
+# with JavaScript itself, as discovery does: a shell regex matches bytes or code points, not JavaScript's UTF-16 units.
+# It needs Node.js only when that file holds a pattern: STRADDLE_NODE, or `node` resolved from this script's directory
+# so no version manager reads the app's configuration. Without it the state is refused.
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+has_excludes=""
+
+sensitive_name() {
+  local name="$1" lower
+  lower="$(printf '%s' "$name" | tr '[:upper:]' '[:lower:]')"
+  [[ "$name" == .env* ]] && return 0
+  [[ "$lower" =~ \.(pem|key|p12|pfx|jks|keystore|crt|cer|der)$ ]] && return 0
+  [[ "$name" =~ ^id_(rsa|dsa|ecdsa|ed25519) ]] && return 0
+  [[ "$name" =~ ^\.(npmrc|pypirc|netrc|git-credentials|aws|ssh|gnupg|docker|kube|config|straddle.*)$ ]] && return 0
+  [[ "$lower" =~ secret|credential|\.tfvars$ ]] && return 0
+  return 1
+}
+
+excluded() {
+  case "$1" in
+    .straddle-wizard/* | straddle-payment-review.md | straddle-go-live-report.md) return 0 ;;
+  esac
+  local rest="$1" name
+  while :; do
+    name="${rest%%/*}"
+    sensitive_name "$name" && return 0
+    [ "$rest" = "$name" ] && return 1
+    rest="${rest#*/}"
+  done
+}
+
+# The NUL-terminated records on stdin whose path the state covers, in order, then one empty record, so a reader can
+# tell a complete list from a failure. With `tree`, a record is ls-tree's "<meta>\t<path>".
+kept_records() {
+  local records=() paths=() record flags="" i
+  while IFS= read -r -d '' record; do
+    records+=("$record")
+    if [ "${1:-}" = tree ]; then paths+=("${record#*$'\t'}"); else paths+=("$record"); fi
+  done
+  if [ -n "$has_excludes" ] && [ ${#paths[@]} -gt 0 ]; then
+    flags="$(printf '%s\0' "${paths[@]}" | (cd "$here" && "${STRADDLE_NODE:-node}" exclude-match.mjs "$exclude_path"))" &&
+      [ ${#flags} -eq ${#paths[@]} ] ||
+      { echo "session-state: couldn't apply the --exclude paths (they need Node.js)" >&2; return 1; }
+  fi
+  for ((i = 0; i < ${#paths[@]}; i++)); do
+    [ "${flags:i:1}" = 1 ] && continue
+    excluded "${paths[$i]}" && continue
+    printf '%s\0' "${records[$i]}"
+  done
+  printf '\0'
+}
+
+# Git keeps listing an indexed path after one of its parent directories becomes a symlink, and reading it would read
+# wherever the link points. Git treats such a path as gone from the working tree, and so does the state.
+beyond_symlink() {
+  local dir="$1"
+  while [[ "$dir" == */* ]]; do
+    dir="${dir%/*}"
+    [ -L "$dir" ] && return 0
+  done
+  return 1
+}
+
+# "<mode> <blob> <path>" per non-excluded file on disk, tracked or untracked. Paths stay byte-exact, spaces
+# included. Pass -w to store the blobs (snapshot); without it nothing is written.
+file_records() {
+  local write="${1:-}" path mode blob target regular=() i=0 complete=""
+  "${git_raw[@]}" ls-files -z --cached --others --exclude-standard >/dev/null || return 1
+  while IFS= read -r -d '' path; do
+    [ -n "$path" ] || { complete=1; continue; }
+    beyond_symlink "$path" && continue
+    # Records are lines. hash-object --stdin-paths reads `$prefix$path` from the repository root and update-index
+    # --index-info reads `$path` here; each unquotes a leading quote and drops a trailing CR. Check both before
+    # anything is hashed.
+    case "$path" in
+      *$'\n'* | *$'\r'* | \"*) echo "session-state: unsupported path: $path" >&2; return 1 ;;
+    esac
+    case "$prefix$path" in
+      *$'\n'* | *$'\r'* | \"*) echo "session-state: unsupported path: $prefix$path" >&2; return 1 ;;
+    esac
+    if [ -L "$path" ]; then
+      target="$(readlink -n -- "$path" && printf x)" || return 1
+      target="${target%x}"
+      blob="$(printf '%s' "$target" | "${git_raw[@]}" hash-object $write --no-filters --stdin)" || return 1
+      printf '120000 %s %s\n' "$blob" "$path"
+    elif [ -d "$path" ]; then
+      echo "session-state: submodule or nested repository at $path isn't supported" >&2
+      return 1
+    elif [ -e "$path" ]; then
+      [ -f "$path" ] && [ -r "$path" ] || { echo "session-state: cannot read $path" >&2; return 1; }
+      regular+=("$path")
+    fi
+  done < <("${git_raw[@]}" ls-files -z --cached --others --exclude-standard | sort -z -u | kept_records)
+  [ -n "$complete" ] || return 1
+  [ ${#regular[@]} -gt 0 ] || return 0
+  while IFS= read -r blob; do
+    path="${regular[$i]}"
+    if [ -x "$path" ]; then mode=100755; else mode=100644; fi
+    printf '%s %s %s\n' "$mode" "$blob" "$path"
+    i=$((i + 1))
+  # hash-object reads --stdin-paths from the repository root, so each path carries this directory's prefix there.
+  done < <(for path in "${regular[@]}"; do printf '%s%s\n' "$prefix" "$path"; done | "${git_raw[@]}" hash-object $write --no-filters --stdin-paths)
+  [ "$i" -eq ${#regular[@]} ] || { echo "session-state: could not hash every file" >&2; return 1; }
+}
+
+snapshot_records() {
+  local meta path complete=""
+  "${git_raw[@]}" ls-tree -r -z --full-tree "$1" >/dev/null || return 1
+  while IFS= read -r -d '' meta; do
+    [ -n "$meta" ] || { complete=1; continue; }
+    path="${meta#*$'\t'}"
+    meta="${meta%%$'\t'*}"
+    printf '%s %s %s\n' "${meta%% *}" "${meta##* }" "$path"
+  done < <("${git_raw[@]}" ls-tree -r -z --full-tree "$1" | kept_records tree)
+  [ -n "$complete" ] || return 1
+}
+
+sha256() { if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 256; fi; }
+
+"${git_raw[@]}" rev-parse --show-toplevel >/dev/null || fail "not inside a Git repository"
+prefix="$("${git_raw[@]}" rev-parse --show-prefix)" || fail "not inside a Git repository"
+exclude_file=.straddle-wizard/payment-review-exclude
+exclude_path="$PWD/$exclude_file"
+if [ -L .straddle-wizard ] || [ -L "$exclude_file" ] || { [ -e "$exclude_file" ] && [ ! -f "$exclude_file" ]; }; then
+  fail "$exclude_file isn't a regular file"
+fi
+if [ -f "$exclude_file" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in *$'\r'*) fail "$exclude_file has a carriage return" ;; esac
+    [ -n "$line" ] && has_excludes=1
+  done < "$exclude_file"
+fi
+
+case "${1:-}" in
+  snapshot)
+    [ $# -eq 1 ] || fail "usage: session-state snapshot"
+    tmp="$(mktemp -d)"
+    trap 'rm -rf "$tmp"' EXIT
+    records="$(file_records -w)" || fail "could not read the working tree"
+    if [ -n "$records" ]; then
+      printf '%s\n' "$records" | while IFS= read -r record; do
+        rest="${record#* }"
+        printf '%s %s\t%s\n' "${record%% *}" "${rest%% *}" "${rest#* }"
+      done |
+        GIT_INDEX_FILE="$tmp/index" "${git_raw[@]}" update-index --add --index-info || fail "could not build the snapshot index"
+    fi
+    tree="$(GIT_INDEX_FILE="$tmp/index" "${git_raw[@]}" write-tree)" || fail "could not write the snapshot tree"
+    parent=()
+    if head="$("${git_raw[@]}" rev-parse --verify --quiet HEAD)"; then parent=(-p "$head"); fi
+    "${git_raw[@]}" commit-tree --no-gpg-sign "$tree" ${parent[@]+"${parent[@]}"} -m "straddle wizard session start" ||
+      fail "could not write the snapshot commit"
+    ;;
+  compare)
+    [ $# -eq 2 ] || fail "usage: session-state compare <snapshot>"
+    "${git_raw[@]}" rev-parse --verify --quiet "$2^{commit}" >/dev/null || fail "snapshot $2 is not a commit"
+    now="$(file_records | sort -t ' ' -k3)" || fail "could not read the working tree"
+    before="$(snapshot_records "$2")" || fail "could not read snapshot $2"
+    hash="$(printf '%s\n' "$now" | sha256)" || fail "could not hash"
+    echo "code-hash ${hash%% *}"
+    awk 'NR == FNR { if ($0 != "") start[substr($0, length($1) + length($2) + 3)] = $1 " " $2; next }
+         $0 != "" { p = substr($0, length($1) + length($2) + 3)
+                    if (!(p in start)) print "added " p
+                    else if (start[p] != $1 " " $2) print "modified " p
+                    delete start[p] }
+         END { for (p in start) print "deleted " p }' \
+      <(printf '%s\n' "$before") <(printf '%s\n' "$now") | sort -k2
+    ;;
+  *) fail "usage: session-state snapshot | session-state compare <snapshot>" ;;
+esac

@@ -1,7 +1,7 @@
 # Step 6: Report
 
 - **Needs:** summaries from steps 2 to 5.
-- **Tools:** Write for `straddle-go-live-report.md` at the repository root only. Bash only for the plan hash command in Integrate's [Recorded approval](../../straddle-integrate/steps/01-begin.md#recorded-approval).
+- **Tools:** Write for `straddle-go-live-report.md` at the repository root only. Bash only for the plan hash command in Integrate's [Recorded approval](../../straddle-integrate/steps/01-begin.md#recorded-approval) and, in a Wizard session, the payment review's code hash command.
 - **Next:** the developer's decision. Failed rows route to [straddle-audit](../../straddle-audit/SKILL.md) or [straddle-test](../../straddle-test/SKILL.md). In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, Go Live is the last step: close the program as that page says.
 
 Print:
@@ -16,6 +16,8 @@ Write the review to `straddle-go-live-report.md` at the repository root, replaci
 
 In the review, the `Status` line comes first, under its heading, because the Straddle Wizard reads it: `ready`, or `not ready (<each blocking gap>)` for both `not_ready` and `blocked`, with a `blocked` review naming its configuration error there. `Plan` is the plan the Sandbox evidence names on its `Plan:` line, or else `straddle-integration-plan.md`, or else `straddle-migration-plan.md`, and `none` when there is none. `Plan hash` is that command's output for the plan file, `none` without a plan, or `unknown` when the command can't run here. A `ready` review counts for the Wizard only at the current plan's hash.
 
+When the checklist's Payment review row applies, compare the report's `Plan hash` with this one, and its `Code hash` with the `code-hash` line from straddle-payment-review's `scripts/session-state compare <snapshot>`, run now from the directory that holds `.straddle-wizard/`, with the `snapshot` from `.straddle-wizard/session-baseline.json`. The payment review is advisory and never a blocking gap, so it never changes `Status` or `Result`. List each Critical or High row of a current report under "Payment review warnings" with its file:line and impact. A missing, `incomplete`, or mismatched report, or the script exiting non-zero, is one warning: `payment review not current for this code`. Don't call the payment review a security review or say a clean one makes the code safe. When the row doesn't apply, add `- No payment review ran: this wasn't a Straddle Wizard session.` under "What this review did not do".
+
 ```markdown
 # Straddle Go Live review
 
@@ -28,6 +30,9 @@ Model: <direct / SaaS / marketplace>   SDK: <package version>   Environment chec
 ## Blocking gaps
 | Row | Result | Evidence | Fix |
 | --- | --- | --- | --- |
+
+## Payment review warnings
+Advisory, not a security audit, never blocking. <each open Critical or High finding as `- <Severity> <file:line>: <impact>`, or `None.`>
 
 ## Checklist
 | Section | Row | Result | Evidence |
