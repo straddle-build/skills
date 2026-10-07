@@ -2,7 +2,7 @@
 
 - **Needs:** every earlier summary that exists for this run, including step 1's plan hash.
 - **Tools:** Read and Write for `straddle-integration-report.md` at the repository root only. Never edit the plan here: any change to it voids its approval hash.
-- **Next:** [straddle-test](../../straddle-test/SKILL.md) when the status is `complete`. In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, a `complete` status ends Integrate, not the turn: start the next listed skill in this same reply, as that page says. This step's Tools line doesn't limit that. Any other status stops and waits for the developer.
+- **Next:** [straddle-test](../../straddle-test/SKILL.md) when the status is `complete`. In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, a `complete` status ends Integrate, not the turn: give this step's reply and print its handoff line first, then start the next listed skill in this same reply, as that page says. The Wizard ticks a step only on its handoff. This step's Tools line doesn't limit that. Any other status stops and waits for the developer.
 
 Print:
 

@@ -2,7 +2,7 @@
 
 - **Needs:** summaries from steps 2 to 4.
 - **Tools:** Write for `straddle-setup.md` at the repository root only.
-- **Next:** hand off to [straddle-plan](../../straddle-plan/SKILL.md) when the status is not `blocked`. When it is `blocked`, the run ends at the handoff and waits for the developer. In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, a status other than `blocked` ends Setup, not the turn: start the next listed skill in this same reply, as that page says. This step's Tools line doesn't limit that.
+- **Next:** hand off to [straddle-plan](../../straddle-plan/SKILL.md) when the status is not `blocked`. When it is `blocked`, the run ends at the handoff and waits for the developer. In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, a status other than `blocked` ends Setup, not the turn: give this step's reply and print its handoff line first, then start the next listed skill in this same reply, as that page says. The Wizard ticks a step only on its handoff. This step's Tools line doesn't limit that.
 
 Print:
 
