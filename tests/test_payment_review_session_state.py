@@ -132,6 +132,23 @@ class ExactBytesAndUnsupportedState(unittest.TestCase):
         self.assertIn("vendor/pay", nested.stderr)
 
 
+    def test_a_selected_subdirectory_is_the_basis_for_paths_and_exclusions(self):
+        for name, text in (("apps/shop/checkout.ts", "amount\n"), ("apps/other/app.ts", "other\n")):
+            (self.repo / name).parent.mkdir(parents=True, exist_ok=True)
+            (self.repo / name).write_text(text)
+        run(["git", "add", "-A"], self.repo)
+        run(["git", "commit", "-qm", "start"], self.repo)
+        shop = self.repo / "apps/shop"
+        (shop / "private").mkdir()
+        (shop / "private/customer.txt").write_text("zqsentinel before\n")
+        (shop / ".straddle-wizard").mkdir()
+        (shop / ".straddle-wizard/payment-review-exclude").write_text("^private/.*$\n")
+        snapshot = run([str(SESSION_STATE), "snapshot"], shop).stdout.strip()
+        self.assertEqual(run(["git", "ls-tree", "-r", "--name-only", snapshot], self.repo).stdout.split(), ["checkout.ts"])
+        for name in ("apps/shop/private/customer.txt", "apps/shop/checkout.ts", "apps/other/app.ts"):
+            (self.repo / name).write_text("changed\n")
+        self.assertEqual(run([str(SESSION_STATE), "compare", snapshot], shop).stdout.splitlines()[1:], ["modified checkout.ts"])
+
 
 class ConfiguredGitCommandsNeverRun(unittest.TestCase):
     """A repository whose config names filter, textconv, fsmonitor, pager, signing, and hook commands."""

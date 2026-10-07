@@ -6,6 +6,10 @@
 #   session-state snapshot           Wizard and eval scaffolds only: writes the start-state commit, prints its sha
 #   session-state compare <snapshot> read-only: prints "code-hash <64 hex>", then "added|modified|deleted <path>"
 #
+# Paths are relative to the directory it runs from, the directory the Wizard was pointed at, which holds
+# .straddle-wizard/. Files outside it, such as another app in the same repository, are not part of the state, and a
+# snapshot's tree is rooted there. At the repository root, that is the whole repository.
+#
 # Exits non-zero with nothing on stdout when it can't read the repository, the snapshot, or a file.
 set -euo pipefail
 export LC_ALL=C
@@ -75,7 +79,8 @@ file_records() {
     if [ -x "$path" ]; then mode=100755; else mode=100644; fi
     printf '%s %s %s\n' "$mode" "$blob" "$path"
     i=$((i + 1))
-  done < <(printf '%s\n' "${regular[@]}" | "${git_raw[@]}" hash-object $write --no-filters --stdin-paths)
+  # hash-object reads --stdin-paths from the repository root, so each path carries this directory's prefix there.
+  done < <(for path in "${regular[@]}"; do printf '%s%s\n' "$prefix" "$path"; done | "${git_raw[@]}" hash-object $write --no-filters --stdin-paths)
   [ "$i" -eq ${#regular[@]} ] || { echo "session-state: could not hash every file" >&2; return 1; }
 }
 
@@ -92,8 +97,8 @@ snapshot_records() {
 
 sha256() { if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 256; fi; }
 
-top="$("${git_raw[@]}" rev-parse --show-toplevel)" || fail "not inside a Git repository"
-cd "$top"
+"${git_raw[@]}" rev-parse --show-toplevel >/dev/null || fail "not inside a Git repository"
+prefix="$("${git_raw[@]}" rev-parse --show-prefix)" || fail "not inside a Git repository"
 exclude_file=.straddle-wizard/payment-review-exclude
 if [ -L .straddle-wizard ] || [ -L "$exclude_file" ] || { [ -e "$exclude_file" ] && [ ! -f "$exclude_file" ]; }; then
   fail "$exclude_file isn't a regular file"
