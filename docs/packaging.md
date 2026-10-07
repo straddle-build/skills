@@ -2,7 +2,7 @@
 
 This repository is one Straddle plugin for Claude Code, Codex and Cursor. Each client reads its own manifest. Claude Code and Cursor load the MCP servers from `mcp.json`, which uses the [Agent Plugins 1.0.0](https://github.com/agentplugins/agent-plugins-spec) MCP form. Codex drops the credential from that form, so Codex's manifest declares the servers in Codex's own form instead, and the root `plugin.json` leaves out the Agent Plugins `$schema` that would make Codex ignore that manifest (see [MCP servers and credentials](#mcp-servers-and-credentials)).
 
-Native installation in each client has not been accepted yet. The commands below are the intended install paths, and they stay unverified until the ME-666 clean-profile checks pass in Claude Code, Codex and Cursor.
+Release-channel install, validate, update and remove passed on the published v0.1.1 and v0.1.2 in fresh Claude Code and Codex profiles (ME-810, 2026-10-06). Cursor's team-marketplace install is still a manual check, so treat the Cursor path below as unverified until it runs on a release.
 
 ## Files
 
@@ -106,7 +106,7 @@ Neither client can move an installed Git marketplace to another ref without remo
 
 Cursor instructions are manual, and Cursor has no candidate channel from a local archive. Cursor imports a team marketplace from a GitHub repository's default branch. On 2026-10-05, Cursor 3.22.12 and its team dashboard accepted only an owner/repo URL: the dashboard rejected a `/tree/<tag>` URL, the IDE ignored one, and neither offered a ref control. So the Cursor release channel can't select or pin tag `v<version>`. Its update is a marketplace Refresh, or Auto Refresh, of the default branch. Cursor's copy isn't checked against `SHA256SUMS` or `plugin.content_sha256`. Validate checks the installed copy's cached metadata under `~/.cursor/plugins/cache/`, the skill count and the MCP server names, not file contents.
 
-The generated operations were run in scratch Claude Code 2.1.284 and Codex 0.157.1 profiles with remote network denied, including tampered, unset-directory, unavailable-tag, mismatched-tag and failed-refresh cases. The release channel ran against a loopback Git mirror with scratch tags, because tag `v<version>` isn't published. That is offline evidence. It is not a clean-client release install, which needs the tag, a signed-in client, and Cursor. After ME-882 removed the client-level Codex server, the Codex candidate install, validate and remove ran again in a scratch Codex 0.159.2 profile, and validate found the plugin's own `straddle-api` reading `STRADDLE_API_KEY`.
+The generated operations were run in scratch Claude Code 2.1.284 and Codex 0.157.1 profiles with remote network denied, including tampered, unset-directory, unavailable-tag, mismatched-tag and failed-refresh cases. The release channel ran against a loopback Git mirror with scratch tags, because no release tag existed when they ran. That is offline evidence. After ME-882 removed the client-level Codex server, the Codex candidate install, validate and remove ran again in a scratch Codex 0.159.2 profile, and validate found the plugin's own `straddle-api` reading `STRADDLE_API_KEY`. The published v0.1.1 and v0.1.2 later passed the release channel in fresh Claude Code (2.1.289 and 2.1.291) and Codex 0.157.1 profiles, including the v0.1.0-to-v0.1.1 and v0.1.1-to-v0.1.2 updates (ME-810, 2026-10-06). Cursor's team-marketplace lifecycle is still a manual check.
 
 ## Validation
 

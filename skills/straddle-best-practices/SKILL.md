@@ -21,7 +21,7 @@ Every Straddle skill also follows [voice.md](references/voice.md) for developer-
 | C# SDK | `Straddle` 1.0.4 | NuGet. |
 | Go SDK | `github.com/straddle-build/straddle-go` v1.0.4 | |
 | Python SDK | `straddle` 1.0.5 | PyPI. |
-| Straddle CLI | v1.0.3 published | v1.0.3 adds `--idempotency-key` on creates and `runtime_context` in `agent-context` and `doctor`. Check `straddle --version` and the command's `--help` before relying on either. |
+| Straddle CLI | v1.0.4 published | v1.0.3 added `--idempotency-key` on creates and `runtime_context` in `agent-context` and `doctor`. v1.0.4 also prints the `Idempotency-Key` header in `--dry-run`. Check `straddle --version` and the command's `--help` before relying on any of them. |
 
 Versions change. Check the installed package in the developer's dependency tree before you rely on a method name, and prefer the SDK release's own `api.md`, README, and generated skill over memory.
 
