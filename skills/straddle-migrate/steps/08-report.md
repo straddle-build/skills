@@ -2,7 +2,7 @@
 
 - **Needs:** every earlier summary, including the plan hash from step 5 or 6.
 - **Tools:** Write for `straddle-migration-report.md` at the repository root only. Never edit the plan here: any change to it voids its approval hash.
-- **Next:** [straddle-test](../../straddle-test/SKILL.md) to prove the new path in Sandbox, after the developer reviews the diff. Test reads the approved `straddle-migration-plan.md` and its Verification section directly; no `straddle-integration-plan.md` is needed, and the plan's approval authorizes no Sandbox write. In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, a `migrated` status ends Migrate, not the turn: start the next listed skill in this same reply, as that page says. This step's Tools line doesn't limit that. Any other status stops and waits for the developer.
+- **Next:** [straddle-test](../../straddle-test/SKILL.md) to prove the new path in Sandbox, after the developer reviews the diff. Test reads the approved `straddle-migration-plan.md` and its Verification section directly; no `straddle-integration-plan.md` is needed, and the plan's approval authorizes no Sandbox write. In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, a `migrated` status ends Migrate, not the turn: give this step's reply and print its handoff line first, then start the next listed skill in this same reply, as that page says. The Wizard ticks a step only on its handoff. This step's Tools line doesn't limit that. Any other status stops and waits for the developer.
 
 Print:
 

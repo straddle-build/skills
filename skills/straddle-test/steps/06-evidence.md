@@ -2,7 +2,7 @@
 
 - **Needs:** every earlier summary that exists for this run.
 - **Tools:** Read and Write for `straddle-test-evidence.md` only.
-- **Next:** the developer reviews the evidence. In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, a header `Status` of `complete` ends Test, not the turn: start the next listed skill in this same reply, as that page says. This step's Tools line doesn't limit that. Any other status stops and waits for the developer.
+- **Next:** the developer reviews the evidence. In a [Straddle Wizard program](../../straddle-best-practices/references/wizard-program.md) session, a header `Status` of `complete` ends Test, not the turn: give this step's reply and print its handoff line first, then start the next listed skill in this same reply, as that page says. The Wizard ticks a step only on its handoff. This step's Tools line doesn't limit that. Any other status stops and waits for the developer.
 
 Print:
 
