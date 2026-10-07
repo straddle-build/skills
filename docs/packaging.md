@@ -120,7 +120,7 @@ scripts/check-contract-tokens        # checks product-model references against t
 python3 -m unittest discover -s tests -v
 ```
 
-The package checks validate `mcp.json`, and `plugin.json`'s metadata fields, against the vendored Agent Plugins 1.0.0 schemas in `scripts/schemas/`. They also check the fixed MCP servers and credential routes, name and version agreement across the manifests, the Codex `interface` fields, that PNG assets are square, the Cursor variables schema, all nine required skills, and eval case layout. They fetch the Codex `websiteURL`, `privacyPolicyURL` and `termsOfServiceURL` and require HTTP 200, like Markdown links. They report missing skills and missing Codex URLs as failures, because both are real release requirements.
+The package checks validate `mcp.json`, and `plugin.json`'s metadata fields, against the vendored Agent Plugins 1.0.0 schemas in `scripts/schemas/`. They also check the fixed MCP servers and credential routes, name and version agreement across the manifests, the Codex `interface` fields, that PNG assets are square, the Cursor variables schema, all required skills, and eval case layout. They fetch the Codex `websiteURL`, `privacyPolicyURL` and `termsOfServiceURL` and require HTTP 200, like Markdown links. They report missing skills and missing Codex URLs as failures, because both are real release requirements.
 
 The release tests and manifest-version drift test use fixed fixture versions. A plugin release bump should not require changing their expected versions.
 

@@ -12,8 +12,8 @@ IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid",
             "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@example.invalid"}
 
 
-def run(args, cwd, check=True):
-    return subprocess.run(args, cwd=cwd, check=check, capture_output=True, text=True, env={**os.environ, **IDENTITY})
+def run(args, cwd, check=True, env=None):
+    return subprocess.run(args, cwd=cwd, check=check, capture_output=True, text=True, env={**os.environ, **IDENTITY, **(env or {})})
 
 
 class SessionStateFromTheEvalScaffold(unittest.TestCase):
@@ -171,6 +171,51 @@ class ExactBytesAndUnsupportedState(unittest.TestCase):
         self.assertEqual(run([str(SESSION_STATE), "compare", snapshot], shop).stdout.splitlines()[1:], ["modified checkout.ts"])
         spaced = run([str(SESSION_STATE), "snapshot"], self.repo / "my app").stdout.strip()
         self.assertEqual(run(["git", "ls-tree", "-r", "--name-only", spaced], self.repo).stdout.splitlines(), ["pay.ts"])
+
+    def test_a_symlinked_parent_directory_is_never_read_through(self):
+        outside = Path(tempfile.mkdtemp())
+        for target in (outside, self.repo / ".secrets"):
+            with self.subTest(target=target.name):
+                repo = Path(tempfile.mkdtemp())
+                run(["git", "init", "-q"], repo)
+                (repo / "src").mkdir()
+                (repo / "src/pay.ts").write_text("tracked public bytes\n")
+                (repo / "checkout.ts").write_text("public\n")
+                run(["git", "add", "-A"], repo)
+                run(["git", "commit", "-qm", "start"], repo)
+                start = run([str(SESSION_STATE), "snapshot"], repo).stdout.strip()
+                target = repo / ".secrets" if target.name == ".secrets" else outside
+                target.mkdir(exist_ok=True)
+                (target / "pay.ts").write_text(f"zqsentinel private {target.name}\n")
+                private = run(["git", "hash-object", "--no-filters", str(target / "pay.ts")], repo).stdout.strip()
+                (repo / "src/pay.ts").unlink()
+                (repo / "src").rmdir()
+                os.symlink(target, repo / "src")
+                compared = run([str(SESSION_STATE), "compare", start], repo).stdout.splitlines()
+                self.assertEqual(compared[1:], ["added src", "deleted src/pay.ts"])
+                (target / "pay.ts").write_text("zqsentinel private changed\n")
+                self.assertEqual(run([str(SESSION_STATE), "compare", start], repo).stdout.splitlines(), compared)
+                after = run([str(SESSION_STATE), "snapshot"], repo).stdout.strip()
+                self.assertEqual(run(["git", "ls-tree", "-r", "--name-only", after], repo).stdout.split(), ["checkout.ts", "src"])
+                self.assertNotEqual(run(["git", "cat-file", "-e", private], repo, check=False).returncode, 0)
+
+    def test_exclusions_match_utf16_code_units_as_the_wizard_does(self):
+        names = ["private/a.txt", "private/猫.txt", "private/😀.txt", "private/ab.txt", "keep.ts"]
+        for name in names:
+            (self.repo / name).parent.mkdir(parents=True, exist_ok=True)
+            (self.repo / name).write_text("zqsentinel before\n")
+        (self.repo / ".straddle-wizard").mkdir()
+        # The Wizard's pattern for `private/?.txt`: `?` is one UTF-16 code unit, so 😀, two units, isn't matched.
+        (self.repo / ".straddle-wizard/payment-review-exclude").write_text("^private/[^/]\\.txt$\n")
+        snapshot = self.state("snapshot").stdout.strip()
+        kept = ["keep.ts", "private/ab.txt", "private/😀.txt"]
+        self.assertEqual(sorted(run(["git", "-c", "core.quotePath=false", "ls-tree", "-r", "--name-only", snapshot], self.repo).stdout.splitlines()), sorted(kept))
+        for name in names:
+            (self.repo / name).write_text("zqsentinel after\n")
+        self.assertEqual(sorted(self.state("compare", snapshot).stdout.splitlines()[1:]), sorted(f"modified {n}" for n in kept))
+        without_node = run([str(SESSION_STATE), "compare", snapshot], self.repo, check=False, env={"STRADDLE_NODE": "/nonexistent/node"})
+        self.assertEqual((without_node.returncode, without_node.stdout), (1, ""))
+        self.assertIn("Node.js", without_node.stderr)
 
 
 class ConfiguredGitCommandsNeverRun(unittest.TestCase):

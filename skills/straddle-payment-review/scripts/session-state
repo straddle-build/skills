@@ -19,9 +19,13 @@ fail() { echo "session-state: $1" >&2; exit 1; }
 
 # The Wizard's discovery rules for files it never opens (Wizard src/discovery.ts, sensitiveReason), applied to every
 # directory and file name in the path, so a sensitive directory hides everything under it. The Wizard also writes the
-# developer's `--exclude` globs, as anchored regular expressions, one per line, to .straddle-wizard/payment-review-exclude; each is
-# matched against the path and each of its parent directories, as discovery does.
-user_excludes=()
+# developer's `--exclude` globs, as its own JavaScript regular expressions, one per line, to
+# .straddle-wizard/payment-review-exclude. exclude-match.mjs tests them on the path and each of its parent directories
+# with JavaScript itself, as discovery does: a shell regex matches bytes or code points, not JavaScript's UTF-16 units.
+# It needs Node.js only when that file holds a pattern: STRADDLE_NODE, or `node` resolved from this script's directory
+# so no version manager reads the app's configuration. Without it the state is refused.
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+has_excludes=""
 
 sensitive_name() {
   local name="$1" lower
@@ -38,24 +42,55 @@ excluded() {
   case "$1" in
     .straddle-wizard/* | straddle-payment-review.md | straddle-go-live-report.md) return 0 ;;
   esac
-  local rest="$1" prefix="" name re
+  local rest="$1" name
   while :; do
     name="${rest%%/*}"
-    prefix="${prefix:+$prefix/}$name"
     sensitive_name "$name" && return 0
-    for re in ${user_excludes[@]+"${user_excludes[@]}"}; do [[ "$prefix" =~ $re ]] && return 0; done
     [ "$rest" = "$name" ] && return 1
     rest="${rest#*/}"
   done
 }
 
+# The NUL-terminated records on stdin whose path the state covers, in order, then one empty record, so a reader can
+# tell a complete list from a failure. With `tree`, a record is ls-tree's "<meta>\t<path>".
+kept_records() {
+  local records=() paths=() record flags="" i
+  while IFS= read -r -d '' record; do
+    records+=("$record")
+    if [ "${1:-}" = tree ]; then paths+=("${record#*$'\t'}"); else paths+=("$record"); fi
+  done
+  if [ -n "$has_excludes" ] && [ ${#paths[@]} -gt 0 ]; then
+    flags="$(printf '%s\0' "${paths[@]}" | (cd "$here" && "${STRADDLE_NODE:-node}" exclude-match.mjs "$exclude_path"))" &&
+      [ ${#flags} -eq ${#paths[@]} ] ||
+      { echo "session-state: couldn't apply the --exclude paths (they need Node.js)" >&2; return 1; }
+  fi
+  for ((i = 0; i < ${#paths[@]}; i++)); do
+    [ "${flags:i:1}" = 1 ] && continue
+    excluded "${paths[$i]}" && continue
+    printf '%s\0' "${records[$i]}"
+  done
+  printf '\0'
+}
+
+# Git keeps listing an indexed path after one of its parent directories becomes a symlink, and reading it would read
+# wherever the link points. Git treats such a path as gone from the working tree, and so does the state.
+beyond_symlink() {
+  local dir="$1"
+  while [[ "$dir" == */* ]]; do
+    dir="${dir%/*}"
+    [ -L "$dir" ] && return 0
+  done
+  return 1
+}
+
 # "<mode> <blob> <path>" per non-excluded file on disk, tracked or untracked. Paths stay byte-exact, spaces
 # included. Pass -w to store the blobs (snapshot); without it nothing is written.
 file_records() {
-  local write="${1:-}" path mode blob target regular=() i=0
+  local write="${1:-}" path mode blob target regular=() i=0 complete=""
   "${git_raw[@]}" ls-files -z --cached --others --exclude-standard >/dev/null || return 1
   while IFS= read -r -d '' path; do
-    excluded "$path" && continue
+    [ -n "$path" ] || { complete=1; continue; }
+    beyond_symlink "$path" && continue
     # Records are lines. hash-object --stdin-paths reads `$prefix$path` from the repository root and update-index
     # --index-info reads `$path` here; each unquotes a leading quote and drops a trailing CR. Check both before
     # anything is hashed.
@@ -77,7 +112,8 @@ file_records() {
       [ -f "$path" ] && [ -r "$path" ] || { echo "session-state: cannot read $path" >&2; return 1; }
       regular+=("$path")
     fi
-  done < <("${git_raw[@]}" ls-files -z --cached --others --exclude-standard | sort -z -u)
+  done < <("${git_raw[@]}" ls-files -z --cached --others --exclude-standard | sort -z -u | kept_records)
+  [ -n "$complete" ] || return 1
   [ ${#regular[@]} -gt 0 ] || return 0
   while IFS= read -r blob; do
     path="${regular[$i]}"
@@ -90,14 +126,15 @@ file_records() {
 }
 
 snapshot_records() {
-  local meta path
+  local meta path complete=""
   "${git_raw[@]}" ls-tree -r -z --full-tree "$1" >/dev/null || return 1
   while IFS= read -r -d '' meta; do
+    [ -n "$meta" ] || { complete=1; continue; }
     path="${meta#*$'\t'}"
-    excluded "$path" && continue
     meta="${meta%%$'\t'*}"
     printf '%s %s %s\n' "${meta%% *}" "${meta##* }" "$path"
-  done < <("${git_raw[@]}" ls-tree -r -z --full-tree "$1")
+  done < <("${git_raw[@]}" ls-tree -r -z --full-tree "$1" | kept_records tree)
+  [ -n "$complete" ] || return 1
 }
 
 sha256() { if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 256; fi; }
@@ -105,13 +142,14 @@ sha256() { if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 25
 "${git_raw[@]}" rev-parse --show-toplevel >/dev/null || fail "not inside a Git repository"
 prefix="$("${git_raw[@]}" rev-parse --show-prefix)" || fail "not inside a Git repository"
 exclude_file=.straddle-wizard/payment-review-exclude
+exclude_path="$PWD/$exclude_file"
 if [ -L .straddle-wizard ] || [ -L "$exclude_file" ] || { [ -e "$exclude_file" ] && [ ! -f "$exclude_file" ]; }; then
   fail "$exclude_file isn't a regular file"
 fi
 if [ -f "$exclude_file" ]; then
   while IFS= read -r line || [ -n "$line" ]; do
     case "$line" in *$'\r'*) fail "$exclude_file has a carriage return" ;; esac
-    [ -n "$line" ] && user_excludes+=("$line")
+    [ -n "$line" ] && has_excludes=1
   done < "$exclude_file"
 fi
 
