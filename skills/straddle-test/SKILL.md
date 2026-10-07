@@ -47,7 +47,7 @@ STRADDLE_HANDOFF {"skill":"straddle-test","status":"partial","report":"<summary>
 
 `status` is one of:
 
-- `passed`: every selected scenario ran and passed. A Bridge widget row recorded `not run: needs the widget completed in a browser` doesn't stop a pass when every other planned method passed; Go Live lists it as a gap. An optional Payout row whose transitions are `not observed` doesn't stop a pass either; the evidence records what arrived.
+- `passed`: every selected scenario ran and passed. A Bridge widget row recorded `not run: needs the widget completed in a browser` doesn't stop a pass when every other planned method passed; Go Live lists it as a gap. A return whose `paid` and `reversed` tie on a webhook endpoint, with the order recorded `not verified` because that endpoint has no delivery order, doesn't stop a pass when both transitions and the `R01` arrived; Go Live lists it as a gap too. An optional Payout row whose transitions are `not observed` doesn't stop a pass either; the evidence records what arrived.
 - `failed`: at least one scenario ran and failed.
 - `partial`: nothing failed, but some scenarios did not run, for example Sandbox scenarios waiting for approval or configuration.
 - `blocked`: no approved integration or migration plan, or no Straddle integration code, exists to test.
