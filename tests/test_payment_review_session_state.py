@@ -131,9 +131,30 @@ class ExactBytesAndUnsupportedState(unittest.TestCase):
         self.assertEqual((nested.returncode, nested.stdout), (1, ""))
         self.assertIn("vendor/pay", nested.stderr)
 
+    def test_a_selected_directory_git_would_misread_is_refused_before_anything_is_stored(self):
+        # Each case: the selected directory, its file, and the root file Git reads instead if the path isn't checked.
+        cases = (("outside\napp", "f.ts", "outside"), ('"o', 'x"', "o/x"), ("app\r", "f.ts", None), ("apps/shop", '"foo"', None))
+        for directory, name, misread in cases:
+            with self.subTest(directory=directory):
+                repo = Path(tempfile.mkdtemp())
+                run(["git", "init", "-q"], repo)
+                (repo / directory).mkdir(parents=True)
+                (repo / directory / name).write_text("zqsentinel inside\n")
+                outside = None
+                if misread:
+                    (repo / misread).parent.mkdir(parents=True, exist_ok=True)
+                    (repo / misread).write_text("zqsentinel outside the app\n")
+                    outside = run(["git", "hash-object", "--no-filters", misread], repo).stdout.strip()
+                objects = run(["git", "count-objects", "-v"], repo).stdout
+                refused = run([str(SESSION_STATE), "snapshot"], repo / directory, check=False)
+                self.assertEqual((refused.returncode, refused.stdout), (1, ""))
+                self.assertIn("unsupported path", refused.stderr)
+                self.assertEqual(run(["git", "count-objects", "-v"], repo).stdout, objects)
+                if outside:
+                    self.assertNotEqual(run(["git", "cat-file", "-e", outside], repo, check=False).returncode, 0)
 
     def test_a_selected_subdirectory_is_the_basis_for_paths_and_exclusions(self):
-        for name, text in (("apps/shop/checkout.ts", "amount\n"), ("apps/other/app.ts", "other\n")):
+        for name, text in (("apps/shop/checkout.ts", "amount\n"), ("apps/other/app.ts", "other\n"), ("my app/pay.ts", "pay\n")):
             (self.repo / name).parent.mkdir(parents=True, exist_ok=True)
             (self.repo / name).write_text(text)
         run(["git", "add", "-A"], self.repo)
@@ -148,6 +169,8 @@ class ExactBytesAndUnsupportedState(unittest.TestCase):
         for name in ("apps/shop/private/customer.txt", "apps/shop/checkout.ts", "apps/other/app.ts"):
             (self.repo / name).write_text("changed\n")
         self.assertEqual(run([str(SESSION_STATE), "compare", snapshot], shop).stdout.splitlines()[1:], ["modified checkout.ts"])
+        spaced = run([str(SESSION_STATE), "snapshot"], self.repo / "my app").stdout.strip()
+        self.assertEqual(run(["git", "ls-tree", "-r", "--name-only", spaced], self.repo).stdout.splitlines(), ["pay.ts"])
 
 
 class ConfiguredGitCommandsNeverRun(unittest.TestCase):
