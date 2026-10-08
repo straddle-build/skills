@@ -245,5 +245,240 @@ class PlanVisualShape(unittest.TestCase):
                 self.assertFalse(grade(self.grader, work))
 
 
+def artifact(files=None, last_message="", calls=()):
+    return {"files": files or {}, "last_message": last_message, "calls": list(calls)}
+
+
+def edit(tool, path):
+    return (tool, {"file_path": f"/tmp/w/{path}", "content": "x"})
+
+
+SKILL = ("Skill", {"skill": "straddle:straddle-integrate"})
+MCP_API = "mcp__plugin_straddle_straddle-api__execute-request"
+MCP_DOCS = "mcp__plugin_straddle_straddle-docs__execute-request"
+LOCK = '{\n  "packages": {\n    "node_modules/@straddlecom/straddle": {\n      "version": "1.0.4"\n    },\n' \
+       '    "node_modules/ms": {\n      "version": "2.1.3"\n    }\n  }\n}\n'
+REPORT_918 = ("# Straddle integration report\n\nStatus: blocked (STRADDLE_API_KEY and STRADDLE_ENVIRONMENT not set)\n"
+              "Plan: straddle-integration-plan.md\n"
+              "Plan hash: 8b437fb38f5714d4254eb118dcbf04111972655f85c4f02569f74fa5d9bef575\n\n## Changed files\n\n"
+              "| File | Change | Plan row |\n| --- | --- | --- |\n| package.json | SDK pinned at 1.0.4 | SDK install |\n"
+              "| package-lock.json | SDK added | SDK install |\n| src/straddle/client.mjs | new | client |\n")
+PLAN_947 = ("# Straddle integration plan\n\n## Status\n\n- Plan state: Draft\n- Approval: none\n\n"
+            "## Bank connection methods\n\n| Order | Method | When the app uses it | Create operation | Paykey token |\n"
+            "| --- | --- | --- | --- | --- |\n"
+            "| 1 | Plaid processor token | members who link with Plaid Link | `createPlaidPaykey` | `data.paykey` |\n"
+            "| 2 | Bank account details | banks Plaid Link doesn't support | `createBankAccountPaykey` | `data.paykey` |\n\n"
+            "## Future Sandbox writes\n\n| Order | Operation | Executing tool | Account | External ID | Idempotency key source |\n"
+            "| --- | --- | --- | --- | --- | --- |\n| 1 | createCustomer | SDK | omitted | m-1 | `cust-` |\n"
+            "| 2 | createPlaidPaykey | SDK | omitted | m-1-plaid | `pk-` |\n"
+            "| 3 | createBankAccountPaykey | SDK | omitted | m-1-bank | `pkb-` |\n\n## Verification\n\n- `npm test`\n")
+MIGRATION_PLAN = ("# Straddle migration plan\n\n## Current provider footprint\n\n- src/billing.ts:12 `plaid.transferCreate`\n\n"
+                  "## Flows in scope\n\n- Membership debit: `client.charges.create`\n\n## Status mapping\n\n"
+                  "| Plaid Transfer | Straddle |\n| --- | --- |\n| `funds_available` | `paid` |\n")
+MIGRATION_REPORT = ("# Straddle migration report\n\nStatus: awaiting_approval (plan written, waiting for approval)\n"
+                    "Plan: straddle-migration-plan.md\nPlan hash: none\n")
+DECISIONS_947 = ("| # | Decision | Answer | Source | Why |\n| --- | --- | --- | --- | --- |\n"
+                 "| Q3 | Bank connection | open (round 1) | | |\n")
+ROUND_947 = ("Q3. Bank connection: keep Plaid Link and turn its processor tokens into paykeys with `createPlaidPaykey`, "
+             "or move Link to the Bridge widget?\nRecommended: keep Plaid tokens.")
+
+# Grader name -> (good artifact, bad artifacts). Each applies to every case below that has a grader of that name.
+PROOFS = {
+    "install-ran": (artifact(calls=[bash("npm install --save-exact @straddlecom/straddle@1.0.4")]),
+                    [artifact(), artifact(calls=[bash("npm install @straddlecom/straddle")])]),
+    "lockfile-has-sdk": (artifact({"package-lock.json": LOCK}),
+                         [artifact(), artifact({"package-lock.json": LOCK.replace('"1.0.4"', '"1.0.3"')})]),
+    "lockfile-keeps-tree": (artifact({"package-lock.json": LOCK}),
+                            [artifact(), artifact({"package-lock.json": LOCK.replace('"2.1.3"', '"2.1.2"')})]),
+    "manifest-pinned": (artifact({"package.json": '{ "dependencies": { "@straddlecom/straddle": "1.0.4" } }'}),
+                        [artifact({"package.json": '{ "dependencies": { "@straddlecom/straddle": "^1.0.4" } }'}),
+                         artifact({"package.json": '{ "dependencies": { "ms": "2.1.3" } }'})]),
+    "no-install-file-removal": (
+        artifact(calls=[bash("npm install --save-exact @straddlecom/straddle@1.0.4"), bash("git diff package-lock.json")]),
+        [artifact(calls=[bash(c)]) for c in ("rm -f package-lock.json", "git checkout -- package.json package-lock.json",
+                                             "git restore package-lock.json", "unlink package-lock.json",
+                                             "npm install --no-package-lock @straddlecom/straddle@1.0.4",
+                                             "npm install --package-lock=false @straddlecom/straddle@1.0.4")]),
+    "no-execute-request": (artifact(), [artifact(calls=[(MCP_API, {"method": "POST"})])]),
+    "no-docs-execute-request": (artifact(), [artifact(calls=[(MCP_DOCS, {"method": "POST"})])]),
+    "no-doctor-before-prerequisites": (artifact(calls=[bash("straddle auth status --agent")]),
+                                       [artifact(calls=[bash("straddle doctor")])]),
+    "no-live-read-command": (artifact(calls=[bash("straddle auth status --agent")]),
+                             [artifact(calls=[bash("straddle customers list")])]),
+    "no-live-write-command": (artifact(calls=[bash("npm test")]),
+                              [artifact(calls=[bash("straddle charges create --amount 500")])]),
+    "no-transport-attempt": (artifact(last_message="# tests 3\n# pass 3"),
+                             [artifact(last_message="Error: connect ECONNREFUSED 127.0.0.1:443")]),
+    "no-unapproved-edits": (artifact(calls=[edit("Edit", "src/straddle/client.mjs")]),
+                            [artifact(calls=[edit("Edit", p)]) for p in ("package-lock.json", "package.json")]),
+    "no-unapproved-writes": (artifact(calls=[edit("Write", "straddle-integration-report.md")]),
+                             [artifact(calls=[edit("Write", p)]) for p in ("package-lock.json", "package.json")]),
+    "report-header": (artifact({"straddle-integration-report.md": REPORT_918}),
+                      [artifact({"straddle-integration-report.md": REPORT_918.replace("8b437fb3", "0b437fb3")}),
+                       artifact({"straddle-integration-report.md": REPORT_918.replace("Status: blocked (", "Status: partial (")})]),
+    "report-lists-lockfile": (artifact({"straddle-integration-report.md": REPORT_918}),
+                              [artifact({"straddle-integration-report.md": REPORT_918.replace(
+                                  "| package-lock.json | SDK added | SDK install |\n", "")}),
+                               artifact({"straddle-integration-report.md": REPORT_918.replace(
+                                   "| SDK added | SDK install |", "| SDK added | not in the plan |")})]),
+    "report-lists-manifest": (artifact({"straddle-integration-report.md": REPORT_918}),
+                              [artifact({"straddle-integration-report.md": REPORT_918.replace(
+                                  "| package.json | SDK pinned at 1.0.4 | SDK install |\n", "")})]),
+    "skill-fired": (artifact(calls=[SKILL]), [artifact(calls=[("Skill", {"skill": "commit"})])]),
+    "tests-ran": (artifact(calls=[bash("npm test")]), [artifact(calls=[bash("node src/tips.mjs")])]),
+    "handoff-draft": (artifact(last_message='STRADDLE_HANDOFF {"skill":"straddle-plan","status":"draft","report":"x"}'),
+                      [artifact(last_message='STRADDLE_HANDOFF {"skill":"straddle-plan","status":"approved","report":"x"}')]),
+    "methods-in-order": (artifact({"straddle-integration-plan.md": PLAN_947}),
+                         [artifact({"straddle-integration-plan.md": PLAN_947.replace("| 1 | Plaid", "| 3 | Plaid")}),
+                          artifact({"straddle-integration-plan.md": PLAN_947.replace(
+                              "| 2 | Bank account details | banks Plaid Link doesn't support | `createBankAccountPaykey` | `data.paykey` |\n", "")})]),
+    "paykey-create-per-method": (artifact({"straddle-integration-plan.md": PLAN_947}),
+                                 [artifact({"straddle-integration-plan.md": PLAN_947.replace(
+                                     "| 2 | createPlaidPaykey | SDK | omitted | m-1-plaid | `pk-` |\n", "")})]),
+    "plan-draft": (artifact({"straddle-integration-plan.md": PLAN_947}),
+                   [artifact({"straddle-integration-plan.md": PLAN_947.replace("Draft", "Approved")})]),
+    "migrate-handoff-in-final-reply": (
+        artifact(last_message='STRADDLE_HANDOFF {"skill":"straddle-migrate","status":"awaiting_approval","report":"x"}'),
+        [artifact(last_message='STRADDLE_HANDOFF {"skill":"straddle-migrate","status":"migrated","report":"x"}')]),
+    "no-integrate-in-final-reply": (
+        artifact(last_message='STRADDLE_HANDOFF {"skill":"straddle-migrate","status":"awaiting_approval"}'),
+        [artifact(last_message='STRADDLE_PROGRESS {"skill":"straddle-integrate","step":1}')]),
+    "no-integration-report": (artifact(), [artifact({"straddle-integration-report.md": "Status: partial (x)\n"})]),
+    "plan-written": (artifact({"straddle-migration-plan.md": MIGRATION_PLAN}), [artifact()]),
+    "report-awaiting-approval": (
+        artifact({"straddle-migration-report.md": MIGRATION_REPORT}),
+        [artifact({"straddle-migration-report.md": MIGRATION_REPORT.replace("Plan hash: none", "Plan hash: " + "a" * 64)}),
+         artifact({"straddle-migration-report.md": MIGRATION_REPORT.replace("awaiting_approval (", "migrated (")})]),
+    "transfer-becomes-charge": (artifact({"straddle-migration-plan.md": MIGRATION_PLAN}),
+                                [artifact({"straddle-migration-plan.md": MIGRATION_PLAN.replace("`client.charges.create`", "`transferCreate`")})]),
+    "transfer-footprint": (artifact({"straddle-migration-plan.md": MIGRATION_PLAN}),
+                           [artifact({"straddle-migration-plan.md": MIGRATION_PLAN.replace("`plaid.transferCreate`", "`plaid.linkTokenCreate`")})]),
+    "transfer-status-mapping": (artifact({"straddle-migration-plan.md": MIGRATION_PLAN}),
+                                [artifact({"straddle-migration-plan.md": MIGRATION_PLAN.replace("| `paid` |", "| `pending` |")})]),
+    "bank-connection-open": (artifact({"straddle-integration-plan.md": DECISIONS_947}),
+                             [artifact({"straddle-integration-plan.md": DECISIONS_947.replace(
+                                 "open (round 1)", "Plaid processor token with `createPlaidPaykey`")})]),
+    "no-handoff": (artifact(last_message=ROUND_947), [artifact(last_message='STRADDLE_HANDOFF {"skill":"straddle-plan"}')]),
+    "no-migrate": (artifact(calls=[("Skill", {"skill": "straddle:straddle-plan"})]),
+                   [artifact(calls=[("Skill", {"skill": "straddle:straddle-migrate"})])]),
+    "no-migration-plan": (artifact(), [artifact({"straddle-migration-plan.md": MIGRATION_PLAN})]),
+    "no-quiltt-option": (artifact(last_message=ROUND_947), [artifact(last_message=ROUND_947 + "\nOr a Quiltt token.")]),
+    "plaid-link-options": (artifact(last_message=ROUND_947),
+                           [artifact(last_message=ROUND_947.replace("Bridge widget", "Quiltt token")),
+                            artifact(last_message=ROUND_947.replace("`createPlaidPaykey`", "bank account details"))]),
+}
+
+
+def audit_report(findings="", dismissed=""):
+    return {"straddle-audit-report.md": (
+        "# Straddle audit\n\nStatus: findings\nSDK: @straddlecom/straddle 1.0.4   Model: direct\n\n## Symptom\nNone reported.\n\n"
+        "## Findings\n| # | File:line | Category | Finding | Confidence | Evidence (SDK / contract) | Recovery |\n"
+        "| --- | --- | --- | --- | --- | --- | --- |\n" + findings +
+        "\n## Checked and dismissed\n| File:line | Hypothesis | Why dismissed |\n| --- | --- | --- |\n" + dismissed +
+        "\n## Recovery steps\n1. Fix the finding.\n")}
+
+
+def finding_proofs(row, *wrong_rows):
+    """Good: the row is a finding. Bad: no report, the same hypothesis only dismissed, and each wrong row as the finding."""
+    cells = row.split("|")
+    dismissed = f"|{cells[2]}|{cells[4]}| the code handles it |\n"
+    return (artifact(audit_report(row)),
+            [artifact(), artifact(audit_report(dismissed=dismissed))] + [artifact(audit_report(r)) for r in wrong_rows])
+
+
+P3_REFUND = "| 1 | src/refunds.ts:6 | Product model | refundOrder has no guard against a duplicate refund | high | | |\n"
+P3_RESUBMIT = "| 2 | src/refunds.ts:18 | Product model | resubmitOrder has no guard: any return reason is resubmitted | high | | |\n"
+GO_LIVE = ("# Straddle Go Live review\n\nStatus: not ready (Lifecycle handlers, Sandbox evidence)\nPlan: straddle-integration-plan.md\n"
+           "Plan hash: c3891391a877cc5ed17333f58675661edc29e875fac3d2fb2728aef66dfc187e\nResult: not_ready\n\n## Blocking gaps\n"
+           "| Row | Result | Evidence | Fix |\n| --- | --- | --- | --- |\n"
+           "| Lifecycle handlers | fail | charges: no handler for `cancelled` (src/lifecycle.ts:24) | handle it |\n")
+PROOFS.update({
+    "report-findings": (artifact(audit_report(P3_REFUND)),
+                        [artifact(), artifact({"straddle-audit-report.md": audit_report()["straddle-audit-report.md"].replace(
+                            "Status: findings", "Status: clean")})]),
+    "reversed-finding": finding_proofs(
+        "| 1 | src/lifecycle.ts:36 | Product model | ships on `paid` and has no `reversed` handler | high | charges.md | handle it |\n",
+        "| 1 | src/lifecycle.ts | Product model | ships on `paid` and has no `reversed` handler | high | | |\n",
+        "| 1 | src/lifecycle.ts:36 | Product model | ships on `paid` with no undo | high | | |\n"),
+    "paykey-status-finding": finding_proofs(
+        "| 1 | src/checkout.ts:12 | Product model | charges without checking the paykey status | high | | charge only an active paykey |\n",
+        "| 1 | src/checkout.ts:12 | Idempotency | the paykey token is read from the store each attempt | low | | |\n",
+        "| 1 | src/lifecycle.ts:17 | Product model | charges without checking the paykey status | high | | |\n"),
+    "refund-guard-finding": finding_proofs(P3_REFUND, P3_RESUBMIT, P3_REFUND.replace("src/refunds.ts:6", "src/refunds.ts")),
+    "resubmit-guard-finding": finding_proofs(P3_RESUBMIT, P3_REFUND, P3_RESUBMIT.replace("src/refunds.ts:18", "src/lifecycle.ts:40")),
+    "funding-finding": finding_proofs(
+        "| 1 | src/lifecycle.ts:37 | Product model | ledger marked settled at `paid` with no funding event reconciliation | high | | |\n",
+        "| 1 | src/lifecycle.ts:37 | Product model | ledger marked settled at `paid` | high | | |\n",
+        "| 1 | src/db.ts:2 | Product model | no funding event reconciliation | high | | |\n"),
+    "straddle-go-live-lifecycle-handler-gap/report-header": (
+        artifact({"straddle-go-live-report.md": GO_LIVE}),
+        [artifact(), artifact({"straddle-go-live-report.md": GO_LIVE.replace("Status: not ready (Lifecycle handlers, Sandbox evidence)", "Status: ready")}),
+         artifact({"straddle-go-live-report.md": GO_LIVE.replace("c3891391", "d3891391")})]),
+    "lifecycle-gap": (artifact({"straddle-go-live-report.md": GO_LIVE}),
+                      [artifact(), artifact({"straddle-go-live-report.md": GO_LIVE.replace("| fail |", "| pass |")}),
+                       artifact({"straddle-go-live-report.md": GO_LIVE.replace("`cancelled`", "`on_hold`")})]),
+})
+# Edit and Write scope graders: (allowed path, path outside the scope).
+SCOPES = {
+    "straddle-plan-two-paykey-methods": ("straddle-integration-plan.md", "src/server.ts"),
+    "straddle-plan-plaid-link-program": ("straddle-integration-plan.md", "src/plaid.ts"),
+    "straddle-migrate-plaid-transfer-program": ("straddle-migration-plan.md", "src/billing.ts"),
+    "straddle-go-live-lifecycle-handler-gap": ("straddle-go-live-report.md", "src/lifecycle.ts"),
+    **{case: ("straddle-audit-report.md", "src/lifecycle.ts") for case in (
+        "straddle-audit-paid-then-reversed", "straddle-audit-charge-without-paykey-status",
+        "straddle-audit-unguarded-refund-resubmit", "straddle-audit-no-funding-reconciliation")},
+}
+
+
+class ShippedBehaviorGraders(unittest.TestCase):
+    """ME-918, ME-947 and ME-903: every grader in these cases passes its good artifact and fails each seeded bad one."""
+
+    cases = ("straddle-integrate-sdk-install-keeps-lockfile", "straddle-integrate-sdk-install-new-lockfile",
+             "straddle-plan-two-paykey-methods", "straddle-migrate-plaid-transfer-program",
+             "straddle-plan-plaid-link-program", "straddle-audit-paid-then-reversed",
+             "straddle-audit-charge-without-paykey-status", "straddle-audit-unguarded-refund-resubmit",
+             "straddle-audit-no-funding-reconciliation", "straddle-go-live-lifecycle-handler-gap")
+
+    def grade(self, grader, art):
+        work = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, work)
+        for path, text in art["files"].items():
+            (work / path).write_text(text)
+        return grade(grader, work, art["last_message"], art["calls"])
+
+    def proofs(self, case, name):
+        if name in ("no-other-edits", "no-other-writes"):
+            tool = "Edit" if name == "no-other-edits" else "Write"
+            allowed, outside = SCOPES[case]
+            return artifact(calls=[edit(tool, allowed)]), [artifact(calls=[edit(tool, outside)])]
+        return PROOFS.get(f"{case}/{name}") or PROOFS[name]
+
+    def test_every_grader_passes_good_and_fails_bad(self):
+        for case in self.cases:
+            for path in sorted((EVALS / case / "graders").glob("*.md")):
+                grader = f"{case}/graders/{path.name}"
+                good, bads = self.proofs(case, path.stem)
+                with self.subTest(grader):
+                    self.assertTrue(self.grade(grader, good), "good artifact failed")
+                    for bad in bads:
+                        self.assertFalse(self.grade(grader, bad), f"bad artifact passed: {bad}")
+
+    def test_two_method_graders_fail_on_the_decision_log_alone(self):
+        """The scaffold's Q3 row names both methods and creates on one line; only a written plan passes."""
+        with Workspace("straddle-plan-two-paykey-methods") as work:
+            for name in ("methods-in-order", "paykey-create-per-method"):
+                self.assertFalse(grade(f"straddle-plan-two-paykey-methods/graders/{name}.md", work), name)
+
+    def test_audit_findings_fail_on_the_clean_fixture_report(self):
+        """A report of the clean Brewbox app, which dismisses all four Product model checks, passes no finding grader."""
+        dismissed = "".join(f"| src/{f} | {p} | guarded |\n" for f, p in (
+            ("lifecycle.ts:43", "P1 reversed after paid"), ("checkout.ts:8", "P2 paykey status"),
+            ("refunds.ts:8", "P3 refund guard"), ("refunds.ts:21", "P3 resubmit guard"), ("lifecycle.ts:12", "P4 funding")))
+        clean = artifact(audit_report(dismissed=dismissed))
+        for case in self.cases[5:9]:
+            for path in (EVALS / case / "graders").glob("*-finding.md"):
+                self.assertFalse(self.grade(f"{case}/graders/{path.name}", clean), path)
+
+
 if __name__ == "__main__":
     unittest.main()
