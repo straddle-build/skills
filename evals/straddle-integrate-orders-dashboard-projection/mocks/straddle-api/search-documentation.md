@@ -1,0 +1,5 @@
+Offline eval fixture of the intended search-only Docs MCP, not proof that ME-809 passed.
+
+Notifications: Straddle sends status changes through a webhook endpoint, a FIFO endpoint (one POST per batch, in strict order), or a polling endpoint, all created in the dashboard. Webhook endpoint deliveries are signed with webhook-id, webhook-timestamp, and webhook-signature headers and a `whsec_` secret. Verify the raw body, persist, then return 2xx; deduplicate by webhook-id. A polling endpoint returns a batch with offsets per consumer ID; commit the last offset, because the next poll returns 423 until you do.
+Hosted onboarding: embed `https://go.straddle.com/account?alignLeft=1&hideTitle=1&dynamicHeight=1&embed=1&platform.id={platform_id}&env={env}&external.id={external_id}` in an iframe with data-straddle-src, loaded by `https://forms.straddle.com/embed.js`. The person completes the form. Account status changes arrive as account events.
+Sandbox outcomes: customers verified, paykeys active, charges paid or reversed_insufficient_funds (paid, then reversed with R01).
