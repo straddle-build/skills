@@ -1,6 +1,6 @@
 {
   "name": "straddle-eval-env-fixture",
   "version": "0.0.0",
-  "description": "Eval-only fixture: exports synthetic Straddle configuration for Bash through a SessionStart hook.",
+  "description": "Eval-only fixture: exports synthetic Straddle configuration for Bash through a SessionStart hook, and a Stop hook checks straddle-plan-visual.html's shape and colors.",
   "author": { "name": "Straddle Developer Kit (eval fixture)" }
 }

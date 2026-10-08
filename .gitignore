@@ -3,3 +3,5 @@ __pycache__/
 dist/
 evals/*/5e55a0e1-*.jsonl
 evals/*/env-fixture/dues-verify.log
+evals/*/env-fixture/*-verify.log
+evals/*/env-fixture/plan-visual-check.log

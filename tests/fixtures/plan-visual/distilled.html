@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northwind Coffee: Pay by Bank</title>
+<style>
+  :root {
+    color-scheme: light;
+    --background: #fdfdfd;
+    --card: #fefdfb;
+    --table-header: oklch(0.986 0.0024 92);
+    --foreground: #282828;
+    --muted-foreground: #555555;
+    --success: oklch(0.54 0.14 150);
+    --warning: oklch(0.74 0.15 78);
+    --shadow-raised: 0 1px 2px 0 oklch(0.21 0.012 265 / 0.05), 0 2px 6px -1px oklch(0.21 0.012 265 / 0.05);
+    --radius-card: 12px;
+    --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  body { margin: 0; background: var(--background); color: var(--foreground); font: 16px/1.5 var(--font-sans); }
+  main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+  h1 { font-size: 30px; font-weight: 400; line-height: 1.13; letter-spacing: -0.044rem; margin: 0 0 24px; }
+  ol.flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; list-style: none; margin: 0 0 32px; padding: 0; }
+  ol.flow > li { background: var(--card); box-shadow: var(--shadow-raised); border-radius: var(--radius-card); padding: 16px; }
+  ol.flow h2 { font-size: 16px; font-weight: 500; margin: 0 0 4px; }
+  ol.flow p { margin: 0 0 8px; color: var(--muted-foreground); font-size: 14px; }
+  .object { font: 500 13px/1.4 var(--font-mono); font-variant-numeric: tabular-nums; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: var(--table-header); text-align: left; font-size: 12px; font-weight: 500; padding: 8px 12px; }
+  td { padding: 8px 12px; }
+  .done::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 4px; margin-right: 6px; background: var(--success); }
+  .later::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 4px; margin-right: 6px; background: var(--warning); }
+  @media (max-width: 720px) {
+    ol.flow { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Northwind Coffee takes Pay by Bank at checkout and ships each order once its charge is paid.</h1>
+  <ol class="flow">
+    <li><h2>Customer</h2><p>The shopper's details become a Straddle customer.</p><span class="object">customer</span></li>
+    <li><h2>Bank link</h2><p>The shopper connects a bank account through Bridge.</p><span class="object">paykey</span></li>
+    <li><h2>Charge</h2><p>Placing the order debits the linked account once.</p><span class="object">charge</span></li>
+    <li><h2>Status</h2><p>Signed events move the order to paid, failed or returned.</p><span class="object">webhook</span></li>
+    <li><h2>Funding</h2><p>Deposits match orders by their funding events.</p><span class="object">funding event</span></li>
+  </ol>
+  <table>
+    <thead><tr><th>Step</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td>Customer</td><td><span class="done">Approved in the plan</span></td></tr>
+      <tr><td>Bank link</td><td><span class="done">Approved in the plan</span></td></tr>
+      <tr><td>Charge</td><td><span class="done">Approved in the plan</span></td></tr>
+      <tr><td>Status</td><td><span class="done">Approved in the plan</span></td></tr>
+      <tr><td>Funding</td><td><span class="later">Sandbox proof in Test</span></td></tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

@@ -103,13 +103,18 @@ const countingFetch = () => {
   return { fetch, calls };
 };
 
-test("missing key is a configuration error before any request", () => {
-  const { fetch, calls } = countingFetch();
-  assert.throws(() => createStraddleClient({ STRADDLE_ENVIRONMENT: "sandbox" }, { fetch }), StraddleConfigError);
-  assert.throws(() => createStraddleClient({ STRADDLE_API_KEY: "k" }, { fetch }), StraddleConfigError);
-  assert.throws(() => createStraddleClient({ STRADDLE_API_KEY: "k", STRADDLE_ENVIRONMENT: "staging" }, { fetch }), StraddleConfigError);
-  assert.equal(calls.length, 0);
-});
+const MISSING_CONFIGURATION = {
+  "missing key": { STRADDLE_ENVIRONMENT: "sandbox" },
+  "missing environment": { STRADDLE_API_KEY: "k" },
+  "unknown environment": { STRADDLE_API_KEY: "k", STRADDLE_ENVIRONMENT: "staging" },
+};
+for (const [name, env] of Object.entries(MISSING_CONFIGURATION)) {
+  test(`${name} is a configuration error before any request`, () => {
+    const { fetch, calls } = countingFetch();
+    assert.throws(() => createStraddleClient(env, { fetch }), StraddleConfigError);
+    assert.equal(calls.length, 0);
+  });
+}
 
 test("charge sends a stable 36-character idempotency key and the invoice external ID", async () => {
   const { fetch, calls } = countingFetch();
@@ -128,10 +133,13 @@ test("charge sends a stable 36-character idempotency key and the invoice externa
   assert.equal(calls[0].headers.has("straddle-account-id"), false);
 });
 
-test("every Straddle status maps, and failed is not reversed", () => {
-  for (const status of ["created", "scheduled", "validating", "pending", "on_hold", "paid", "failed", "cancelled", "reversed"]) {
+for (const status of ["created", "scheduled", "validating", "pending", "on_hold", "paid", "failed", "cancelled", "reversed"]) {
+  test(`Straddle status ${status} maps to an app state`, () => {
     assert.ok(STATUS_MAP[status], status);
-  }
+  });
+}
+
+test("failed is not reversed, and an unknown status throws", () => {
   assert.equal(straddleStatusToAppState("failed"), "failed");
   assert.equal(straddleStatusToAppState("reversed"), "reversed");
   assert.equal(straddleStatusToAppState("paid"), "paid");
