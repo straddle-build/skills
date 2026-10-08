@@ -27,7 +27,7 @@ Release-channel install, validate, update and remove passed on the published v0.
 | `kit/manifest.yaml` | Release acceptance (ME-659), and published with each plugin release. The Wizard doesn't read it. | Generated at the release cut. Every version and digest, minimum CLI and SDK versions, and install, update, remove and validation instructions per client. Between releases it describes the last cut, not the current source. |
 | `.github/workflows/release.yml` | GitHub Actions, on a `v*` tag push | The plugin release cut. See [Plugin releases](#plugin-releases). |
 | `third_party/LICENSES.md` | Maintainers | Every vendored third-party file and its license. A skill that vendors a file also carries the notice in its own `references/third-party-licenses.md`, so skills-only installs keep it. |
-| `docs/best-practices-traceability.md` | Reviewers of Best Practices | The build plan section or contract source for each numbered rule in `skills/straddle-best-practices/SKILL.md`, and the clauses that have none. Outside `skills/`, so it doesn't ship to agents. |
+| `docs/best-practices-traceability.md` | Reviewers of Best Practices | The build plan section or contract source for each numbered rule in `skills/straddle-best-practices/SKILL.md`, and the clauses that have none. Outside `skills/`, so it doesn't ship to agents. See [Best Practices rule sources](best-practices-traceability.md). |
 
 The version is `0.1.2` in `plugin.json`, all three native manifests, and both version fields in `.claude-plugin/marketplace.json`. Clients stay on a release until the version changes, so bump every copy together. The validator fails when they differ.
 
