@@ -1,0 +1,6 @@
+{
+  "name": "brightcrew",
+  "private": true,
+  "scripts": { "test": "node --test test/" },
+  "dependencies": { "dwolla-v2": "^3.4.0", "express": "^4.19.2" }
+}
