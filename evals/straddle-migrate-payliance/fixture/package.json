@@ -1,0 +1,6 @@
+{
+  "name": "stepstone-loans",
+  "private": true,
+  "scripts": { "test": "node --test test/" },
+  "dependencies": { "node-cron": "^3.0.3" }
+}
