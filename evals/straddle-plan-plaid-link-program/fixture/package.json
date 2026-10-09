@@ -1,0 +1,7 @@
+{
+  "name": "rentroll",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test test/" },
+  "dependencies": { "@straddlecom/straddle": "1.0.4", "express": "^4.19.2", "plaid": "^30.0.0" }
+}

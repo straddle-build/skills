@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northwind Coffee · Straddle Pay by Bank flow</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --card: #ffffff; --ink: #1b1d21; --muted: #5f6570; --line: #e3e4e8;
+    --accent: #3b5bdb; --accent-soft: #edf1ff; --ok: #2b8a3e; --ok-soft: #ebfbee;
+    --warn: #b35c00; --warn-soft: #fff4e6; --bad: #c92a2a; --bad-soft: #fff0f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  main { max-width: 1120px; margin: 0 auto; padding: 40px 24px 64px; }
+  header { margin-bottom: 28px; }
+  h1 { font-size: 26px; line-height: 1.2; margin: 0 0 6px; }
+  h2 { font-size: 17px; margin: 40px 0 12px; }
+  .sub { color: var(--muted); margin: 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .tag { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-size: 13px; color: var(--muted); }
+  .tag b { color: var(--ink); font-weight: 600; }
+  code { font: 12.5px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #f1f2f4; border-radius: 4px; padding: 1px 4px; }
+
+  .flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; position: relative; }
+  .step .n { display: inline-flex; width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent);
+    font-size: 12px; font-weight: 700; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .step h3 { font-size: 15px; margin: 0 0 4px; }
+  .step .route { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .step ul { margin: 0; padding-left: 16px; font-size: 13px; color: var(--muted); }
+  .step li { margin: 3px 0; }
+  .step:not(:last-child)::after { content: "→"; position: absolute; right: -11px; top: 50%; transform: translateY(-50%);
+    color: var(--accent); font-weight: 700; background: var(--bg); line-height: 1; }
+
+  .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .panel h3 { font-size: 15px; margin: 0 0 10px; }
+  .panel p { margin: 6px 0; font-size: 14px; color: var(--muted); }
+  .events { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+  .events code { background: var(--accent-soft); color: var(--accent); }
+  ol.pipe { margin: 8px 0 0; padding-left: 18px; font-size: 14px; }
+  ol.pipe li { margin: 4px 0; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: #fafafa; }
+  tr:last-child td { border-bottom: 0; }
+  .s { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .s.ok { background: var(--ok-soft); color: var(--ok); }
+  .s.warn { background: var(--warn-soft); color: var(--warn); }
+  .s.bad { background: var(--bad-soft); color: var(--bad); }
+  .note { font-size: 13px; color: var(--muted); margin-top: 10px; }
+  footer { margin-top: 40px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+
+  @media (max-width: 980px) {
+    .flow { grid-template-columns: repeat(2, 1fr); }
+    .step::after { display: none; }
+  }
+  @media (max-width: 640px) {
+    main { padding: 24px 16px 48px; }
+    .flow, .lanes { grid-template-columns: 1fr; }
+    th:nth-child(3), td:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Northwind Coffee · Pay by Bank flow</h1>
+    <p class="sub">The approved Straddle integration plan, from checkout to funding. A view of <code>straddle-integration-plan.md</code>; it changes nothing.</p>
+    <div class="tags">
+      <span class="tag"><b>Direct</b> integration, no <code>Straddle-Account-Id</code></span>
+      <span class="tag"><b>Charges</b> only</span>
+      <span class="tag"><b>@straddlecom/straddle</b> 1.0.4</span>
+      <span class="tag"><b>Webhook</b> endpoint</span>
+      <span class="tag"><b>Sandbox</b></span>
+    </div>
+  </header>
+
+  <h2>Checkout to charge</h2>
+  <div class="flow">
+    <section class="step">
+      <span class="n">1</span>
+      <h3>Checkout</h3>
+      <div class="route">Browser → <code>app/api</code> only</div>
+      <ul>
+        <li>Name, email, E.164 phone, address</li>
+        <li>No key or paykey token reaches the browser</li>
+      </ul>
+    </section>
+    <section class="step">
+      <span class="n">2</span>
+      <h3>Customer</h3>
+      <div class="route"><code>POST /api/customers</code></div>
+      <ul>
+        <li><code>createCustomer</code></li>
+        <li><code>nw-cust-&lt;orderId&gt;</code></li>
+        <li>Draft order saved</li>
+      </ul>
+    </section>
+    <section class="step">
+      <span class="n">3</span>
+      <h3>Bank link</h3>
+      <div class="route"><code>POST /api/bank-accounts</code></div>
+      <ul>
+        <li>Only when customer is <code>verified</code></li>
+        <li><code>createBankAccountPaykey</code></li>
+        <li><code>nw-pk-&lt;orderId&gt;</code></li>
+        <li>Stores paykey id, label, last4</li>
+      </ul>
+    </section>
+    <section class="step">
+      <span class="n">4</span>
+      <h3>Charge</h3>
+      <div class="route"><code>POST /api/orders</code></div>
+      <ul>
+        <li>Needs <code>authorized</code> and paykey <code>active</code></li>
+        <li>Consent saved on the order</li>
+        <li><code>revealPaykey</code> in memory, then <code>createCharge</code></li>
+        <li><code>nw-order-&lt;orderId&gt;</code>, <code>internet</code>, <code>balance_check: enabled</code>, Eastern date</li>
+      </ul>
+    </section>
+    <section class="step">
+      <span class="n">5</span>
+      <h3>Webhook events</h3>
+      <div class="route"><code>POST /api/webhooks/straddle</code></div>
+      <ul>
+        <li>Verify, store, then <code>204</code></li>
+        <li>Projects status onto the order</li>
+      </ul>
+    </section>
+    <section class="step">
+      <span class="n">6</span>
+      <h3>Funding</h3>
+      <div class="route"><code>funding_event.event.v1</code></div>
+      <ul>
+        <li>Lands on <code>Order.funding</code></li>
+        <li>Sandbox: "Run Sandbox funding" calls <code>simulateFundingEvent</code></li>
+      </ul>
+    </section>
+  </div>
+  <p class="note">Every create sends an idempotency key: a prefix plus a SHA-256 hash of its external ID (<code>cus-</code>, <code>pk-</code>, <code>chg-</code>). A retry reuses the key, so it returns the same charge.</p>
+
+  <h2>How status arrives</h2>
+  <div class="lanes">
+    <section class="panel">
+      <h3>Webhook handler</h3>
+      <div class="events">
+        <code>customer.*</code><code>paykey.*</code><code>charge.*</code><code>funding_event.*</code>
+      </div>
+      <ol class="pipe">
+        <li>Read the raw body. Verify with <code>standardwebhooks</code> (<code>400</code> on failure, <code>500</code> if the secret is missing).</li>
+        <li>Strip the paykey token, then append to <code>data/webhook-events.jsonl</code> by <code>event_id</code>. A duplicate changes nothing.</li>
+        <li>Project onto <code>data/orders.json</code> by <code>changed_at</code>. An older event never replaces a newer one.</li>
+        <li>Return <code>204</code>. A failed write returns <code>500</code> so Straddle retries.</li>
+      </ol>
+    </section>
+    <section class="panel">
+      <h3>Pages</h3>
+      <p><b>Order page</b> reads the stored projection. "Refresh status" rereads the store and makes no Straddle request.</p>
+      <p><b>Back office</b> shows each order, plus one review read and one paykey read per order on page load. Read-only: no review decisions, refunds, resubmits, or unblocks.</p>
+      <p><b>Sandbox</b> defaults to customer <code>verified</code>, paykey <code>active</code>, charge <code>paid</code>. Test can override per request.</p>
+    </section>
+  </div>
+
+  <h2>What the order does on each status</h2>
+  <table>
+    <thead><tr><th>Resource</th><th>Status</th><th>Shopper or back office sees</th></tr></thead>
+    <tbody>
+      <tr><td>Customer</td><td><span class="s warn">review</span></td><td>"We're verifying your details." Bank linking waits.</td></tr>
+      <tr><td>Customer</td><td><span class="s bad">rejected</span></td><td>"We can't take pay by bank for this order." No scores or codes.</td></tr>
+      <tr><td>Paykey</td><td><span class="s warn">review</span></td><td>"We're verifying your bank account." Order creation waits.</td></tr>
+      <tr><td>Paykey</td><td><span class="s bad">rejected</span> <span class="s bad">blocked</span></td><td>Ask for another bank account. A blocked (R29) account takes no new charges.</td></tr>
+      <tr><td>Charge</td><td><span class="s ok">paid</span></td><td>Order paid, ready to ship.</td></tr>
+      <tr><td>Charge</td><td><span class="s bad">failed</span></td><td>Reason and code shown; ask for another account. Insufficient funds says so.</td></tr>
+      <tr><td>Charge</td><td><span class="s warn">on_hold</span></td><td>"Under review", with no promised release.</td></tr>
+      <tr><td>Charge</td><td><span class="s bad">reversed</span></td><td>Back office flags "returned after paid" with the code (for example R01), for manual recovery.</td></tr>
+      <tr><td>Funding event</td><td><span class="s ok">charge_deposit</span> <span class="s bad">charge_reversal</span></td><td>Status on the order's funding step and in the back office.</td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    Plan: <code>straddle-integration-plan.md</code>, approved 2026-10-01, sha256 <code>cdcff5ee…2777ac</code>. Every Sandbox write still needs its own preview and approval.
+  </footer>
+</main>
+</body>
+</html>

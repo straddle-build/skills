@@ -1,0 +1,21 @@
+{
+  "tools": [
+    {
+      "name": "search-documentation",
+      "description": "Search the available documentation for pages related to a user's query and return a list of related content matching the search criteria.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "question"
+        ]
+      }
+    }
+  ]
+}
