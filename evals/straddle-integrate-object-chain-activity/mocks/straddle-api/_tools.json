@@ -1,0 +1,92 @@
+{
+  "tools": [
+    {
+      "name": "summarize-openapi-specs",
+      "description": "Get a summary of available OpenAPI and AsyncAPI descriptions, including info, servers, HTTP paths or message channel names.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "search-openapi-operations",
+      "description": "Search the available OpenAPI and AsyncAPI descriptions for HTTP operations or message channels related to a user's query. Return matching content, including referenced message payloads. AsyncAPI channels are documentation only and cannot be executed as HTTP requests.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "question"
+        ]
+      }
+    },
+    {
+      "name": "search-documentation",
+      "description": "Search the available documentation for pages related to a user's query and return a list of related content matching the search criteria.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "question"
+        ]
+      }
+    },
+    {
+      "name": "execute-request",
+      "description": "Execute an HTTP request for a specific scalar document and operation.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "xScalarDocumentId": {
+            "type": "string"
+          },
+          "xScalarOperationId": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "serverBaseUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Must be one of the document's declared server URLs. Requests to any other host are rejected."
+          },
+          "path": {
+            "type": "string"
+          },
+          "headers": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "body": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "xScalarDocumentId",
+          "xScalarOperationId",
+          "method",
+          "serverBaseUrl",
+          "path"
+        ]
+      }
+    }
+  ]
+}
