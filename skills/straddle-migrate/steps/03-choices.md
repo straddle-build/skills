@@ -25,6 +25,6 @@ Ask each unanswered choice with the repository evidence beside it. Do not infer 
 
 Search the Docs MCP for the Straddle guide for each flow in scope and keep the citations. If the Docs MCP lists `execute-request`, do not call it.
 
-Don't stop at this step to wait for answers. Carry every open choice into the plan as `Unresolved`, and ask the questions alongside the written plan. Writing the plan changes no other file, and nothing is edited before approval anyway. If the answers can't come in this run, stop after step 4 and hand off with `awaiting_approval`.
+Don't stop at this step to wait for answers. Carry every open choice into the plan as `Unresolved`, and ask the questions alongside the written plan. Writing the plan changes no other file, and nothing is edited before approval anyway. If the answers can't come in this run, continue through step 5 to step 8, which writes `straddle-migration-report.md` and hands off with `awaiting_approval`.
 
 **Summary for step 4:** the choices with sources, the proposed status mapping, the consent and existing-account decisions, flows in scope, doc citations.
