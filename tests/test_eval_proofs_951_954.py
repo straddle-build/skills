@@ -279,6 +279,26 @@ class OrdersDashboardGraders(unittest.TestCase):
                          "webhook-clears-cache", "decision-clears-cache"):
                 self.assertTrue(grade(self.grader(name), work), name)
 
+    def test_injectable_clock_cache_passes(self):
+        """All three b28a272 runs passed `now = Date.now` and called `now()`, so the TTL test needs no real wait."""
+        with Workspace(DASHBOARD) as work:
+            self.write_good(work)
+            put(work, "src/straddle/review-cache.mjs", """export function createReviewCache(client, { ttlMs = 5 * 60 * 1000, now = Date.now } = {}) {
+  const entries = new Map();
+  return {
+    get(id) {
+      const entry = entries.get(id);
+      if (entry && entry.expiresAt > now()) return entry.promise;
+      const fresh = { promise: client.customers.review.get(id), expiresAt: now() + ttlMs };
+      entries.set(id, fresh);
+      return fresh.promise;
+    },
+    clear(id) { entries.delete(id); },
+  };
+}
+""")
+            self.assertTrue(grade(self.grader("cache-expires"), work))
+
     def test_per_row_reads_fail(self):
         with Workspace(DASHBOARD) as work:
             self.write_good(work)

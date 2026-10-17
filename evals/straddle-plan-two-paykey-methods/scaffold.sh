@@ -10,7 +10,7 @@ cat > package.json <<'JSON'
   "private": true,
   "type": "module",
   "scripts": { "test": "node --test" },
-  "dependencies": { "@straddlecom/straddle": "1.0.4", "express": "4.21.2", "plaid": "30.0.0" }
+  "dependencies": { "@straddlecom/straddle": "1.0.4", "express": "4.21.2", "plaid": "30.1.0" }
 }
 JSON
 cat > src/db.ts <<'TS'

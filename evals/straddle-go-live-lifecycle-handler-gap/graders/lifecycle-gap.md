@@ -1,7 +1,7 @@
 ---
 type: regex
 target: { source: file, path: straddle-go-live-report.md }
-pattern: '^\|(?=[^\n]*\bLifecycle handlers\b)(?=[^\n]*\|[\s*`]*fail[\s*`]*\|)(?=[^\n]*\bcancelled\b)'
+pattern: '^\|(?=[^\n]*\bLifecycle\b)(?=[^\n]*\|[\s*`]*fail[\s*`]*\|)(?=[^\n]*\bcancelled\b)'
 flags: mi
 arm: with-only
 ---
