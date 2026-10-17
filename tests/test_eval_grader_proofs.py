@@ -469,6 +469,12 @@ class ShippedBehaviorGraders(unittest.TestCase):
             for name in ("methods-in-order", "paykey-create-per-method"):
                 self.assertFalse(grade(f"straddle-plan-two-paykey-methods/graders/{name}.md", work), name)
 
+    def test_lifecycle_gap_accepts_a_shortened_row_label(self):
+        """b28a272 runs 1 and 3 labeled the row "Lifecycle: charge"; no Go Live step fixes the label."""
+        report = GO_LIVE.replace("| Lifecycle handlers | fail |", "| Lifecycle: charge | fail |")
+        self.assertTrue(self.grade("straddle-go-live-lifecycle-handler-gap/graders/lifecycle-gap.md",
+                                   artifact({"straddle-go-live-report.md": report})))
+
     def test_audit_findings_fail_on_the_clean_fixture_report(self):
         """A report of the clean Brewbox app, which dismisses all four Product model checks, passes no finding grader."""
         dismissed = "".join(f"| src/{f} | {p} | guarded |\n" for f, p in (
