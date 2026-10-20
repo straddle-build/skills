@@ -42,7 +42,9 @@ REQUIRED_SKILLS = (
     "straddle-best-practices",
 )
 INSTALL_REPO = "straddle-build/skills"
-INSTALL_SOURCE = re.compile(r"skills(?:@[^\s`'\"]+)? add (?P<quote>['\"]?)" + re.escape(INSTALL_REPO)
+INSTALL_SOURCE_PATH = (rf"(?:{re.escape(INSTALL_REPO)}|"
+                       rf"{re.escape(f'https://github.com/{INSTALL_REPO}')}(?:\.git)?)")
+INSTALL_SOURCE = re.compile(r"skills(?:@[^\s`'\"]+)? add (?P<quote>['\"]?)" + INSTALL_SOURCE_PATH
                            + r"(?:#(?P<ref>[^\s`'\"]*))?(?P=quote)(?=[\s`'\"]|$)")
 NATIVE_MANIFESTS = (".claude-plugin/plugin.json", ".codex-plugin/plugin.json", ".cursor-plugin/plugin.json")
 # mcp.json sends the caller's key to straddle-api for Claude Code and Cursor, which expand ${STRADDLE_API_KEY}
