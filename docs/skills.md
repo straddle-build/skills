@@ -98,7 +98,7 @@ Review `straddle-audit-report.md` before approving a specific fix. Each approved
 
 [Payment Review](../skills/straddle-payment-review/SKILL.md) checks the payment paths changed during a Wizard session and produces an advisory report. It uses `.straddle-wizard/session-baseline.json` to identify the session's changes, then checks authorization, ownership, server-side amounts, webhook verification, secret exposure, and recovery behavior.
 
-Install it from the default branch with the skills installer or a repository marketplace. Confirm that `straddle-payment-review` appears in your client's skill list. To supply the required session baseline, use the compatible workflow from [Wizard source](https://github.com/straddle-build/wizard); the skill's [scope instructions](../skills/straddle-payment-review/steps/01-scope.md) describe that prerequisite.
+It isn't in a release yet, so the release-pinned install commands in the [README](../README.md#install) don't include it. Install it from the default branch with the skills installer or a repository marketplace. Confirm that `straddle-payment-review` appears in your client's skill list. To supply the required session baseline, use the compatible workflow from [Wizard source](https://github.com/straddle-build/wizard); the skill's [scope instructions](../skills/straddle-payment-review/steps/01-scope.md) describe that prerequisite.
 
 ## Find the shared references
 

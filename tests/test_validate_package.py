@@ -183,6 +183,40 @@ class PackageTest(unittest.TestCase):
              "$.name does not match ^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$"),
         ])
 
+    def test_skills_install_commands_must_pin_the_plugin_release_tag(self):
+        version = json.loads((self.root / "plugin.json").read_text())["version"]
+        (self.root / "docs").mkdir()
+        (self.root / "README.md").write_text(
+            f"npx skills add straddle-build/skills#v{version} --skill '*'\n"
+            f"npx skills add 'straddle-build/skills#v{version}' --list\n"
+            f'npx skills add "straddle-build/skills#v{version}" --list\n'
+            f"npx skills@1.7.4 add straddle-build/skills#v{version} --list\n"
+            f"npx skills add https://github.com/straddle-build/skills#v{version} --list\n"
+            f"npx skills add https://github.com/straddle-build/skills.git#v{version} --list\n"
+            f"npx skills add 'https://github.com/straddle-build/skills#v{version}' --list\n"
+            f'npx skills add "https://github.com/straddle-build/skills.git#v{version}" --list\n'
+            "npx skills add straddle-build/skills --list\n"
+            "npx skills add 'straddle-build/skills#main' --list\n"
+            'npx skills add "straddle-build/skills#main" --list\n'
+            "npx skills add https://github.com/straddle-build/skills#main --list\n"
+            "npx skills add https://github.com/straddle-build/skills.git --list\n"
+            "npx skills add 'https://github.com/straddle-build/skills#main' --list\n"
+            'npx skills add "https://github.com/straddle-build/skills.git" --list\n')
+        (self.root / "docs" / "install.md").write_text("npx skills@1.7.4 add straddle-build/skills --list\n")
+        code, lines = run_cli("--offline", cwd=self.root)
+        self.assertEqual(code, 1)
+        expected = f"skills install source must be straddle-build/skills#v{version}, the plugin.json release tag"
+        self.assertEqual([line for line in lines if line.startswith(("README.md:", "docs/install.md:"))], [
+            f"README.md:9: version: {expected}; found no ref",
+            f"README.md:10: version: {expected}; found #main",
+            f"README.md:11: version: {expected}; found #main",
+            f"README.md:12: version: {expected}; found #main",
+            f"README.md:13: version: {expected}; found no ref",
+            f"README.md:14: version: {expected}; found #main",
+            f"README.md:15: version: {expected}; found no ref",
+            f"docs/install.md:1: version: {expected}; found no ref",
+        ])
+
     def test_codex_legal_urls_are_required_and_must_resolve(self):
         privacy = "https://legal.straddle.com/legal/legal/privacy-policy"
         self.remote = lambda url: 404 if url == privacy else 200
