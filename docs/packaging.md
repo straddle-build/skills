@@ -59,6 +59,8 @@ The validator requires the `mcp.json` header, the Codex manifest's servers, and 
 
 `npx skills add straddle-build/skills#v0.1.2` installs the skills only. It doesn't install the manifests or MCP servers, so it isn't evidence that the plugin works. `scripts/validate-package` checks the skill files that both distribution paths ship, including each skill's `references/`.
 
+The immutable `v0.1.2` release has malformed front matter on Best Practices. The skills installer therefore skips that skill and lists or installs eight skills, even though the plugin archive has nine. The source front matter is corrected in this change; the complete release-pinned set needs a `v0.1.3` release.
+
 The `#v<version>` ref pins the skills installer to the release tag the Wizard installs; without it the installer takes the default branch. `scripts/validate-package` requires every skills installer command for this repository in `README.md` and `docs/` to name `v<plugin.json version>`, so a release cut that bumps the version also moves these commands. Claude Code, Codex and Cursor marketplace installs from GitHub still follow the default branch. Cursor can't pin a ref (see [Plugin releases](#plugin-releases)).
 
 The skills installer parses each `SKILL.md` front matter with the `yaml` package and skips a skill whose front matter doesn't parse, or lacks a string `name` and `description`, with only a warning. `scripts/validate-package` parses a YAML subset and doesn't catch those errors, so CI also runs `scripts/skill-frontmatter/check.mjs`, which splits and parses front matter the way the installer does. A plain `description:` value that contains a colon followed by a space doesn't parse; quote it.

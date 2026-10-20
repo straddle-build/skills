@@ -28,7 +28,7 @@ Install the complete set, then choose your agent and installation scope when pro
 npx skills add straddle-build/skills#v0.1.2 --skill '*'
 ```
 
-The `#` suffix pins the current release tag, the version the Wizard installs. Without it the installer takes the default branch, which can hold unreleased changes. Keep the set together because the skills share references and hand work to one another. Confirm the installed names with `npx skills list`, then start a new agent session. Use `npx skills list --global` if you selected a global installation.
+The `#` suffix pins the current release tag, the version the Wizard installs. Without it the installer takes the default branch, which can hold unreleased changes. For the temporary `v0.1.2` `npx` limitation (eight skills), see [package installation details](docs/packaging.md#install-paths). Keep the set together because the skills share references and hand work to one another. Confirm the installed names with `npx skills list`, then start a new agent session. Use `npx skills list --global` if you selected a global installation.
 
 For documentation search and API requests, [connect the hosted MCP servers](https://straddle-build-straddle-openapi.apidocumentation.com/connect-mcp) in your client. Docs MCP supplies documentation. API MCP discovers operations and sends Straddle API requests using your key.
 
@@ -56,7 +56,7 @@ npx @straddlecom/wizard@latest status --json
 
 In `clients`, find your client and confirm `plugin.state` is `installed` and `plugin.verified` is `true`. Start a new client session and confirm that `straddle-api` and `straddle-docs` appear in its MCP connections. This checks the installed files and server registration; Setup checks API configuration separately.
 
-The [v0.1.2 plugin release](https://github.com/straddle-build/skills/releases/tag/v0.1.2) contains nine skills. It's the release that the Wizard and the portable-skills command install. The default branch also includes [Payment Review](docs/skills.md#review-changes-from-a-wizard-session), which isn't in a release yet. Direct GitHub marketplace installs follow the default branch; [packaging details](docs/packaging.md#install-paths) document those client commands.
+The [v0.1.2 plugin release](https://github.com/straddle-build/skills/releases/tag/v0.1.2) contains nine skills. The Wizard installs all nine; the portable-skills commands select that tag, subject to the current `npx` limitation above. The default branch also includes [Payment Review](docs/skills.md#review-changes-from-a-wizard-session), which isn't in a release yet. Direct GitHub marketplace installs follow the default branch; [packaging details](docs/packaging.md#install-paths) document those client commands.
 
 ### Install the plugin in Cursor
 
