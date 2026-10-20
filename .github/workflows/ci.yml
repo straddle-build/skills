@@ -38,6 +38,17 @@ jobs:
         with:
           node-version: 22
 
+      # npx skills add silently skips a skill whose front matter its YAML parser rejects (EG-1010).
+      - name: Install skill front matter check
+        working-directory: scripts/skill-frontmatter
+        run: npm ci
+
+      - name: Parse skill front matter as the skills installer does
+        working-directory: scripts/skill-frontmatter
+        run: |
+          npm test
+          npm run check
+
       - name: Validate Claude Code manifests
         run: |
           npx --yes @anthropic-ai/claude-code@2.1.283 plugin validate --strict .
