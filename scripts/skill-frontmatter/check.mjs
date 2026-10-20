@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// Parse every skill's SKILL.md front matter the way `npx skills add` does, and fail on any skill it would skip.
-// The skills installer (vercel-labs/skills) splits front matter with the expression below, parses it with the
-// `yaml` package, and silently drops a skill whose front matter doesn't parse or lacks a string name and
-// description (EG-1010). scripts/validate-package parses a YAML subset and can't see those errors.
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, realpathSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { parse } from 'yaml';
 
 const FRONTMATTER = /^﻿?---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '__pycache__']);
+const SKILL_CONTAINERS = ['skills', 'skills/.curated', 'skills/.experimental', 'skills/.system'];
+const MAX_CONTAINER_DEPTH = 3;
 
-export function checkSkill(text) {
+function checkSkill(text) {
   const match = text.match(FRONTMATTER);
   if (!match) return ['SKILL.md must start with front matter between --- lines'];
   let data;
@@ -24,15 +24,31 @@ export function checkSkill(text) {
     .map((key) => `${key} must be a non-empty string`);
 }
 
-export function skillFiles(root) {
-  const skills = join(root, 'skills');
-  return readdirSync(skills)
-    .map((name) => join(skills, name, 'SKILL.md'))
-    .filter((path) => statSync(path, { throwIfNoEntry: false })?.isFile())
-    .sort();
+function skillFiles(root) {
+  const paths = new Set();
+  const walk = (dir, depth = 1) => {
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const child = join(dir, entry.name);
+      const skill = join(child, 'SKILL.md');
+      if (statSync(skill, { throwIfNoEntry: false })?.isFile()) {
+        paths.add(skill);
+      } else if (depth < MAX_CONTAINER_DEPTH && !SKIP_DIRS.has(entry.name)) {
+        walk(child, depth + 1);
+      }
+    }
+  };
+  for (const container of SKILL_CONTAINERS) walk(join(root, container));
+  return [...paths].sort();
 }
 
-if (import.meta.main) {
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   const root = resolve(import.meta.dirname, '..', '..');
   const paths = process.argv.length > 2 ? process.argv.slice(2).map((path) => resolve(path)) : skillFiles(root);
   let failed = 0;

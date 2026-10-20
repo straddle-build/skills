@@ -42,7 +42,8 @@ REQUIRED_SKILLS = (
     "straddle-best-practices",
 )
 INSTALL_REPO = "straddle-build/skills"
-INSTALL_SOURCE = re.compile(r"skills add " + re.escape(INSTALL_REPO) + r"(?:#([^\s`'\"]*))?(?=[\s`'\"]|$)")
+INSTALL_SOURCE = re.compile(r"skills(?:@[^\s`'\"]+)? add (?P<quote>['\"]?)" + re.escape(INSTALL_REPO)
+                           + r"(?:#(?P<ref>[^\s`'\"]*))?(?P=quote)(?=[\s`'\"]|$)")
 NATIVE_MANIFESTS = (".claude-plugin/plugin.json", ".codex-plugin/plugin.json", ".cursor-plugin/plugin.json")
 # mcp.json sends the caller's key to straddle-api for Claude Code and Cursor, which expand ${STRADDLE_API_KEY}
 # from the environment or the Cursor variable. Codex strips Authorization from Agent Plugins config, so its
@@ -272,8 +273,6 @@ class Package:
             self.report(rel, "version", f"plugin entry version must match plugin.json version {version!r}")
 
     def check_install_refs(self, version):
-        # `npx skills add` installs whatever ref it is given, so the documented commands pin the release tag the
-        # Wizard installs. A release cut that bumps plugin.json must move them too (EG-1010).
         tag = f"v{version}"
         for path in [self.root / "README.md", *sorted((self.root / "docs").glob("*.md"))]:
             if not path.is_file():
@@ -281,8 +280,8 @@ class Package:
             rel = path.relative_to(self.root).as_posix()
             for number, line in enumerate(path.read_text().split("\n"), 1):
                 for match in INSTALL_SOURCE.finditer(line):
-                    if match.group(1) != tag:
-                        found = f"#{match.group(1)}" if match.group(1) else "no ref"
+                    if match.group("ref") != tag:
+                        found = f"#{match.group('ref')}" if match.group("ref") else "no ref"
                         self.report(rel, "version", f"skills install source must be {INSTALL_REPO}#{tag}, the "
                                     f"plugin.json release tag; found {found}", number)
 
