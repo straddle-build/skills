@@ -1,0 +1,36 @@
+name: API drift
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      contract_version:
+        description: 'Published Scalar version (X.Y.Z); blank checks public current'
+        required: false
+        type: string
+  repository_dispatch:
+    types: [api-contract-published]
+
+permissions:
+  contents: read
+
+jobs:
+  api-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.8
+      - name: Test API drift checker
+        run: bun test tests/api-drift.test.ts
+      - name: Check skills and SDK pins against published API
+        env:
+          CONTRACT_VERSION: ${{ inputs.contract_version || github.event.client_payload.contract_version }}
+        run: |
+          if [ -n "$CONTRACT_VERSION" ]; then
+            bun scripts/check-api-drift.ts --contract-version "$CONTRACT_VERSION"
+          else
+            bun scripts/check-api-drift.ts
+          fi
