@@ -32,7 +32,7 @@ def mock_dirs(evals):
 
 
 def mocked_tools(server_dir):
-    # ponytail: ignores _server.md `tools:` lists; no case uses one. Parse its frontmatter when one does.
+    # Ignores _server.md `tools:` lists.
     return sorted(p.stem for p in server_dir.glob("*.md") if p.name != SERVER_AGENT)
 
 
