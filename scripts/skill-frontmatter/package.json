@@ -1,0 +1,15 @@
+{
+  "name": "straddle-skill-frontmatter-check",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "check": "node check.mjs",
+    "test": "node --test check.test.mjs"
+  },
+  "dependencies": {
+    "yaml": "2.9.1"
+  }
+}

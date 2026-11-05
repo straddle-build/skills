@@ -41,6 +41,11 @@ REQUIRED_SKILLS = (
     "straddle-payment-review",
     "straddle-best-practices",
 )
+INSTALL_REPO = "straddle-build/skills"
+INSTALL_SOURCE_PATH = (rf"(?:{re.escape(INSTALL_REPO)}|"
+                       rf"{re.escape(f'https://github.com/{INSTALL_REPO}')}(?:\.git)?)")
+INSTALL_SOURCE = re.compile(r"skills(?:@[^\s`'\"]+)? add (?P<quote>['\"]?)" + INSTALL_SOURCE_PATH
+                           + r"(?:#(?P<ref>[^\s`'\"]*))?(?P=quote)(?=[\s`'\"]|$)")
 NATIVE_MANIFESTS = (".claude-plugin/plugin.json", ".codex-plugin/plugin.json", ".cursor-plugin/plugin.json")
 # mcp.json sends the caller's key to straddle-api for Claude Code and Cursor, which expand ${STRADDLE_API_KEY}
 # from the environment or the Cursor variable. Codex strips Authorization from Agent Plugins config, so its
@@ -228,6 +233,8 @@ class Package:
             if manifest.get("mcpServers") != expected:
                 self.report(rel, "package", message)
         self.check_claude_marketplace(name, version)
+        if version:
+            self.check_install_refs(version)
         if manifests[".codex-plugin/plugin.json"] is not None:
             self.check_codex(manifests[".codex-plugin/plugin.json"])
         if manifests[".cursor-plugin/plugin.json"] is not None:
@@ -266,6 +273,19 @@ class Package:
             self.report(rel, "package", 'plugin source must be "./", the repository root')
         if entries[0].get("version", version) != version:
             self.report(rel, "version", f"plugin entry version must match plugin.json version {version!r}")
+
+    def check_install_refs(self, version):
+        tag = f"v{version}"
+        for path in [self.root / "README.md", *sorted((self.root / "docs").glob("*.md"))]:
+            if not path.is_file():
+                continue
+            rel = path.relative_to(self.root).as_posix()
+            for number, line in enumerate(path.read_text().split("\n"), 1):
+                for match in INSTALL_SOURCE.finditer(line):
+                    if match.group("ref") != tag:
+                        found = f"#{match.group('ref')}" if match.group("ref") else "no ref"
+                        self.report(rel, "version", f"skills install source must be {INSTALL_REPO}#{tag}, the "
+                                    f"plugin.json release tag; found {found}", number)
 
     def check_codex(self, manifest):
         rel = ".codex-plugin/plugin.json"
