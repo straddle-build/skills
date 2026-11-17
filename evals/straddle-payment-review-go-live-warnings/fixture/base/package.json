@@ -4,6 +4,6 @@
   "type": "module",
   "dependencies": {
     "@straddlecom/straddle": "1.0.4",
-    "express": "4.21.2"
+    "express": "4.22.3"
   }
 }
