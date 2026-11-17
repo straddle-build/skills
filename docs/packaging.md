@@ -118,6 +118,7 @@ scripts/validate-package             # package checks, policy lint, and live lin
 scripts/validate-package --offline   # same, without fetching remote links
 scripts/validate-package --offline path/to/file.md   # policy lint for specific files only
 scripts/check-contract-tokens        # checks product-model references against the pinned API contract
+scripts/check-skills-install         # checks the skills installer (npx skills) can read every skill
 python3 -m unittest discover -s tests -v
 ```
 
@@ -126,6 +127,8 @@ The package checks validate `mcp.json`, and `plugin.json`'s metadata fields, aga
 The release tests and manifest-version drift test use fixed fixture versions. A plugin release bump should not require changing their expected versions.
 
 CI runs Markdown lint, the unit tests, `scripts/check-contract-tokens` against the pinned published contract, `scripts/validate-package`, `scripts/kit-release build` (the plugin packs), and `claude plugin validate --strict` from Claude Code 2.1.283. It also runs the `fixtures/account-scope` corpus job on every run. It doesn't check `kit/manifest.yaml` or the recorded Wizard, so a skills-only change passes without a Wizard change. Those checks run at the release cut.
+
+`scripts/check-skills-install` runs the pinned `skills` installer (`npx skills add . --list`) and fails when it skips a skill or doesn't list one of the directories in `skills/`. The installer parses frontmatter as strict YAML and skips an unreadable skill with only a warning, so a portable install would quietly ship fewer skills. The package validator's frontmatter parser is lenient and only catches the common cases, so this check is the authority for installability.
 
 ### Skill policy lint (ME-816)
 
