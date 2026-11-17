@@ -13,6 +13,8 @@ listing="$(npx --yes "$SKILLS_CLI" add . --list 2>&1)" || {
     echo "check-skills-install: \`npx $SKILLS_CLI add . --list\` failed" >&2
     exit 1
 }
+# The CLI colors its output whenever CI or FORCE_COLOR is set, even without a TTY, so drop ANSI escapes before matching.
+listing="$(sed -E $'s/\e\\[[0-9;?]*[A-Za-z]//g' <<<"$listing")"
 
 status=0
 if grep -q "SKILLS_SKILL_SKIPPED" <<<"$listing"; then
