@@ -402,9 +402,27 @@ def parse_scalar(raw):
     return raw
 
 
+def plain_scalar_error(raw):
+    """Why a strict YAML parser, such as the skills installer's, would reject or misread this unquoted value."""
+    raw = raw.strip()
+    if raw[:1] in ("'", '"'):
+        return None
+    if ": " in raw or raw.endswith(":"):
+        return "contains ': ', which YAML reads as a nested mapping"
+    if " #" in raw:
+        return "contains ' #', which YAML reads as the start of a comment"
+    if raw[:1] in ("[", "{", "&", "*", "!", "%", "@", "`"):
+        return f"starts with {raw[0]!r}, a YAML indicator"
+    return None
+
+
 def parse_frontmatter(lines):
-    """Return (mapping, error) for the frontmatter lines."""
-    data, index = {}, 0
+    """Return (mapping, error) for the frontmatter lines.
+
+    A value strict YAML would reject is reported as the error but still parsed, so readers that only need the
+    mapping, such as kit-release reading metadata.version from an older commit, keep working.
+    """
+    data, index, strict_error = {}, 0, None
     while index < len(lines):
         line = lines[index]
         if not line.strip() or line.lstrip().startswith("#"):
@@ -414,6 +432,7 @@ def parse_frontmatter(lines):
         if not match:
             return data, (index, f"unsupported frontmatter syntax: {line.strip()!r}")
         key, value = match.group(1), (match.group(2) or "").strip()
+        start = index
         index += 1
         block = []
         while index < len(lines) and (not lines[index].strip() or lines[index].startswith((" ", "\t"))):
@@ -423,18 +442,26 @@ def parse_frontmatter(lines):
             parts = [b.strip() for b in block]
             data[key] = ("\n" if value.startswith("|") else " ").join(parts).strip()
         elif value:
+            problem = plain_scalar_error(value)
+            if problem and strict_error is None:
+                strict_error = (start, f"{key} {problem}; quote the value or use a '>-' block scalar")
             data[key] = parse_scalar(value)
         elif block and block[0].strip().startswith("- "):
             data[key] = [parse_scalar(b.strip()[2:]) for b in block if b.strip()]
         else:
             nested = {}
-            for child in (b for b in block if b.strip()):
+            for offset, child in enumerate(block, start=1):
+                if not child.strip():
+                    continue
                 child_match = re.match(r"^\s+([A-Za-z0-9_.-]+):\s+(.*)$", child)
                 if not child_match:
                     return data, (index, f"unsupported nested frontmatter syntax: {child.strip()!r}")
+                problem = plain_scalar_error(child_match.group(2))
+                if problem and strict_error is None:
+                    strict_error = (start + offset, f"{child_match.group(1)} {problem}; quote the value")
                 nested[child_match.group(1)] = parse_scalar(child_match.group(2))
             data[key] = nested
-    return data, None
+    return data, strict_error
 
 
 def check_frontmatter(rel, text, skill_dir):

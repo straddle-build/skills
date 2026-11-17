@@ -92,6 +92,21 @@ class PolicyLintTest(unittest.TestCase):
         self.assertEqual([line.split(": ")[:2] for line in lines],
                          [["straddle-mismatch/SKILL.md:1", "frontmatter"]] * 2)
 
+    def test_skill_frontmatter_must_be_valid_yaml_for_strict_parsers(self):
+        # The skills installer parses frontmatter as strict YAML and silently skips a skill it can't parse.
+        _, invalid = materialize_skill(self, "straddle-colon.md")
+        found = validator.lint_file(invalid, "straddle-colon/SKILL.md", remote=offline)
+        self.assertEqual([(d.line, d.rule) for d in found], [(3, "frontmatter")])
+        self.assertIn("description contains ': '", found[0].message)
+        for stored in ("straddle-example.md",):
+            _, valid = materialize_skill(self, stored)
+            self.assertEqual(lint(valid), [])
+
+    def test_shipped_skills_have_strict_yaml_frontmatter(self):
+        for skill in sorted((REPO / "skills").glob("*/SKILL.md")):
+            lines, _ = validator.split_frontmatter(skill.read_text())
+            self.assertIsNone(validator.parse_frontmatter(lines)[1], skill)
+
     def test_webhook_guidance_passes_the_policy_lint(self):
         guide = REPO / "skills" / "straddle-best-practices" / "references" / "receiving-webhooks.md"
         self.assertEqual(lint(guide, remote=lambda url: 200), [])
